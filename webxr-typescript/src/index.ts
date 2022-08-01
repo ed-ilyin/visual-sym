@@ -9,8 +9,7 @@ import {
   StandardMaterial,
   PhotoDome,
   PhysicsImpostor,
-  Mesh,
-  Tools,
+  Mesh
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
@@ -56,34 +55,7 @@ var createScene = async function () {
   const env = scene.createDefaultEnvironment();
 
 
-  var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-  var panel = new GUI.StackPanel();
-  panel.width = "220px";
-  panel.horizontalAlignment =GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  panel.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-  advancedTexture.addControl(panel);
-
-  var header = new GUI.TextBlock();
-  header.text = "Y-rotation: 0 deg";
-  header.height = "30px";
-  header.color = "white";
-  panel.addControl(header); 
-
-  var slider = new GUI.Slider();
-  slider.minimum = 0;
-  slider.maximum = 2 * Math.PI;
-  slider.value = 0;
-  slider.isVertical = true;
-  slider.height = "200px";
-  slider.width = "20px";
-  slider.onValueChangedObservable.add(function(value) {
-      header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";
-      if (skull) {
-          skull.rotation.y = value;
-      }
-  });
-  panel.addControl(slider);    
+  
 
 
   // Create a floor in the scene and position it to the center
