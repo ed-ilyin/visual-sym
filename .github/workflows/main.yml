@@ -40,5 +40,6 @@ jobs:
       - name: Update page
         run: |
           cd ..
+          ls
           sudo cp  -r ./webxr-typescript/dist ./docs
           echo OK
