@@ -27,7 +27,7 @@ jobs:
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./docs
 
       # Runs a single command using the runners shell
       - name: Install Node.JS
@@ -46,6 +46,5 @@ jobs:
           ls
           sudo cp  -r ./webxr-typescript/dist ./docs
           echo OK
-          - name: Deploy
 
 
