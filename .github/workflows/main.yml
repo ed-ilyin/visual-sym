@@ -36,3 +36,9 @@ jobs:
           npm i copy-webpack-plugin
           npm install
           npx webpack
+
+      - name: Update page
+        run: |
+          cd ..
+          sudo cp  -r ./webxr-typescript/dist ./docs
+          echo OK
