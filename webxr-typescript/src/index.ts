@@ -40,7 +40,7 @@ var createScene = async function () {
     new Vector3(0, 1, 0),
     scene
   );
-  //var sphere = Mesh.CreateSphere("sphere", 5.0, 5.0,  scene, false, BABYLON.Mesh.DEFAULTSIDE);
+  var sphere = Mesh.CreateSphere("sphere", 5.0, 5.0,  scene, false, BABYLON.Mesh.DEFAULTSIDE);
 
   // Reduce the light intensity to 70%
   light.intensity = 0.7;
@@ -93,7 +93,7 @@ var createScene = async function () {
 };
 
 
-//const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", options, scene); 
+const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", options, scene); 
 //
 // Create a default engine to load the scene
 try {
