@@ -93,7 +93,7 @@ var createScene = async function () {
 };
 
 
-const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", options, scene); 
+// const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", options, scene); 
 //
 // Create a default engine to load the scene
 try {
