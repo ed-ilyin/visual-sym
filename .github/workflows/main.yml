@@ -33,5 +33,6 @@ jobs:
       - name: Build app
         run: |
           cd webxr-typescript
+          npm i copy-webpack-plugin
           npm install
           npx webpack
