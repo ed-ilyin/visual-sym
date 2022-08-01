@@ -25,9 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+
 
       # Runs a single command using the runners shell
       - name: Install Node.JS
@@ -46,5 +44,11 @@ jobs:
           ls
           sudo cp  -r ./webxr-typescript/dist ./docs
           echo OK
+      - name: Deploy
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./webxr-typescript/dist  # default: public
+        
+
 
 
