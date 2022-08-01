@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Install Node.JS
-        run: apt update && apt install nodejs npm -y 
+        run: sudo apt update &&  sudo apt install nodejs npm -y 
 
       # Runs a set of commands using the runners shell
       - name: Build app
