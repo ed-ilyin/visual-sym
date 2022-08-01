@@ -30,6 +30,4 @@ jobs:
 
 
     - run: npm install
-       working-directory:webxr-typescript
     - run: npx webpack
-       working-directory:webxr-typescript
