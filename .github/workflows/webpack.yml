@@ -24,5 +24,6 @@ jobs:
 
     - name: Build
       run: |
+        cd webxr-typescript
         npm install
         npx webpack
