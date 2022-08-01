@@ -26,6 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd webxr-typescript 
+    - working-directory: ./webxr-typescript
     - run: npm install
     - run: npx webpack
