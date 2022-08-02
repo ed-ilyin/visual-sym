@@ -94,19 +94,7 @@ var createScene = async function () {
 
   scene.beforeRender = function(){   
     spheres.forEach(function (value) {
-      if (Math.random() > 0.5) {
-        let x=value.position.x+0.1;
-        let y=value.position.y+0.1;
-        let z=value.position.z;
-        value.position=new Vector3(x,y,z);
-      }
-      else {
-        let x=value.position.x-0.1;
-        let y=value.position.y-0.1;
-        let z=value.position.z;
-        value.position=new Vector3(x,y,z);
-      }
-  
+      
       
 
     }); 
