@@ -9,7 +9,8 @@ import {
   StandardMaterial,
   PhotoDome,
   PhysicsImpostor,
-  Mesh
+  Mesh,
+  Vector2
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
@@ -41,7 +42,6 @@ var createScene = async function () {
     scene
   );
 
-
   // Reduce the light intensity to 70%
   light.intensity = 0.7;
 
@@ -54,10 +54,12 @@ var createScene = async function () {
   // Create the default environment
   const env = scene.createDefaultEnvironment();
   
-
+  let spheres=[]
   for(let i=0; i<100; i++) {
-    let options:GainOptions;
-    var sphere = Mesh.CreateSphere("sphere", 32, 1, scene, true,1*i); 
+    var sphere = Mesh.CreateSphere("sphere", 32, 1, scene, true,1);
+    sphere.position= new Vector3(1*i,1*i,1*i);
+
+    spheres.push(sphere);
   }
 
   
