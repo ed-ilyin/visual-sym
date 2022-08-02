@@ -55,12 +55,15 @@ var createScene = async function () {
   const env = scene.createDefaultEnvironment();
   
   let spheres=[]
-  for(let i=0; i<100; i++) {
+  for(let i=0; i<10; i++) {
     var sphere = Mesh.CreateSphere("sphere", 32, 1, scene, true,1);
-    sphere.position= new Vector3(1*i,1*i,1*i);
-
+    sphere.position= new Vector3(Math.random()*10,Math.random()*10,1*i);
     spheres.push(sphere);
   }
+
+  console.log(spheres.length);
+
+
 
   
 
@@ -87,6 +90,29 @@ var createScene = async function () {
 
   // Create PhotoDome with a .png image and add it to the scene
 
+
+
+  scene.beforeRender = function(){   
+    spheres.forEach(function (value) {
+      if (Math.random() > 0.5) {
+        let x=value.position.x+0.1;
+        let y=value.position.y+0.1;
+        let z=value.position.z;
+        value.position=new Vector3(x,y,z);
+      }
+      else {
+        let x=value.position.x-0.1;
+        let y=value.position.y-0.1;
+        let z=value.position.z;
+        value.position=new Vector3(x,y,z);
+      }
+  
+      
+
+    }); 
+
+   
+   }
   
   // Create the default XR experience
   
@@ -97,7 +123,10 @@ var createScene = async function () {
 
   // Return the completed scene with camera, lights, an environment, and a Mixed Reality experience
   return scene;
-};
+}
+
+
+
 
 
 
