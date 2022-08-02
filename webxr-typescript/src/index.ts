@@ -9,7 +9,8 @@ import {
   StandardMaterial,
   PhotoDome,
   PhysicsImpostor,
-  Mesh
+  Mesh,
+  Vector2
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
@@ -40,7 +41,6 @@ var createScene = async function () {
     new Vector3(0, 1, 0),
     scene
   );
-  var sphere = Mesh.CreateSphere("sphere", 5.0, 5.0,  scene, false, BABYLON.Mesh.DEFAULTSIDE);
 
   // Reduce the light intensity to 70%
   light.intensity = 0.7;
@@ -53,6 +53,16 @@ var createScene = async function () {
 
   // Create the default environment
   const env = scene.createDefaultEnvironment();
+  
+  let spheres=[]
+  for(let i=0; i<10; i++) {
+    var sphere = Mesh.CreateSphere("sphere", 32, 1, scene, true,1);
+    sphere.position= new Vector3(Math.random()*10,Math.random()*10,1*i);
+    spheres.push(sphere);
+  }
+
+  console.log(spheres.length);
+
 
 
   
@@ -80,6 +90,29 @@ var createScene = async function () {
 
   // Create PhotoDome with a .png image and add it to the scene
 
+
+
+  scene.beforeRender = function(){   
+    spheres.forEach(function (value) {
+      if (Math.random() > 0.5) {
+        let x=value.position.x+0.1;
+        let y=value.position.y+0.1;
+        let z=value.position.z;
+        value.position=new Vector3(x,y,z);
+      }
+      else {
+        let x=value.position.x-0.1;
+        let y=value.position.y-0.1;
+        let z=value.position.z;
+        value.position=new Vector3(x,y,z);
+      }
+  
+      
+
+    }); 
+
+   
+   }
   
   // Create the default XR experience
   
@@ -90,10 +123,13 @@ var createScene = async function () {
 
   // Return the completed scene with camera, lights, an environment, and a Mixed Reality experience
   return scene;
-};
+}
 
 
-// const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", options, scene); 
+
+
+
+
 //
 // Create a default engine to load the scene
 try {
