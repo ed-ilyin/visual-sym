@@ -10,12 +10,21 @@ import {
   PhotoDome,
   PhysicsImpostor,
   Mesh,
-  Vector2
+  Vector2,
+  ParticleSystem,
+  Texture
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
+import { GridMaterial } from "babylonjs-materials";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
+
+export interface Skudra  {
+  sphere:Mesh,
+  message:Vector2
+};
+
 
 // Load the 3D engine
 var engine: Engine = null;
@@ -31,7 +40,7 @@ var createDefaultEngine = function () {
 var createScene = async function () {
   // Create the scene and the camera
   var scene = new Scene(engine);
-  var camera = new ArcRotateCamera("cam", -Math.PI / 2, Math.PI / 2, 10, new Vector3(0, -2, 3), scene);
+  var camera = new ArcRotateCamera("cam", -Math.PI, Math.PI, 10, new Vector3(0, -2, 3), scene);
   camera.wheelDeltaPercentage = 0.01;
   camera.attachControl(canvas, true);
 
@@ -43,25 +52,22 @@ var createScene = async function () {
   );
 
   // Reduce the light intensity to 70%
-  light.intensity = 0.7;
+  //light.intensity = 0.5;
 
   // Create the physics engine
   var cannonPlugin = new CannonJSPlugin(true, 10, cannon);
 
   //enable physics and set gravity force.
-  scene.enablePhysics(new Vector3(0, -3, 0), cannonPlugin);
+  //scene.enablePhysics(new Vector3(0, -3, 0), cannonPlugin);
 
   // Create the default environment
   const env = scene.createDefaultEnvironment();
-  
-  let spheres=[]
-  for(let i=0; i<10; i++) {
-    var sphere = Mesh.CreateSphere("sphere", 32, 1, scene, true,1);
-    sphere.position= new Vector3(Math.random()*10,Math.random()*10,1*i);
-    spheres.push(sphere);
-  }
 
-  console.log(spheres.length);
+
+
+
+  
+  
 
 
 
@@ -73,54 +79,27 @@ var createScene = async function () {
   //ymFloor.position = new Vector3(0, -3.5, 0);
 
   // Create wood materials and texture in the scene
-  //var woodMaterial = new StandardMaterial("woodMaterial", scene);
-  //var woodTexture = new WoodProceduralTexture("text", 1024, scene);
-
-  // Adjust the texture to look more realistic 
-  //woodTexture.ampScale = 80.0;
-
-  // Apply the texture to the material
- // woodMaterial.diffuseTexture = woodTexture;
-
-  // Apply the material to the gym floor mesh object
-  //gymFloor.material = woodMaterial;
-
-  // Add physics that simulates the ground
- // gymFloor.physicsImpostor = new PhysicsImpostor(gymFloor, PhysicsImpostor.PlaneImpostor, { mass: 0, restitution: 1 }, scene);
-
-  // Create PhotoDome with a .png image and add it to the scene
+  var woodMaterial = new StandardMaterial("woodMaterial", scene);
+  var woodTexture = new WoodProceduralTexture("text", 1024, scene);
 
 
-
-  scene.beforeRender = function(){   
-    spheres.forEach(function (value) {
-      if (Math.random() > 0.5) {
-        let x=value.position.x+0.1;
-        let y=value.position.y+0.1;
-        let z=value.position.z;
-        value.position=new Vector3(x,y,z);
-      }
-      else {
-        let x=value.position.x-0.1;
-        let y=value.position.y-0.1;
-        let z=value.position.z;
-        value.position=new Vector3(x,y,z);
-      }
-  
-      
-
-    }); 
-
-   
-   }
-  
-  // Create the default XR experience
   
   const xr = await scene.createDefaultXRExperienceAsync({
     
   });
-  
 
+  const ground = MeshBuilder.CreateGround("ground", {width: 25, height: 25});
+
+       // Ground for positional reference
+       //const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 25, height: 25});
+       ground.material = new GridMaterial("groundMat",scene);
+       ground.material.backFaceCulling = false;
+       const myParticleSystem = new ParticleSystem("particles", 2000, scene); 
+       myParticleSystem.particleTexture = new Texture("https://upload.wikimedia.org/wikipedia/commons/c/c2/Deus_drone.png", scene);
+        // Position where the particles are emiited from
+        myParticleSystem.emitter = new Vector3(0, 0.5, 0);
+
+        myParticleSystem.start();
   // Return the completed scene with camera, lights, an environment, and a Mixed Reality experience
   return scene;
 }
@@ -158,3 +137,36 @@ engine.runRenderLoop(function () {
 window.addEventListener("resize", function () {
   engine.resize();
 });
+
+
+function do_step(value) {
+  let random_direction=getRandomInt(3);
+  console.log(random_direction);
+  if (random_direction == 1 ){
+    let x=value.sphere.position.x+0.05;
+    let y=value.sphere.position.y;
+    let z=value.sphere.position.z;
+    value.sphere.position=new Vector3(x,y,z);
+
+  }
+  if (random_direction == 2 ){
+    let x=value.sphere.position.x;
+    let y=value.sphere.position.y+0.05;
+   
+    let z=value.sphere.position.z;
+    value.sphere.position=new Vector3(x,y,z);
+  }
+  if (random_direction == 3){
+    let x=value.sphere.position.x;
+    let y=value.sphere.position.y;
+    let z=value.sphere.position.z+0.05;
+    value.sphere.position=new Vector3(x,y,z);
+  }
+
+ 
+  
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
