@@ -150,7 +150,7 @@ var createScene = function () {
   pl.diffuse = new Color3(1, 1, 1);
   pl.intensity = 1.0;
 
-  var nb = 10000;    		    // nb of particles
+  var nb = 1000;    		    // nb of particles
   var size = 5;				// particle size
   var fact = 1500; 			// cube size
   var distance = 10;		// neighbor distance
