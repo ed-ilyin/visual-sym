@@ -17,7 +17,8 @@ import {
   PointLight,
   Axis,
   Color4,
-  SolidParticleSystem
+  SolidParticleSystem,
+  SolidParticle
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
@@ -25,10 +26,7 @@ import { GridMaterial } from "babylonjs-materials";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
-export interface Skudra  {
-  sphere:Mesh,
-  message:Vector2
-};
+
 
 
 // Load the 3D engine
@@ -139,6 +137,11 @@ var createDefaultEngine = function () {
   };
 
 */
+interface Skudra extends SolidParticle {
+  difference_to_point:Vector3;
+  data_transmit:Vector3;
+
+}
 var createScene = function () {
   var scene = new Scene(engine);
   //scene.clearColor = Color3.Black;
@@ -150,7 +153,7 @@ var createScene = function () {
   pl.diffuse = new Color3(1, 1, 1);
   pl.intensity = 1.0;
 
-  var nb = 1000;    		    // nb of particles
+  var nb = 10000;    		    // nb of particles
   var size = 5;				// particle size
   var fact = 1500; 			// cube size
   var distance = 10;		// neighbor distance
@@ -175,7 +178,8 @@ var createScene = function () {
   var box = MeshBuilder.CreateBox("b", { size: fact + 2 * size, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene);
 
   // position function 
-  var myPositionFunction = function (particle, i, s) {
+  var myPositionFunction = function (particle: any, i: number, s: number) {
+    
       particle.position.x = (Math.random() - 0.5) * fact;
       particle.position.y = (Math.random() - 0.5) * fact;
       particle.position.z = (Math.random() - 0.5) * fact;
@@ -186,11 +190,24 @@ var createScene = function () {
       //particle.rotation.y = Math.random() * 3.15;
       //particle.rotation.z = Math.random() * 1.5;
       particle.color = new BABYLON.Color4(particle.position.x / fact + 0.5, particle.position.y / fact + 0.5, particle.position.z / fact + 0.5, 1.0);
-  };
+   
+    };
 
   // model 
   var model = MeshBuilder.CreatePolyhedron("m", { type: 4, size: size, sizeY: size * 2 }, scene);
+  var point_a=MeshBuilder.CreateSphere("a",{segments:64,diameter:80});
+  var point_b=MeshBuilder.CreateBox("a",{size:100});
+  point_a.position=new Vector3(0,-10,-10);
+  point_b.position=new Vector3(500,0,10);
+  var material = new StandardMaterial("potato",scene);
+  material.alpha = 1;
+  material.diffuseColor = new BABYLON.Color3(1.0, 0.2, 0.7);
+  point_b.material = material; 
 
+  var new_material = new StandardMaterial("varienik",scene);
+  new_material.alpha = 1;
+  new_material.diffuseColor = new BABYLON.Color3(0.2, 0.4, 0.7);
+  point_a.material = new_material; 
   // SPS creation
   var SPS = new SolidParticleSystem('SPS', scene);
   SPS.addShape(model, nb);
@@ -306,7 +323,7 @@ var createScene = function () {
   // flocking
   setInterval(function () { flocking(); }, delay);
 
-  SPS.updateParticle = function (particle) {
+  SPS.updateParticle = function (particle:Skudra) {
       // keep in the cube
       if (Math.abs(particle.position.x) > limit) { particle.velocity.x *= -1 }
       if (Math.abs(particle.position.y) > limit) { particle.velocity.y *= -1 }
@@ -314,10 +331,35 @@ var createScene = function () {
 
       particle.velocity.normalize();
       particle.velocity.scaleInPlace(speed);
+      
+          var diff=get_difference(point_a,particle);
+          if (diff.x < 2 && diff.y < 2 && diff.z < 2) {
+            particle.difference_to_point=get_difference(point_b,particle);
 
-      particle.position.x += particle.velocity.x;
-      particle.position.y += particle.velocity.y;
-      particle.position.z += particle.velocity.z;
+          particle.position.x  -= particle.velocity.x;
+          particle.position.y -= particle.velocity.y;
+          particle.position.z -= particle.velocity.z;
+          
+
+      
+
+
+          }
+          else {
+             particle.difference_to_point=get_difference(point_a,particle);
+          particle.position.x  += particle.velocity.x;
+          particle.position.y += particle.velocity.y;
+          particle.position.z += particle.velocity.z;
+          
+      
+
+
+          }
+      
+
+      //particle.position.x += particle.velocity.x;
+     // particle.position.y += particle.velocity.y;
+     // particle.position.z += particle.velocity.z;
       return particle;
   }
 
@@ -339,6 +381,8 @@ var createScene = function () {
 
   return scene;
 };
+
+
 
   
 
@@ -375,3 +419,24 @@ window.addEventListener("resize", function () {
 });
 
 
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+}
+
+
+function get_difference(object,particle)  {
+  var object_x=object.position.x;
+  var object_y=object.position.y;
+  var object_z=object.position.z;
+  var particle_x=particle.position.x;
+  var particle_y=particle.position.y;
+  var particle_z=particle.position.z;
+  var diff_x=particle_x-object_x;
+  var diff_y=particle_y-object_y;
+  var diff_z=particle_z-object_z;
+  return new Vector3(diff_x,diff_y,diff_z);
+
+}
