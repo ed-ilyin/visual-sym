@@ -142,15 +142,19 @@ var createDefaultEngine = function () {
 interface Skudra extends SolidParticle {
   difference_to_point:Vector3;
   data_transmit:Vector3;
-
 }
-var createScene = function () {
+
+
+var createScene =  async function () {
+  const scale = 0.015;
   var scene = new Scene(engine);
   //scene.clearColor = Color3.Black;
   var camera = new ArcRotateCamera("camera1", 0, 0, 0, new Vector3(0, 0, -0), scene);
   camera.setPosition(new Vector3(0, 10, -400));
   camera.attachControl(canvas, true);
   const environment = scene.createDefaultEnvironment();
+
+  
 
   
 
@@ -181,7 +185,7 @@ var createScene = function () {
   var Z = Axis.Z;
 
   var box = MeshBuilder.CreateBox("b", { size: fact + 2 * size, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene);
-
+  
   // position function 
   var myPositionFunction = function (particle: any, i: number, s: number) {
     
@@ -403,10 +407,29 @@ var createScene = function () {
       }, KeyboardEventTypes.KEYDOWN);
 
 
-      const xrHelper =  scene.createDefaultXRExperienceAsync({
-        floorMeshes: [environment.ground]
+     
+      const ground = MeshBuilder.CreateGround("ground", {width: 4, height: 4});
+      const xrPromise = scene.createDefaultXRExperienceAsync({
+        floorMeshes: [ground]
     });
-  return scene;
+    return xrPromise.then((xrExperience) => {
+        console.log("Done, WebXR is enabled.");
+        return scene;
+    });
+
+    
+
+
+
+
+    
+
+  
+   
+   
+
+
+
 };
 
 
@@ -431,7 +454,9 @@ try {
 if (!engine) throw "engine should not be null.";
 
 //Create the scene
-sceneToRender=createScene();
+createScene().then(sceneToRender => {
+  engine.runRenderLoop(() => sceneToRender.render());
+});
 
 // Render the scene by using the engine
 engine.runRenderLoop(function () {
