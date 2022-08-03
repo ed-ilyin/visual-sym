@@ -18,7 +18,9 @@ import {
   Axis,
   Color4,
   SolidParticleSystem,
-  SolidParticle
+  SolidParticle,
+  KeyboardEventTypes,
+  Animation
 } from "babylonjs";
 import * as cannon from "cannon";
 import { WoodProceduralTexture } from "babylonjs-procedural-textures";
@@ -148,15 +150,18 @@ var createScene = function () {
   var camera = new ArcRotateCamera("camera1", 0, 0, 0, new Vector3(0, 0, -0), scene);
   camera.setPosition(new Vector3(0, 10, -400));
   camera.attachControl(canvas, true);
+  const environment = scene.createDefaultEnvironment();
+
+  
 
   var pl = new PointLight("pl", new Vector3(0, 0, 0), scene);
   pl.diffuse = new Color3(1, 1, 1);
   pl.intensity = 1.0;
 
-  var nb = 10000;    		    // nb of particles
+  var nb = 1000;    		    // nb of particles
   var size = 5;				// particle size
   var fact = 1500; 			// cube size
-  var distance = 10;		// neighbor distance
+  var distance = 1;		// neighbor distance
   var aw = 0.5;				// association weight
   var cw = 0.5;				// cohesion weight
   var sw = 0.5;				// separation weight
@@ -190,7 +195,7 @@ var createScene = function () {
       //particle.rotation.y = Math.random() * 3.15;
       //particle.rotation.z = Math.random() * 1.5;
       particle.color = new BABYLON.Color4(particle.position.x / fact + 0.5, particle.position.y / fact + 0.5, particle.position.z / fact + 0.5, 1.0);
-   
+      particle.difference_to_point;
     };
 
   // model 
@@ -323,6 +328,7 @@ var createScene = function () {
   // flocking
   setInterval(function () { flocking(); }, delay);
 
+  
   SPS.updateParticle = function (particle:Skudra) {
       // keep in the cube
       if (Math.abs(particle.position.x) > limit) { particle.velocity.x *= -1 }
@@ -331,30 +337,27 @@ var createScene = function () {
 
       particle.velocity.normalize();
       particle.velocity.scaleInPlace(speed);
+      particle.difference_to_point=get_difference(point_a,particle);
+      particle.position.x  += particle.velocity.x;
+      particle.position.y += particle.velocity.y;
+      particle.position.z += particle.velocity.z;
       
+
           var diff=get_difference(point_a,particle);
-          if (diff.x < 2 && diff.y < 2 && diff.z < 2) {
+          if (diff.x < 10 &&  diff.x > -10 && diff.y < 10 && diff.y > -10  && diff.z < 10 && diff.z > -10) {
+            particle.velocity.x *= -1 
+            particle.velocity.y *= -1 
+            particle.velocity.z *= -1 
             particle.difference_to_point=get_difference(point_b,particle);
-
-          particle.position.x  -= particle.velocity.x;
-          particle.position.y -= particle.velocity.y;
-          particle.position.z -= particle.velocity.z;
-          
-
+    
+          }
+         
+          //particle.position.x  += particle.velocity.x;
+          //particle.position.y += particle.velocity.y;
+          //particle.position.z += particle.velocity.z;
       
 
 
-          }
-          else {
-             particle.difference_to_point=get_difference(point_a,particle);
-          particle.position.x  += particle.velocity.x;
-          particle.position.y += particle.velocity.y;
-          particle.position.z += particle.velocity.z;
-          
-      
-
-
-          }
       
 
       //particle.position.x += particle.velocity.x;
@@ -362,6 +365,8 @@ var createScene = function () {
      // particle.position.z += particle.velocity.z;
       return particle;
   }
+
+ 
 
   // Optimizers after first setParticles() call
   // This will be used only for the next setParticles() calls
@@ -372,13 +377,35 @@ var createScene = function () {
   // SPS mesh animation
   scene.registerBeforeRender(function () {
       SPS.setParticles();
+      for (var i = 0; i < SPS.nbParticles; i++) {
+
+        p = SPS.particles[i];
+        //console.log(p.difference_to_point);
+  
+      }
       pl.position = camera.position;
   });
 
-  const xr =  scene.createDefaultXRExperienceAsync({
-    
-  });
+  
 
+  //var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(65), 20, sphere.position, scene);
+
+  // This attaches the camera to the canvas
+  camera.attachControl(canvas, true);
+
+  scene.onKeyboardObservable.add(function(kbinfo){
+          if(kbinfo.event.key == " "){
+
+              Animation.CreateAndStartAnimation("moveTarget", camera, "target", 30, 30, camera.target, box.position, 0);
+              Animation.CreateAndStartAnimation("moveAlpha", camera, "alpha", 30, 30, camera.alpha, BABYLON.Tools.ToRadians(-90), 0);
+              Animation.CreateAndStartAnimation("moveBeta", camera, "beta", 30, 30, camera.beta, BABYLON.Tools.ToRadians(90), 0);
+          };
+      }, KeyboardEventTypes.KEYDOWN);
+
+
+      const xrHelper =  scene.createDefaultXRExperienceAsync({
+        floorMeshes: [environment.ground]
+    });
   return scene;
 };
 
