@@ -333,6 +333,10 @@ var createScene = function () {
       pl.position = camera.position;
   });
 
+  const xr =  scene.createDefaultXRExperienceAsync({
+    
+  });
+
   return scene;
 };
 
