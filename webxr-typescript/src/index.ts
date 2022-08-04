@@ -16,6 +16,7 @@ const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 // Load the 3D engine
 var engine: Engine = null;
 const sceneToRender = null;
+
 const createDefaultEngine = function () {
   return new Engine(canvas, true, {
     preserveDrawingBuffer: true,
@@ -23,7 +24,7 @@ const createDefaultEngine = function () {
   });
 };
 
-const dzirde = 50;
+const dzirde = 1;
 enum Vieta { Bariba, Maja }
 
 class Skudra {
@@ -47,7 +48,7 @@ function dzird(
   if (sadzirdetaVieta == Vieta.Maja &&
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
 
-    skudraKasDzird.lidzMajai = sadzirdetsAttalums
+      skudraKasDzird.lidzMajai = sadzirdetsAttalums
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
@@ -55,7 +56,7 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
       skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
-      console.log(skudraKasDzird.virziens)
+      console.log(`дом ${sadzirdetsAttalums}`)
     }
   }
 
@@ -70,7 +71,7 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
       skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
-      console.log(skudraKasDzird.virziens)
+      console.log(`хавка ${sadzirdetsAttalums}`)
     }
   }
 }
@@ -111,7 +112,7 @@ const createScene = async function () {
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём еду
-  const bariba = MeshBuilder.CreateBox("box", { size: 0.1 }, scene);
+  const bariba = MeshBuilder.CreateBox("box", { size: 0.2 }, scene);
   bariba.position = new Vector3(rnd(), rnd(), rnd());
 
   //Create a manager for the player's sprite animation
@@ -162,7 +163,7 @@ const createScene = async function () {
     //      обнулить сообтветсвующий счётчик
     //      поменять skudra.mekle на противоположный
     if (particle.intersectsMesh(bariba, false)) { 
-      console.log('мы уперлись во что-то!')
+      console.log('нашёл еду!')
       skudra.lidzBaribai = 0
       skudra.mekle = Vieta.Maja
     }
