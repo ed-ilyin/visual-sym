@@ -134,7 +134,7 @@ const createScene = async function () {
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    let r = Math.random() / 10
+    let r = Math.random() / 20
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
