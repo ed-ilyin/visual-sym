@@ -1,4 +1,17 @@
-import { ArcRotateCamera, CloudPoint, Color4, Engine, PointLight, PointsCloudSystem, Scalar, Scene, Vector3 } from "babylonjs";
+import {
+  ArcRotateCamera,
+  CloudPoint,
+  Color4,
+  Engine,
+  HemisphericLight,
+  Mesh,
+  MeshBuilder,
+  PointLight,
+  PointsCloudSystem,
+  Scalar,
+  Scene,
+  Vector3
+} from "babylonjs";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -36,8 +49,9 @@ function dzird(
 
   if (sadzirdetaVieta == Vieta.Maja &&
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
-      
+
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
+    console.log(skudraKasDzird.lidzMajai)
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
@@ -45,6 +59,7 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
       skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
+      console.log(skudraKasDzird.virziens)
     }
   }
 
@@ -59,6 +74,7 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
       skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
+      console.log(skudraKasDzird.virziens)
     }
   }
 }
@@ -86,14 +102,19 @@ function kliedz(distance: number,
   }
 }
 
+function rnd() { return Math.random() - 0.5 }
 
 const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
+  // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
+
+  const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+  const box = MeshBuilder.CreateBox("box", {size: 0.05}, scene);
+  box.position = new Vector3(rnd(), rnd(), rnd());
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
@@ -101,13 +122,13 @@ const createScene = async function () {
   // тут исправляем косяк когда проподает всё при повороте камеры
   // это медленнее, есть ещё способ - это задать bounding box заранее
   pcs.computeBoundingBox = true;
-  
+
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.position = new Vector3(0, 1, 1)
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    const r = Math.random()/100;
+    const r = Math.random() / 100;
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
