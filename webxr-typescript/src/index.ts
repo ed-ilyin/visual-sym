@@ -123,7 +123,7 @@ const createScene = async function () {
   const size = 0.1
   const maja = MeshBuilder.CreateSphere("maja", { diameter: size }, scene);
   // maja.position = new Vector3(0, 0, 0)
-  maja.position = new Vector3(0, 1, 1)
+  maja.position = new Vector3(0, 0.5, 0)
   const bariba = MeshBuilder.CreateBox("box", { size: size }, scene);
   bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
 
@@ -204,7 +204,7 @@ const createScene = async function () {
 
   // initialize XR
   const xr = await scene.createDefaultXRExperienceAsync({
-    floorMeshes: [env.ground]
+    // floorMeshes: [env.ground]
   });
 
   return scene;
