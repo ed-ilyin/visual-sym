@@ -113,7 +113,7 @@ const createScene = async function () {
   camera.attachControl(canvas, true);
 
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
-  const box = MeshBuilder.CreateBox("box", {size: 0.05}, scene);
+  const box = MeshBuilder.CreateBox("box", {size: 0.02}, scene);
   box.position = new Vector3(rnd(), rnd(), rnd());
 
   //Create a manager for the player's sprite animation
