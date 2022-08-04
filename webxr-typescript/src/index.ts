@@ -48,7 +48,7 @@ function dzird(
   if (sadzirdetaVieta == Vieta.Maja &&
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
 
-      skudraKasDzird.lidzMajai = sadzirdetsAttalums
+    skudraKasDzird.lidzMajai = sadzirdetsAttalums
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
@@ -113,7 +113,7 @@ const createScene = async function () {
 
   // создаём еду
   const bariba = MeshBuilder.CreateBox("box", { size: 0.2 }, scene);
-  bariba.position = new Vector3(rnd(), rnd(), rnd());
+  bariba.position = new Vector3(rnd(), rnd() + 1, rnd() + 1);
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
@@ -162,7 +162,7 @@ const createScene = async function () {
     // TODO: проверить не уткнулись ли в еду или дом
     //      обнулить сообтветсвующий счётчик
     //      поменять skudra.mekle на противоположный
-    if (particle.intersectsMesh(bariba, false)) { 
+    if (particle.intersectsMesh(bariba, false)) {
       console.log('нашёл еду!')
       skudra.lidzBaribai = 0
       skudra.mekle = Vieta.Maja
