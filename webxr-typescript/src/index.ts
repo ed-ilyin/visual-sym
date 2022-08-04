@@ -22,6 +22,7 @@ class Skudra {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
+
   constructor(virziens: Vector3, atrums: number) {
     this.virziens = virziens;
     this.atrums = atrums;
@@ -35,7 +36,9 @@ function dzird(
 
   if (sadzirdetaVieta == Vieta.Maja &&
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
+      
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
+
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
@@ -47,7 +50,9 @@ function dzird(
 
   if (sadzirdetaVieta == Vieta.Bariba &&
     sadzirdetsAttalums < skudraKasDzird.lidzBaribai) {
+
     skudraKasDzird.lidzBaribai = sadzirdetsAttalums
+
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
@@ -100,7 +105,7 @@ const createScene = async function () {
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
-    particle.position = Vector3.Zero()
+    particle.position = new Vector3(0, 1, 1)
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
     const r = Math.random()/100;
     const phi = Scalar.RandomRange(0, Math.PI)
