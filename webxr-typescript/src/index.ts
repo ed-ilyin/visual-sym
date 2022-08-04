@@ -24,7 +24,7 @@ const createDefaultEngine = function () {
   });
 };
 
-const dzirde = 1;
+const dzirde = 10;
 enum Vieta { Bariba, Maja }
 
 class Skudra {
@@ -54,9 +54,12 @@ function dzird(
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
       // но динной в скорость слышащей букахи
-      skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
-      skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
-      console.log(`дом ${sadzirdetsAttalums}`)
+      skudraKasDzird.virziens =
+        kliedzosasSkudrasVieta
+        .subtract(skudrasKasDzirdVieta)
+        .normalize()
+        .scaleInPlace(skudraKasDzird.atrums)
+      console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
 
@@ -69,9 +72,12 @@ function dzird(
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
       // но динной в скорость слышащей букахи
-      skudraKasDzird.virziens = kliedzosasSkudrasVieta.subtract(skudrasKasDzirdVieta)
-      skudraKasDzird.virziens.normalizeFromLength(skudraKasDzird.atrums)
-      console.log(`хавка ${sadzirdetsAttalums}`)
+      skudraKasDzird.virziens =
+        kliedzosasSkudrasVieta
+        .subtract(skudrasKasDzirdVieta)
+        .normalize()
+        .scaleInPlace(skudraKasDzird.atrums)
+        // console.log(`хавка ${skudraKasDzird.virziens.length()}`)
     }
   }
 }
@@ -111,9 +117,13 @@ const createScene = async function () {
 
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
-  // создаём еду
-  const bariba = MeshBuilder.CreateBox("box", { size: 0.2 }, scene);
-  bariba.position = new Vector3(rnd(), rnd() + 1, rnd() + 1);
+  // создаём дом и еду
+  const size = 0.1
+  const maja = MeshBuilder.CreateSphere("maja", { diameter: size }, scene);
+  maja.position = new Vector3(0, 0, 0)
+  // maja.position = new Vector3(0, 1, 1)
+  const bariba = MeshBuilder.CreateBox("box", { size: size }, scene);
+  bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
@@ -121,15 +131,16 @@ const createScene = async function () {
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
-    particle.position = new Vector3(0, 1, 1)
-    particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    // const r = Math.random() / 100;
-    const r = Scalar.RandomRange(0, 0.01)
+    // particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
+    let r = Math.random() / 100
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
     const y = r * Math.sin(phi) * Math.sin(theta)
     const z = r * Math.cos(theta)
+    const surface = new Vector3(x, y, z).normalize().scale(size/2)
+    // console.log(surface.length())
+    particle.position = maja.position.add(surface)
     const virziens = new Vector3(x, y, z)
     skudras[i] = new Skudra(virziens, virziens.length())
   }
@@ -159,13 +170,19 @@ const createScene = async function () {
 
     }
 
-    // TODO: проверить не уткнулись ли в еду или дом
-    //      обнулить сообтветсвующий счётчик
-    //      поменять skudra.mekle на противоположный
-    if (particle.intersectsMesh(bariba, false)) {
+    // проверить не уткнулись ли в еду или дом
+    // обнулить сообтветсвующий счётчик
+    // поменять skudra.mekle на противоположный
+    if (skudra.mekle == Vieta.Bariba && particle.intersectsMesh(bariba, false)) {
       console.log('нашёл еду!')
       skudra.lidzBaribai = 0
       skudra.mekle = Vieta.Maja
+    }
+
+    if (skudra.mekle == Vieta.Maja && particle.intersectsMesh(maja, true)) {
+      console.log('нашёл дом!')
+      skudra.lidzMajai = 0
+      skudra.mekle = Vieta.Bariba
     }
 
     return particle
