@@ -1,4 +1,4 @@
-import { ArcRotateCamera, CloudPoint, Color4, Engine, PointLight, PointsCloudSystem, Scalar, Scene, Vector3 } from "babylonjs";
+import { ArcRotateCamera, CloudPoint, Color4, Engine, Mesh, MeshBuilder, PointLight, PointsCloudSystem, Scalar, Scene, Vector3 } from "babylonjs";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -22,7 +22,6 @@ class Skudra {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-
   constructor(virziens: Vector3, atrums: number) {
     this.virziens = virziens;
     this.atrums = atrums;
@@ -36,9 +35,7 @@ function dzird(
 
   if (sadzirdetaVieta == Vieta.Maja &&
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
-      
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
-
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
@@ -50,9 +47,7 @@ function dzird(
 
   if (sadzirdetaVieta == Vieta.Bariba &&
     sadzirdetsAttalums < skudraKasDzird.lidzBaribai) {
-
     skudraKasDzird.lidzBaribai = sadzirdetsAttalums
-
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
       // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
@@ -95,19 +90,20 @@ const createScene = async function () {
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
 
+
+
+
+  
+
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
-
-  // тут исправляем косяк когда проподает всё при повороте камеры
-  // это медленнее, есть ещё способ - это задать bounding box заранее
   pcs.computeBoundingBox = true;
-  
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
-    particle.position = new Vector3(0, 1, 1)
+    particle.position = Vector3.Zero()
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    const r = Math.random()/100;
+    const r = 0.01; //Math.random()/1000;
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
@@ -121,6 +117,10 @@ const createScene = async function () {
   pcs.buildMeshAsync();
 
   pcs.updateParticle = function (particle) {
+
+
+
+
     // букаха походила
     particle.position.addInPlace(skudras[particle.idx].virziens);
 
@@ -139,7 +139,15 @@ const createScene = async function () {
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
       kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
       kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
+      if(Vector3.Distance(particle.position,bariba_object.position)==0){
+        console.log('мы уперлись во что-то!')
+
+      }
+      
+     
     }
+
+    
 
     // TODO: проверить не уткнулись ли в еду или дом
     //      обнулить сообтветсвующий счётчик
@@ -148,15 +156,24 @@ const createScene = async function () {
     return particle
   }
 
+
+
+  const bariba_object = MeshBuilder.CreateBox("box", {size:0.1}, scene);
+  bariba_object.position=new Vector3(Math.random(),Math.random(),Math.random());
+ 
+
   scene.registerAfterRender(() => pcs.setParticles())
 
   const env = scene.createDefaultEnvironment();
+
+
 
   // initialize XR
   const xr = await scene.createDefaultXRExperienceAsync({
     floorMeshes: [env.ground]
 
   });
+ 
 
   return scene;
 }
