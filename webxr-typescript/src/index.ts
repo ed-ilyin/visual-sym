@@ -92,7 +92,11 @@ const createScene = async function () {
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
+
+  // тут исправляем косяк когда проподает всё при повороте камеры
+  // это медленнее, есть ещё способ - это задать bounding box заранее
   pcs.computeBoundingBox = true;
+  
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
