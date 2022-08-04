@@ -107,7 +107,7 @@ function kliedz(distance: number,
   }
 }
 
-function rnd() { return Math.random() - 0.5 }
+function rnd() { return Scalar.RandomRange(-1, 1) }
 
 const createScene = async function () {
   const scene = new Scene(engine);
@@ -122,8 +122,8 @@ const createScene = async function () {
   // создаём дом и еду
   const size = 0.1
   const maja = MeshBuilder.CreateSphere("maja", { diameter: size }, scene);
-  maja.position = new Vector3(0, 0, 0)
-  // maja.position = new Vector3(0, 1, 1)
+  // maja.position = new Vector3(0, 0, 0)
+  maja.position = new Vector3(0, 1, 1)
   const bariba = MeshBuilder.CreateBox("box", { size: size }, scene);
   bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
 
