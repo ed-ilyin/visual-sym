@@ -59,7 +59,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-      console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
 
@@ -145,7 +145,6 @@ const createScene = async function () {
 
     particle.position =
       maja.position.add(virziens.normalizeToNew().scaleInPlace(size / 2))
-
   }
 
   pcs.addPoints(1000, spawn);
@@ -175,16 +174,26 @@ const createScene = async function () {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    if (skudra.mekle == Vieta.Bariba && particle.intersectsMesh(bariba, false)) {
-      console.log('нашёл еду!')
+    if (particle.intersectsMesh(bariba, false)) {
       skudra.lidzBaribai = 0
-      skudra.mekle = Vieta.Maja
+
+      if (skudra.mekle == Vieta.Bariba) {
+        // console.log('нашёл еду!')
+        skudra.mekle = Vieta.Maja
+        // разворот на 180 градусов
+        skudra.virziens.scaleInPlace(-1)
+      }
     }
 
-    if (skudra.mekle == Vieta.Maja && particle.intersectsMesh(maja, true)) {
-      console.log('нашёл дом!')
+    if (particle.intersectsMesh(maja, true)) {
       skudra.lidzMajai = 0
-      skudra.mekle = Vieta.Bariba
+
+      if (skudra.mekle == Vieta.Maja) {
+        // console.log('нашёл дом!')
+        skudra.mekle = Vieta.Bariba
+        // разворот на 180 градусов
+        skudra.virziens.scaleInPlace(-1)
+      }
     }
 
     return particle
