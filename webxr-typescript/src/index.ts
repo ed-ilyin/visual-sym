@@ -56,9 +56,9 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens =
         kliedzosasSkudrasVieta
-        .subtract(skudrasKasDzirdVieta)
-        .normalize()
-        .scaleInPlace(skudraKasDzird.atrums)
+          .subtract(skudrasKasDzirdVieta)
+          .normalize()
+          .scaleInPlace(skudraKasDzird.atrums)
       console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
@@ -74,10 +74,10 @@ function dzird(
       // но динной в скорость слышащей букахи
       skudraKasDzird.virziens =
         kliedzosasSkudrasVieta
-        .subtract(skudrasKasDzirdVieta)
-        .normalize()
-        .scaleInPlace(skudraKasDzird.atrums)
-        // console.log(`хавка ${skudraKasDzird.virziens.length()}`)
+          .subtract(skudrasKasDzirdVieta)
+          .normalize()
+          .scaleInPlace(skudraKasDzird.atrums)
+      // console.log(`хавка ${skudraKasDzird.virziens.length()}`)
     }
   }
 }
@@ -89,18 +89,20 @@ function kliedz(distance: number,
   // выясняем что кричали в прошлый раз и кричим другое
   switch (skudra.kliegs) {
     case Vieta.Maja: {
+      skudra.kliegs = Vieta.Bariba
+
       if (distance <= dzirde) dzird(
         skudrasVieta,
         Vieta.Maja, skudra.lidzMajai + dzirde,
         citaSkudra, citasSkudrasVieta)
-      skudra.kliegs = Vieta.Bariba
     }
     case Vieta.Bariba: {
+      skudra.kliegs = Vieta.Maja
+
       if (distance <= dzirde) dzird(
         skudrasVieta,
         Vieta.Bariba, skudra.lidzBaribai + dzirde,
         citaSkudra, citasSkudrasVieta)
-      skudra.kliegs = Vieta.Maja
     }
   }
 }
@@ -138,11 +140,12 @@ const createScene = async function () {
     const x = r * Math.cos(phi) * Math.sin(theta)
     const y = r * Math.sin(phi) * Math.sin(theta)
     const z = r * Math.cos(theta)
-    const surface = new Vector3(x, y, z).normalize().scale(size/2)
-    // console.log(surface.length())
-    particle.position = maja.position.add(surface)
     const virziens = new Vector3(x, y, z)
     skudras[i] = new Skudra(virziens, virziens.length())
+
+    particle.position =
+      maja.position.add(virziens.normalizeToNew().scaleInPlace(size / 2))
+
   }
 
   pcs.addPoints(1000, spawn);
@@ -167,7 +170,6 @@ const createScene = async function () {
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
       kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
       kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
-
     }
 
     // проверить не уткнулись ли в еду или дом
