@@ -111,8 +111,8 @@ const createScene = async function () {
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём еду
-  const bariba_object = MeshBuilder.CreateBox("box", { size: 0.1 }, scene);
-  bariba_object.position = new Vector3(rnd(), rnd(), rnd());
+  const bariba = MeshBuilder.CreateBox("box", { size: 0.1 }, scene);
+  bariba.position = new Vector3(rnd(), rnd(), rnd());
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 2, scene);
@@ -122,7 +122,8 @@ const createScene = async function () {
   const spawn = function (particle: CloudPoint, i: number) {
     particle.position = new Vector3(0, 1, 1)
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    const r = Math.random() / 100;
+    // const r = Math.random() / 100;
+    const r = Scalar.RandomRange(0, 0.01)
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
@@ -154,14 +155,15 @@ const createScene = async function () {
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
       kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
       kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
-      if (Vector3.Distance(particle.position, bariba_object.position) == 0) {
-        console.log('мы уперлись во что-то!')
-      }
+
     }
 
     // TODO: проверить не уткнулись ли в еду или дом
     //      обнулить сообтветсвующий счётчик
     //      поменять skudra.mekle на противоположный
+    if (particle.intersectsMesh(bariba, false)) { 
+      console.log('мы уперлись во что-то!')
+    }
 
     return particle
   }
