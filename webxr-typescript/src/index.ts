@@ -163,6 +163,8 @@ const createScene = async function () {
     //      поменять skudra.mekle на противоположный
     if (particle.intersectsMesh(bariba, false)) { 
       console.log('мы уперлись во что-то!')
+      skudra.lidzBaribai = 0
+      skudra.mekle = Vieta.Maja
     }
 
     return particle
