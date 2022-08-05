@@ -5,6 +5,7 @@ import {
   Engine,
   HemisphericLight,
   MeshBuilder,
+  PointLight,
   PointsCloudSystem,
   Scalar,
   Scene,
@@ -37,9 +38,10 @@ class Skudra {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  constructor(virziens: Vector3, atrums: number) {
+  
+  constructor(virziens: Vector3) {
     this.virziens = virziens;
-    this.atrums = atrums;
+    this.atrums = virziens.length();
   }
 }
 
@@ -116,11 +118,11 @@ const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
+  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
 
-  const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+  // const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: izmers }, scene);
@@ -143,7 +145,7 @@ const createScene = async function () {
     const y = r * Math.sin(phi) * Math.sin(theta)
     const z = r * Math.cos(theta)
     const virziens = new Vector3(x, y, z)
-    skudras[i] = new Skudra(virziens, virziens.length())
+    skudras[i] = new Skudra(virziens)
 
     particle.position =
       maja.position.add(virziens.normalizeToNew().scaleInPlace(izmers / 2))
@@ -156,22 +158,10 @@ const createScene = async function () {
     // букаха походила
     particle.position.addInPlace(skudras[particle.idx].virziens);
 
-    // букаха увеличила все счётчики на велечину скорости
+    // букаха увеличила все счётчики на велечину своей скорости
     const skudra = skudras[particle.idx]
     skudra.lidzMajai += skudra.atrums
     skudra.lidzBaribai += skudra.atrums
-
-    // букаха кричит одно из пройденных путей
-    // Ищем кто услышал,
-    //      чтобы два раза не прогонять по массиву сразу меняемся данными в обе стороны
-    //      и проганяем только оставшихся (такая вот оптимизация)
-    for (var p = particle.idx + 1; p < pcs.nbParticles; p++) {
-      const citaSkudra = skudras[p]
-      const citasSkudrasVieta = pcs.particles[p].position
-      const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
-      kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
-      kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
-    }
 
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
@@ -187,7 +177,7 @@ const createScene = async function () {
       }
     }
 
-    if (particle.intersectsMesh(maja, true)) {
+    if (particle.intersectsMesh(maja, false)) {
       skudra.lidzMajai = 0
 
       if (skudra.mekle == Vieta.Maja) {
@@ -196,6 +186,18 @@ const createScene = async function () {
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
+    }
+
+    // букаха кричит одно из пройденных путей
+    // Ищем кто услышал,
+    //      чтобы два раза не прогонять по массиву сразу меняемся данными в обе стороны
+    //      и проганяем только оставшихся (такая вот оптимизация)
+    for (var p = particle.idx + 1; p < pcs.nbParticles; p++) {
+      const citaSkudra = skudras[p]
+      const citasSkudrasVieta = pcs.particles[p].position
+      const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
+      kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
+      kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
     }
 
     return particle
