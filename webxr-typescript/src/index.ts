@@ -14,10 +14,10 @@ import {
 
 const daudzums = 500
 const objectSize = 0.1; // в метрах
-const skudraSize = 8; // в пикселях
-const atrums = 0.001; // в метрах
+const skudraSize = 4; // в пикселях
+const atrums = 0.01; // в метрах
 const dzirde = 0.1; // в метрах
-const foodDistance = randomPolarToCartesian(0.3, 0.5)
+const foodDistance = randomPolarToCartesian(0.3, 1)
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -49,11 +49,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  // const line = MeshBuilder.CreateLines("lines", {
-  //   points: [from, to],
-  //   updatable: true
-  // });
-  // setTimeout(() => line.dispose(), 20)
+  const line = MeshBuilder.CreateLines("lines", {
+    points: [from, to],
+    updatable: true
+  });
+  setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
@@ -153,7 +153,7 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
-
+  // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
   const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
   bariba.position = maja.position.add(foodDistance)
@@ -165,7 +165,7 @@ const createScene = async function () {
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), 1);
-    const virziens = randomPolarToCartesian(atrums,atrums)
+    const virziens = randomPolarToCartesian(atrums, atrums)
     skudras[i] = new Skudra(virziens)
 
     particle.position = virziens
