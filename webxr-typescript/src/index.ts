@@ -15,7 +15,7 @@ import {
 
 const daudzums = 500
 const objectSize = 0.2; // в метрах
-const skudraSize = 4; // в пикселях
+const skudraSize = 3; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.4; // в метрах
 // const home = new Vector3(0, 0, 0)
