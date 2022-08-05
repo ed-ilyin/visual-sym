@@ -14,7 +14,7 @@ import {
 
 const izmers = 0.05;
 const atrums = 0.01;
-const dzirde = 1;
+const dzirde = 0.01;
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -38,7 +38,7 @@ class Skudra {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  
+
   constructor(virziens: Vector3) {
     this.virziens = virziens;
     this.atrums = virziens.length();
@@ -87,11 +87,12 @@ function dzird(
   }
 }
 
-function kliedz(distance: number,
+function kliedz(
   skudra: Skudra, skudrasVieta: Vector3,
+  distance: number,
   citaSkudra: Skudra, citasSkudrasVieta: Vector3) {
 
-  // выясняем что кричали в прошлый раз и кричим другое
+  // что в этот раз надо кричать?
   switch (skudra.kliegs) {
     case Vieta.Maja: {
       skudra.kliegs = Vieta.Bariba
@@ -155,11 +156,12 @@ const createScene = async function () {
   pcs.buildMeshAsync();
 
   pcs.updateParticle = function (particle) {
+    const skudra = skudras[particle.idx]
+
     // букаха походила
-    particle.position.addInPlace(skudras[particle.idx].virziens);
+    particle.position.addInPlace(skudra.virziens);
 
     // букаха увеличила все счётчики на велечину своей скорости
-    const skudra = skudras[particle.idx]
     skudra.lidzMajai += skudra.atrums
     skudra.lidzBaribai += skudra.atrums
 
@@ -170,18 +172,18 @@ const createScene = async function () {
       skudra.lidzBaribai = 0
 
       if (skudra.mekle == Vieta.Bariba) {
-        console.log('нашёл еду!')
+        // console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
     }
 
-    if (particle.intersectsMesh(maja, false)) {
+    if (particle.intersectsMesh(maja, true)) {
       skudra.lidzMajai = 0
 
       if (skudra.mekle == Vieta.Maja) {
-        console.log('нашёл дом!')
+        // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
@@ -190,14 +192,15 @@ const createScene = async function () {
 
     // букаха кричит одно из пройденных путей
     // Ищем кто услышал,
-    //      чтобы два раза не прогонять по массиву сразу меняемся данными в обе стороны
-    //      и проганяем только оставшихся (такая вот оптимизация)
+    // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
+    // стороны и прогоняем только оставшихся (такая вот оптимизация)
     for (var p = particle.idx + 1; p < pcs.nbParticles; p++) {
       const citaSkudra = skudras[p]
       const citasSkudrasVieta = pcs.particles[p].position
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
-      kliedz(distance, skudra, particle.position, citaSkudra, citasSkudrasVieta)
-      kliedz(distance, citaSkudra, citasSkudrasVieta, skudra, particle.position)
+      // if (distance <= dzirde) console.log('кто-то рядом')
+      kliedz(skudra, particle.position, distance, citaSkudra, citasSkudrasVieta)
+      kliedz(citaSkudra, citasSkudrasVieta, distance, skudra, particle.position)
     }
 
     return particle
