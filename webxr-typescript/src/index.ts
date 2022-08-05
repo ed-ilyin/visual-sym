@@ -12,9 +12,10 @@ import {
   Vector3
 } from "babylonjs";
 
-const izmers = 0.05;
-const atrums = 0.01;
-const dzirde = 0.01;
+const objectSize = 0.05; // в метрах
+const skudraSize = 4; // в пикселях
+const atrums = 0.01; // в метрах
+const dzirde = 0.1; // в метрах
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -64,7 +65,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-      console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
 
@@ -133,21 +134,21 @@ const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
-
+  
+  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   // const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём дом и еду
-  const maja = MeshBuilder.CreateSphere("maja", { diameter: izmers }, scene);
+  const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
   // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
-  const bariba = MeshBuilder.CreateBox("box", { size: izmers }, scene);
+  const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
   bariba.position = maja.position.add(randomPolarToCartesian(0.5, 1))
 
   //Create a manager for the player's sprite animation
-  const pcs = new PointsCloudSystem("pcs", 3, scene);
+  const pcs = new PointsCloudSystem("pcs", skudraSize, scene);
   pcs.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
@@ -157,7 +158,7 @@ const createScene = async function () {
     skudras[i] = new Skudra(virziens)
 
     particle.position =
-      maja.position.add(virziens.normalizeToNew().scaleInPlace(izmers / 2))
+      maja.position.add(virziens.normalizeToNew().scaleInPlace(objectSize / 2))
   }
 
   pcs.addPoints(2000, spawn);
@@ -182,6 +183,7 @@ const createScene = async function () {
       if (skudra.mekle == Vieta.Bariba) {
         // console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
+        particle.color = new Color4(1, 0, 0, 1)
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
@@ -193,6 +195,7 @@ const createScene = async function () {
       if (skudra.mekle == Vieta.Maja) {
         // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
+        particle.color = new Color4(0, 0, 1, 1)
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
