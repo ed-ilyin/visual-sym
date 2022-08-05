@@ -12,10 +12,12 @@ import {
   Vector3
 } from "babylonjs";
 
+const daudzums = 300
 const objectSize = 0.05; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.1; // в метрах
+const foodDistance = randomPolarToCartesian(0.3, 0.5)
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -55,11 +57,6 @@ function dzird(
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
 
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
-    const options = {
-      points: [kliedzosasSkudrasVieta,skudrasKasDzirdVieta], //vec3 array,
-      updatable: true
-  }
-    MeshBuilder.CreateLines("lines", options);
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
@@ -71,6 +68,10 @@ function dzird(
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
       // console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      MeshBuilder.CreateLines("lines", {
+        points: [kliedzosasSkudrasVieta, skudrasKasDzirdVieta],
+        updatable: true
+      })
     }
   }
 
@@ -89,6 +90,11 @@ function dzird(
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
       // console.log(`хавка ${skudraKasDzird.virziens.length()}`)
+      const line = MeshBuilder.CreateLines("lines", {
+        points: [kliedzosasSkudrasVieta, skudrasKasDzirdVieta],
+        updatable: true
+      });
+      setTimeout(() => line.dispose(), 100)
     }
   }
 }
@@ -139,7 +145,7 @@ const createScene = async function () {
   // Create camera and light
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
-  
+
   // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
@@ -148,7 +154,7 @@ const createScene = async function () {
   // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
   const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
-  bariba.position = maja.position.add(randomPolarToCartesian(0.5, 1))
+  bariba.position = maja.position.add(foodDistance)
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", skudraSize, scene);
@@ -156,15 +162,17 @@ const createScene = async function () {
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
-    particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
+    particle.color = new Color4(Math.random(), Math.random(), Math.random(), 1);
     const virziens = randomPolarToCartesian(0, atrums)
     skudras[i] = new Skudra(virziens)
 
-    particle.position =
-      maja.position.add(virziens.normalizeToNew().scaleInPlace(objectSize / 2))
+    particle.position = virziens
+      .normalizeToNew()
+      .scaleInPlace(objectSize / 2)
+      .addInPlace(maja.position)
   }
 
-  pcs.addPoints(2000, spawn);
+  pcs.addPoints(daudzums, spawn);
   pcs.buildMeshAsync();
 
   pcs.updateParticle = function (particle) {
@@ -221,7 +229,7 @@ const createScene = async function () {
   }
 
   scene.registerAfterRender(() => pcs.setParticles())
-  const env = scene.createDefaultEnvironment();
+  // const env = scene.createDefaultEnvironment();
 
   // initialize XR
   const xr = await scene.createDefaultXRExperienceAsync({
@@ -258,3 +266,4 @@ engine.runRenderLoop(function () {
 window.addEventListener("resize", function () {
   engine.resize();
 });
+
