@@ -14,7 +14,7 @@ import {
 } from "babylonjs";
 
 const daudzums = 500
-const objectSize = 0.1; // в метрах
+const objectSize = 0.2; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.4; // в метрах
