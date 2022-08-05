@@ -2,6 +2,7 @@ import {
   ArcRotateCamera,
   CloudPoint,
   Color4,
+  DeviceOrientationCamera,
   Engine,
   HemisphericLight,
   MeshBuilder,
@@ -18,7 +19,7 @@ const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.4; // в метрах
 // const home = new Vector3(0, 0, 0)
-const home = new Vector3(0, 0.5, 1)
+const home = new Vector3(0, 1, 1)
 const outerSphere = 2
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
@@ -149,11 +150,13 @@ const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 6, home, scene);
+  // const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 6, home, scene);
+  const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
+  camera.setTarget(home);
   camera.attachControl(canvas, true);
 
   // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
-  const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+  const light = new HemisphericLight("light", new Vector3(1, 1, 0), scene);
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
