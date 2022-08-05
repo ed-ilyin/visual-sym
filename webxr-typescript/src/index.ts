@@ -11,6 +11,10 @@ import {
   Vector3
 } from "babylonjs";
 
+const izmers = 0.05;
+const atrums = 0.01;
+const dzirde = 1;
+
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
 // Load the 3D engine
@@ -24,7 +28,6 @@ const createDefaultEngine = function () {
   });
 };
 
-const dzirde = 10;
 enum Vieta { Bariba, Maja }
 
 class Skudra {
@@ -59,7 +62,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
 
@@ -107,7 +110,7 @@ function kliedz(distance: number,
   }
 }
 
-function rnd() { return Scalar.RandomRange(-1, 1) }
+function rnd() { return Scalar.RandomRange(-0.5, 0.5) }
 
 const createScene = async function () {
   const scene = new Scene(engine);
@@ -120,21 +123,20 @@ const createScene = async function () {
   const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём дом и еду
-  const size = 0.1
-  const maja = MeshBuilder.CreateSphere("maja", { diameter: size }, scene);
+  const maja = MeshBuilder.CreateSphere("maja", { diameter: izmers }, scene);
   // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
-  const bariba = MeshBuilder.CreateBox("box", { size: size }, scene);
+  const bariba = MeshBuilder.CreateBox("box", { size: izmers }, scene);
   bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
 
   //Create a manager for the player's sprite animation
-  const pcs = new PointsCloudSystem("pcs", 2, scene);
+  const pcs = new PointsCloudSystem("pcs", 3, scene);
   pcs.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    let r = Math.random() / 20
+    let r = Math.random() * atrums
     const phi = Scalar.RandomRange(0, Math.PI)
     const theta = Scalar.RandomRange(0, Scalar.TwoPi)
     const x = r * Math.cos(phi) * Math.sin(theta)
@@ -144,10 +146,10 @@ const createScene = async function () {
     skudras[i] = new Skudra(virziens, virziens.length())
 
     particle.position =
-      maja.position.add(virziens.normalizeToNew().scaleInPlace(size / 2))
+      maja.position.add(virziens.normalizeToNew().scaleInPlace(izmers / 2))
   }
 
-  pcs.addPoints(500, spawn);
+  pcs.addPoints(2000, spawn);
   pcs.buildMeshAsync();
 
   pcs.updateParticle = function (particle) {
@@ -178,7 +180,7 @@ const createScene = async function () {
       skudra.lidzBaribai = 0
 
       if (skudra.mekle == Vieta.Bariba) {
-        // console.log('нашёл еду!')
+        console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
@@ -189,7 +191,7 @@ const createScene = async function () {
       skudra.lidzMajai = 0
 
       if (skudra.mekle == Vieta.Maja) {
-        // console.log('нашёл дом!')
+        console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
