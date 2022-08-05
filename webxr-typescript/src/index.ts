@@ -12,12 +12,16 @@ import {
   Vector3
 } from "babylonjs";
 
-const daudzums = 500
+const daudzums = 1000
 const objectSize = 0.1; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.1; // в метрах
-const foodDistance = randomPolarToCartesian(0.3, 1)
+// const home = new Vector3(0, 0, 0)
+const home = new Vector3(0, 0.5, 5)
+const foodDistance = randomPolarToCartesian(0.5, 1.5)
+const outerSphere = 2
+function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -153,8 +157,7 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
-  // maja.position = new Vector3(0, 0, 0)
-  maja.position = new Vector3(0, 0.5, 0)
+  maja.position = home
   const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
   bariba.position = maja.position.add(foodDistance)
 
@@ -168,10 +171,11 @@ const createScene = async function () {
     const virziens = randomPolarToCartesian(atrums, atrums)
     skudras[i] = new Skudra(virziens)
 
-    particle.position = virziens
-      .normalizeToNew()
-      .scaleInPlace(objectSize / 2)
-      .addInPlace(maja.position)
+    // particle.position = virziens
+    //   .normalizeToNew()
+    //   .scaleInPlace(objectSize / 2)
+    //   .addInPlace(maja.position)
+    particle.position = skudra()
   }
 
   pcs.addPoints(daudzums, spawn);
@@ -227,6 +231,11 @@ const createScene = async function () {
       // if (distance <= dzirde) console.log('кто-то рядом')
       kliedz(skudra, particle.position, distance, citaSkudra, citasSkudrasVieta)
       kliedz(citaSkudra, citasSkudrasVieta, distance, skudra, particle.position)
+    }
+
+    // отражаем вектор от внешней сферы
+    if (home.subtract(particle.position).length() >= outerSphere) {
+      skudra.virziens.scaleInPlace(-1)
     }
 
     return particle
