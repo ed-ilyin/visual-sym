@@ -114,8 +114,6 @@ function kliedz(
   }
 }
 
-function rnd() { return Scalar.RandomRange(-0.5, 0.5) }
-
 function polarToCartesian(radius: number, phi: number, theta: number) {
   const x = radius * Math.sin(phi) * Math.cos(theta);
   const y = radius * Math.sin(phi) * Math.sin(theta);
@@ -137,8 +135,8 @@ const createScene = async function () {
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
   
-  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
-  // const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+  // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
+  const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
