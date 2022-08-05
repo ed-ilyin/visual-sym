@@ -18,7 +18,6 @@ const objectSize = 0.2; // в метрах
 const skudraSize = 3; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.4; // в метрах
-// const home = new Vector3(0, 0, 0)
 const home = new Vector3(0, 1, 2)
 const outerSphere = 2
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
