@@ -16,11 +16,11 @@ const daudzums = 1000
 const objectSize = 0.1; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
-const dzirde = 0.1; // в метрах
+const dzirde = 0.4; // в метрах
 // const home = new Vector3(0, 0, 0)
 const home = new Vector3(0, 0.5, 5)
-const foodDistance = randomPolarToCartesian(0.5, 1.5)
 const outerSphere = 2
+const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
@@ -53,11 +53,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  const line = MeshBuilder.CreateLines("lines", {
-    points: [from, to],
-    updatable: true
-  });
-  setTimeout(() => line.dispose(), 20)
+  // const line = MeshBuilder.CreateLines("lines", {
+  //   points: [from, to],
+  //   updatable: true
+  // });
+  // setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
@@ -149,7 +149,7 @@ const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
+  const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 6, home, scene);
   camera.attachControl(canvas, true);
 
   // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
