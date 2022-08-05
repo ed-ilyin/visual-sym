@@ -12,10 +12,9 @@ import {
   Vector3
 } from "babylonjs";
 
-const objectSize = 0.05; // в метрах
-const skudraSize = 4; // в пикселях
-const atrums = 0.01; // в метрах
-const dzirde = 0.1; // в метрах
+const izmers = 0.05;
+const atrums = 0.01;
+const dzirde = 0.01;
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -55,6 +54,11 @@ function dzird(
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
 
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
+    const options = {
+      points: [kliedzosasSkudrasVieta,skudrasKasDzirdVieta], //vec3 array,
+      updatable: true
+  }
+    MeshBuilder.CreateLines("lines", options);
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
@@ -65,7 +69,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      console.log(`дом ${skudraKasDzird.virziens.length()}`)
     }
   }
 
@@ -116,49 +120,41 @@ function kliedz(
 
 function rnd() { return Scalar.RandomRange(-0.5, 0.5) }
 
-function polarToCartesian(radius: number, phi: number, theta: number) {
-  const x = radius * Math.sin(phi) * Math.cos(theta);
-  const y = radius * Math.sin(phi) * Math.sin(theta);
-  const z = radius * Math.cos(phi);
-  return new Vector3(x, y, z);
-}
-
-function randomPolarToCartesian(radiusMin: number, radiusMax: number) {
-  return polarToCartesian(
-    Scalar.RandomRange(radiusMin, radiusMax),
-    Scalar.RandomRange(0, Math.PI),
-    Scalar.RandomRange(0, Scalar.TwoPi))
-}
-
 const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
+  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
   const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 2, new Vector3(0, 0, 0), scene);
   camera.attachControl(canvas, true);
-  
-  const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
+
   // const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
   // создаём дом и еду
-  const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
+  const maja = MeshBuilder.CreateSphere("maja", { diameter: izmers }, scene);
   // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
-  const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
-  bariba.position = maja.position.add(randomPolarToCartesian(0.5, 1))
+  const bariba = MeshBuilder.CreateBox("box", { size: izmers }, scene);
+  bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
 
   //Create a manager for the player's sprite animation
-  const pcs = new PointsCloudSystem("pcs", skudraSize, scene);
+  const pcs = new PointsCloudSystem("pcs", 3, scene);
   pcs.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    const virziens = randomPolarToCartesian(0, atrums)
+    let r = Math.random() * atrums
+    const phi = Scalar.RandomRange(0, Math.PI)
+    const theta = Scalar.RandomRange(0, Scalar.TwoPi)
+    const x = r * Math.cos(phi) * Math.sin(theta)
+    const y = r * Math.sin(phi) * Math.sin(theta)
+    const z = r * Math.cos(theta)
+    const virziens = new Vector3(x, y, z)
     skudras[i] = new Skudra(virziens)
 
     particle.position =
-      maja.position.add(virziens.normalizeToNew().scaleInPlace(objectSize / 2))
+      maja.position.add(virziens.normalizeToNew().scaleInPlace(izmers / 2))
   }
 
   pcs.addPoints(2000, spawn);
@@ -181,9 +177,9 @@ const createScene = async function () {
       skudra.lidzBaribai = 0
 
       if (skudra.mekle == Vieta.Bariba) {
-        // console.log('нашёл еду!')
+        console.log('нашёл еду!')
+     
         skudra.mekle = Vieta.Maja
-        particle.color = new Color4(1, 0, 0, 1)
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
@@ -195,7 +191,6 @@ const createScene = async function () {
       if (skudra.mekle == Vieta.Maja) {
         // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
-        particle.color = new Color4(0, 0, 1, 1)
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
@@ -209,7 +204,7 @@ const createScene = async function () {
       const citaSkudra = skudras[p]
       const citasSkudrasVieta = pcs.particles[p].position
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
-      // if (distance <= dzirde) console.log('кто-то рядом')
+       
       kliedz(skudra, particle.position, distance, citaSkudra, citasSkudrasVieta)
       kliedz(citaSkudra, citasSkudrasVieta, distance, skudra, particle.position)
     }
