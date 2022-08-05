@@ -17,7 +17,7 @@ const objectSize = 0.1; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.1; // в метрах
-const foodDistance = randomPolarToCartesian(0.3, 0.5)
+const foodDistance = randomPolarToCartesian(0.3, 1)
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -49,11 +49,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  // const line = MeshBuilder.CreateLines("lines", {
-  //   points: [from, to],
-  //   updatable: true
-  // });
-  // setTimeout(() => line.dispose(), 20)
+  const line = MeshBuilder.CreateLines("lines", {
+    points: [from, to],
+    updatable: true
+  });
+  setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
