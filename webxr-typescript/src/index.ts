@@ -55,6 +55,11 @@ function dzird(
     sadzirdetsAttalums < skudraKasDzird.lidzMajai) {
 
     skudraKasDzird.lidzMajai = sadzirdetsAttalums
+    const options = {
+      points: [kliedzosasSkudrasVieta,skudrasKasDzirdVieta], //vec3 array,
+      updatable: true
+  }
+    MeshBuilder.CreateLines("lines", options);
 
     if (sadzirdetaVieta == skudraKasDzird.mekle) {
       // меняем направление на кричащую букаху
