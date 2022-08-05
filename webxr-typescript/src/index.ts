@@ -122,6 +122,13 @@ function polarToCartesian(radius: number, phi: number, theta: number) {
   return new Vector3(x, y, z);
 }
 
+function randomPolarToCartesian(radiusMin: number, radiusMax: number) {
+  return polarToCartesian(
+    Scalar.RandomRange(radiusMin, radiusMax),
+    Scalar.RandomRange(0, Math.PI),
+    Scalar.RandomRange(0, Scalar.TwoPi))
+}
+
 const createScene = async function () {
   const scene = new Scene(engine);
 
@@ -137,7 +144,7 @@ const createScene = async function () {
   // maja.position = new Vector3(0, 0, 0)
   maja.position = new Vector3(0, 0.5, 0)
   const bariba = MeshBuilder.CreateBox("box", { size: izmers }, scene);
-  bariba.position = maja.position.add(new Vector3(rnd(), rnd(), rnd()))
+  bariba.position = maja.position.add(randomPolarToCartesian(0.5, 1))
 
   //Create a manager for the player's sprite animation
   const pcs = new PointsCloudSystem("pcs", 3, scene);
@@ -146,12 +153,7 @@ const createScene = async function () {
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-
-    const virziens = polarToCartesian(
-      Math.random() * atrums,
-      Scalar.RandomRange(0, Math.PI),
-      Scalar.RandomRange(0, Scalar.TwoPi))
-
+    const virziens = randomPolarToCartesian(0, atrums)
     skudras[i] = new Skudra(virziens)
 
     particle.position =
