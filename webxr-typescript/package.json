@@ -19,6 +19,7 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
+    "@babylonjs/core": "^5.18.0",
     "babylonjs": "^4.1.0",
     "babylonjs-gui": "^4.1.0",
     "babylonjs-loaders": "^4.1.0",
