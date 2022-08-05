@@ -115,6 +115,13 @@ function kliedz(
 
 function rnd() { return Scalar.RandomRange(-0.5, 0.5) }
 
+function polarToCartesian(radius: number, phi: number, theta: number) {
+  const x = radius * Math.sin(phi) * Math.cos(theta);
+  const y = radius * Math.sin(phi) * Math.sin(theta);
+  const z = radius * Math.cos(phi);
+  return new Vector3(x, y, z);
+}
+
 const createScene = async function () {
   const scene = new Scene(engine);
 
@@ -139,13 +146,12 @@ const createScene = async function () {
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-    let r = Math.random() * atrums
-    const phi = Scalar.RandomRange(0, Math.PI)
-    const theta = Scalar.RandomRange(0, Scalar.TwoPi)
-    const x = r * Math.cos(phi) * Math.sin(theta)
-    const y = r * Math.sin(phi) * Math.sin(theta)
-    const z = r * Math.cos(theta)
-    const virziens = new Vector3(x, y, z)
+
+    const virziens = polarToCartesian(
+      Math.random() * atrums,
+      Scalar.RandomRange(0, Math.PI),
+      Scalar.RandomRange(0, Scalar.TwoPi))
+
     skudras[i] = new Skudra(virziens)
 
     particle.position =
