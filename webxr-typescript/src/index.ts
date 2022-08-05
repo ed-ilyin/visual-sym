@@ -13,7 +13,7 @@ import {
   Vector3
 } from "babylonjs";
 
-const daudzums = 1000
+const daudzums = 500
 const objectSize = 0.1; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
