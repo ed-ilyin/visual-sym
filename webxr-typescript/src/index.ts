@@ -12,8 +12,8 @@ import {
   Vector3
 } from "babylonjs";
 
-const daudzums = 300
-const objectSize = 0.05; // в метрах
+const daudzums = 500
+const objectSize = 0.1; // в метрах
 const skudraSize = 4; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.1; // в метрах
@@ -36,7 +36,7 @@ enum Vieta { Bariba, Maja }
 
 class Skudra {
   virziens = Vector3.Zero()
-  atrums = 0
+  atrums = atrums
   mekle = Vieta.Bariba
   kliegs = Vieta.Maja
   lidzMajai = 0
@@ -46,6 +46,14 @@ class Skudra {
     this.virziens = virziens;
     this.atrums = virziens.length();
   }
+}
+
+function line(from: Vector3, to: Vector3) {
+  // const line = MeshBuilder.CreateLines("lines", {
+  //   points: [from, to],
+  //   updatable: true
+  // });
+  // setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
@@ -68,10 +76,8 @@ function dzird(
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
       // console.log(`дом ${skudraKasDzird.virziens.length()}`)
-      MeshBuilder.CreateLines("lines", {
-        points: [kliedzosasSkudrasVieta, skudrasKasDzirdVieta],
-        updatable: true
-      })
+      
+      line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
     }
   }
 
@@ -90,11 +96,7 @@ function dzird(
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
       // console.log(`хавка ${skudraKasDzird.virziens.length()}`)
-      const line = MeshBuilder.CreateLines("lines", {
-        points: [kliedzosasSkudrasVieta, skudrasKasDzirdVieta],
-        updatable: true
-      });
-      setTimeout(() => line.dispose(), 100)
+      line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
     }
   }
 }
@@ -163,7 +165,7 @@ const createScene = async function () {
 
   const spawn = function (particle: CloudPoint, i: number) {
     particle.color = new Color4(Math.random(), Math.random(), Math.random(), 1);
-    const virziens = randomPolarToCartesian(0, atrums)
+    const virziens = randomPolarToCartesian(atrums, atrums)
     skudras[i] = new Skudra(virziens)
 
     particle.position = virziens
@@ -184,6 +186,8 @@ const createScene = async function () {
     // букаха увеличила все счётчики на велечину своей скорости
     skudra.lidzMajai += skudra.atrums
     skudra.lidzBaribai += skudra.atrums
+    // skudra.lidzMajai += 1
+    // skudra.lidzBaribai += 1
 
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
