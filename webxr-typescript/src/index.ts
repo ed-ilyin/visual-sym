@@ -1,6 +1,7 @@
 import {
   ArcRotateCamera,
   CloudPoint,
+  Color3,
   Color4,
   DeviceOrientationCamera,
   Engine,
@@ -10,12 +11,13 @@ import {
   PointsCloudSystem,
   Scalar,
   Scene,
+  SolidParticleSystem,
   Vector3
 } from "babylonjs";
 
-const daudzums = 500
+const daudzums = 1000
 const objectSize = 0.2; // в метрах
-const skudraSize = 3; // в пикселях
+const skudraSize = 0.005; // в пикселях
 const atrums = 0.01; // в метрах
 const dzirde = 0.4; // в метрах
 const home = new Vector3(0, 1, 2)
@@ -149,13 +151,11 @@ const createScene = async function () {
   const scene = new Scene(engine);
 
   // Create camera and light
-  // const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 6, home, scene);
   const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
   camera.setTarget(home);
   camera.attachControl(canvas, true);
 
-  // const light = new PointLight("Point", new Vector3(5, 10, 5), scene);
-  const light = new HemisphericLight("light", new Vector3(1, 1, 0), scene);
+  const light = new HemisphericLight("light", new Vector3(2, 2, -1), scene);
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
@@ -164,26 +164,28 @@ const createScene = async function () {
   bariba.position = maja.position.add(foodDistance)
 
   //Create a manager for the player's sprite animation
-  const pcs = new PointsCloudSystem("pcs", skudraSize, scene);
-  pcs.computeBoundingBox = true;
+  const SPS = new SolidParticleSystem("sps", scene, { particleIntersection: true });
+  SPS.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
-  const spawn = function (particle: CloudPoint, i: number) {
-    particle.color = new Color4(Math.random(), Math.random(), Math.random(), 1);
-    const virziens = randomPolarToCartesian(atrums, atrums)
-    skudras[i] = new Skudra(virziens)
+  const poly = MeshBuilder.CreatePolyhedron("p", {size: skudraSize }, scene);
+  SPS.addShape(poly, daudzums); // 120 polyhedrons
+  poly.dispose();
+  const mesh = SPS.buildMesh();
 
-    // particle.position = virziens
-    //   .normalizeToNew()
-    //   .scaleInPlace(objectSize / 2)
-    //   .addInPlace(maja.position)
-    particle.position = skudra()
+  // initiate particles function
+  SPS.initParticles = () => {
+    for (let p = 0; p < SPS.nbParticles; p++) {
+      const particle = SPS.particles[p];
+      particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
+      const virziens = randomPolarToCartesian(atrums, atrums)
+      particle.rotation = virziens
+      skudras[p] = new Skudra(virziens)
+      particle.position = skudra()
+    }
   }
-
-  pcs.addPoints(daudzums, spawn);
-  pcs.buildMeshAsync();
-
-  pcs.updateParticle = function (particle) {
+  SPS.initParticles();
+  SPS.updateParticle = function (particle) {
     const skudra = skudras[particle.idx]
 
     // букаха походила
@@ -198,7 +200,7 @@ const createScene = async function () {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    if (particle.intersectsMesh(bariba, false)) {
+    if (particle.intersectsMesh(bariba)) {
       skudra.lidzBaribai = 0
 
       if (skudra.mekle == Vieta.Bariba) {
@@ -210,7 +212,7 @@ const createScene = async function () {
       }
     }
 
-    if (particle.intersectsMesh(maja, true)) {
+    if (particle.intersectsMesh(maja)) {
       skudra.lidzMajai = 0
 
       if (skudra.mekle == Vieta.Maja) {
@@ -226,24 +228,28 @@ const createScene = async function () {
     // Ищем кто услышал,
     // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
     // стороны и прогоняем только оставшихся (такая вот оптимизация)
-    for (var p = particle.idx + 1; p < pcs.nbParticles; p++) {
+    for (var p = particle.idx + 1; p < SPS.nbParticles; p++) {
       const citaSkudra = skudras[p]
-      const citasSkudrasVieta = pcs.particles[p].position
+      const citasSkudrasParicle = SPS.particles[p]
+      const citasSkudrasVieta = citasSkudrasParicle.position
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
       // if (distance <= dzirde) console.log('кто-то рядом')
       kliedz(skudra, particle.position, distance, citaSkudra, citasSkudrasVieta)
       kliedz(citaSkudra, citasSkudrasVieta, distance, skudra, particle.position)
+      particle.rotation = skudra.virziens
+      citasSkudrasParicle.rotation = citaSkudra.virziens
     }
 
     // отражаем вектор от внешней сферы
     if (home.subtract(particle.position).length() >= outerSphere) {
       skudra.virziens.scaleInPlace(-1)
+      particle.rotation = skudra.virziens
     }
 
     return particle
   }
 
-  scene.registerAfterRender(() => pcs.setParticles())
+  scene.onBeforeRenderObservable.add(() => SPS.setParticles())
   // const env = scene.createDefaultEnvironment();
 
   // initialize XR
