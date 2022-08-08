@@ -23,7 +23,7 @@ const daudzums = 500
 const objectSize = 1; // в метрах
 const skudraSize = 0.02; // в пикселях
 const atrums = 0.05; // в метрах
-const dzirde = 0.4; // в метрах
+const dzirde = 1; // в метрах
 const home = new Vector3(0, 1, 2)
 const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
@@ -59,11 +59,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  const line = MeshBuilder.CreateLines("lines", {
-    points: [from, to],
-    updatable: false
-  });
-  setTimeout(() => line.dispose(), 100)
+  // const line = MeshBuilder.CreateLines("lines", {
+  //   points: [from, to],
+  //   updatable: false
+  // });
+  // setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
