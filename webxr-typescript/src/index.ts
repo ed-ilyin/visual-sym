@@ -21,11 +21,11 @@ import {
 
 const daudzums = 500
 const objectSize = 1; // в метрах
-const skudraSize = 0.02; // в пикселях
-const atrums = 0.05; // в метрах
-const dzirde = 0.4; // в метрах
+const skudraSize = 0.1; // в пикселях
+const atrums = 10; // в метрах
+const dzirde = 0.02; // в метрах
 const home = new Vector3(0, 1, 2)
-const outerSphere = 10
+const outerSphere = 100
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 
@@ -34,6 +34,7 @@ const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 // Load the 3D engine
 var engine: Engine = null;
 const sceneToRender = null;
+var calculated_first_time=false;
 
 const createDefaultEngine = function () {
   return new Engine(canvas, true, {
@@ -43,6 +44,7 @@ const createDefaultEngine = function () {
 };
 
 enum Vieta { Bariba, Maja }
+
 
 class Skudra {
   virziens = Vector3.Zero()
@@ -63,7 +65,7 @@ function line(from: Vector3, to: Vector3) {
     points: [from, to],
     updatable: false
   });
-  setTimeout(() => line.dispose(), 100)
+  setTimeout(() => line.dispose(), 1000)
 }
 
 function dzird(
@@ -85,7 +87,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
+       console.log(`дом ${skudraKasDzird.virziens.length()}`)
       
       line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
     }
@@ -248,11 +250,13 @@ const createScene = async function () {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    if (particle.intersectsMesh(bariba)) {
+    //console.log(particle.intersectsMesh(bariba))
+    if (particle.intersectsMesh(bariba) && calculated_first_time) {
       skudra.lidzBaribai = 0
+      console.log(skudra.mekle, Vieta.Bariba)
 
       if (skudra.mekle == Vieta.Bariba) {
-        // console.log('нашёл еду!')
+        console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
         particle.color = red
         // разворот на 180 градусов
@@ -260,11 +264,13 @@ const createScene = async function () {
       }
     }
 
-    if (particle.intersectsMesh(maja)) {
+    if (particle.intersectsMesh(maja) && calculated_first_time) {
       skudra.lidzMajai = 0
+      console.log(skudra.mekle, Vieta.Maja)
+                  
 
       if (skudra.mekle == Vieta.Maja) {
-        // console.log('нашёл дом!')
+        console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
         particle.color = blue
         // разворот на 180 градусов
@@ -290,6 +296,11 @@ const createScene = async function () {
 
     return particle
   }
+
+  SPS.afterUpdateParticles = function() {
+    calculated_first_time = true;
+    //console.log(calculated_first_time)
+  };
 
   scene.onBeforeRenderObservable.add(() => SPS.setParticles())
   // const env = scene.createDefaultEnvironment();
