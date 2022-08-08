@@ -12,6 +12,7 @@ import {
   PBRMaterial,
   PointLight,
   PointsCloudSystem,
+  Quaternion,
   Scalar,
   Scene,
   SolidParticleSystem,
@@ -207,7 +208,8 @@ const createScene = async function () {
       const particle = SPS.particles[p];
       particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
       const virziens = randomPolarToCartesian(atrums, atrums)
-      particle.rotation = virziens
+      particle.rotationQuaternion = new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
+      // particle.rotation = new Vector3(Math.random(), Math.random(), Math.random())
       skudras[p] = new Skudra(virziens)
       particle.position = skudra()
     }
