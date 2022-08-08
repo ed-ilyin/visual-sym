@@ -6,6 +6,7 @@ import {
   CubeTexture,
   DeviceOrientationCamera,
   Engine,
+  GlowLayer,
   HemisphericLight,
   MeshBuilder,
   PBRMaterial,
@@ -18,7 +19,7 @@ import {
   Vector3
 } from "babylonjs";
 
-const daudzums = 400
+const daudzums = 1000
 const objectSize = 1; // в метрах
 const skudraSize = 0.03; // в пикселях
 const atrums = 0.1; // в метрах
@@ -158,7 +159,8 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
-
+  // const maja = MeshBuilder.CreateBox("maja", { size: objectSize }, scene);
+  // var gl = new GlowLayer("glow", scene);
   maja.material = pbr;
 
   pbr.metallic = 0.0;
@@ -183,15 +185,18 @@ const createScene = async function () {
 
   //Create a manager for the player's sprite animation
   const SPS = new SolidParticleSystem("sps", scene, {
-    particleIntersection: true,
+    // particleIntersection: true,
     boundingSphereOnly: true,
     bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)});
 
-  SPS.computeBoundingBox = true;
+  SPS._bSphereOnly = true;
+  // SPS.billboard = true;
+  SPS.computeBoundingBox = false;
   const skudras: Skudra[] = [];
 
   // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
   const poly = MeshBuilder.CreatePolyhedron("p", {size: skudraSize }, scene);
+  // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
   SPS.addShape(poly, daudzums); // 120 polyhedrons
   poly.dispose();
   const mesh = SPS.buildMesh();
