@@ -156,7 +156,6 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
-  // const maja = MeshBuilder.CreatePolyhedron("maja", {type: 2, size: objectSize }, scene);
   // const maja = MeshBuilder.CreateBox("maja", { size: objectSize }, scene);
   // var gl = new GlowLayer("glow", scene);
   maja.material = pbr;
@@ -183,7 +182,7 @@ const createScene = async function () {
 
   const bariba = MeshBuilder.CreatePolyhedron(
     "box",
-    {type: polyhedronType, size: objectSize},
+    {type: 2, size: objectSize},
     scene
   );
 
@@ -213,10 +212,10 @@ const createScene = async function () {
   const skudras: Skudra[] = [];
 
   // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
-  const poly = MeshBuilder.CreatePolyhedron("p", {type: 0, size: skudraSize }, scene);
+  const poly = MeshBuilder.CreatePolyhedron("p", {type: polyhedronType, size: skudraSize }, scene);
   // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
   // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
-  SPS.addShape(poly, daudzums); // 120 polyhedrons
+  SPS.addShape(poly, daudzums)
   poly.dispose();
   const mesh = SPS.buildMesh();
 
