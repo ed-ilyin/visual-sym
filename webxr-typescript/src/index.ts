@@ -1,19 +1,4 @@
-import {
-  ArcRotateCamera,
-  BoundingInfo,
-  Color4,
-  CubeTexture,
-  Engine,
-  HemisphericLight,
-  MeshBuilder,
-  PBRMaterial,
-  Quaternion,
-  Scalar,
-  Scene,
-  SolidParticleSystem,
-  Vector3
-} from "babylonjs";
-
+import { Engine } from "babylonjs";
 import { createWorld } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;

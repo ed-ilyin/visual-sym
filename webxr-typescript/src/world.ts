@@ -1,18 +1,16 @@
-
-
 import {
     Scene, Engine, CubeTexture, PBRMaterial, MeshBuilder, ArcRotateCamera,
-    HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, float, int, Color4, Scalar, Quaternion
+    HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, Color4,
+    Scalar, Quaternion
 } from "babylonjs";
 import { Ant } from "./ant";
 
-import{Colony} from "./colony";
+import { Colony } from "./colony";
 
 const daudzums = 500
 const objectsSize = 1; // в метрах
 const skudraSize = 0.03; // в метрах
 const atrums = 0.02; // в метрах
-const dzirde = 2; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
@@ -38,7 +36,6 @@ export async function createWorld(
     engine: Engine,
     canvas: HTMLCanvasElement
 ) {
-
     // создаём сцену
     const scene = new Scene(engine);
     // scene.clearColor = Color3.Black().toColor4();
@@ -102,10 +99,9 @@ export async function createWorld(
     // SPS.billboard = true;
     SPS.computeBoundingBox = true;
     const colony = new Colony()
-    colony.food=bariba;
-    colony.home=maja;
-    colony.sps=SPS;
-
+    colony.food = bariba;
+    colony.home = maja;
+    colony.sps = SPS;
 
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
     const poly = MeshBuilder.CreatePolyhedron("p", { type: polyhedronType, size: skudraSize }, scene);
@@ -123,7 +119,7 @@ export async function createWorld(
             const virziens = randomPolarToCartesian(atrums, atrums)
             colony.ants[p] = new Ant(virziens)
             particle.position = skudra()
-       
+
             particle.rotationQuaternion =
                 new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
         }
@@ -131,9 +127,6 @@ export async function createWorld(
 
     SPS.initParticles();
     SPS.updateParticle = (particle) => colony.update(particle)
-
-    // A: nado particle emy dat :)))))
-    // E: a tak nizzja?
 
     SPS.afterUpdateParticles = function () {
         colony.bboxesComputed = true;
