@@ -1,5 +1,7 @@
 import {
   ArcRotateCamera,
+  BoundingInfo,
+  BoundingSphere,
   CloudPoint,
   Color3,
   Color4,
@@ -20,12 +22,12 @@ import {
   Vector3
 } from "babylonjs";
 
-const daudzums = 500
+const daudzums = 1000
 const objectSize = 1; // в метрах
-const skudraSize = 0.02; // в пикселях
-const atrums = 0.05; // в метрах
+const skudraSize = 0.01; // в пикселях
+const atrums = 0.01; // в метрах
 const dzirde = 1; // в метрах
-const home = new Vector3(0, 1, 2)
+const home = new Vector3(0, 1, 1)
 const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
@@ -160,6 +162,7 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
+  // const maja = MeshBuilder.CreatePolyhedron("maja", {type: 2, size: objectSize }, scene);
   // const maja = MeshBuilder.CreateBox("maja", { size: objectSize }, scene);
   // var gl = new GlowLayer("glow", scene);
   maja.material = pbr;
@@ -170,7 +173,7 @@ const createScene = async function () {
   pbr.subSurface.isRefractionEnabled = true;
   // scene.createDefaultCamera(true, true, true);
   // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
-  const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, 10, home, scene);
+  const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, outerSphere, home, scene);
   scene.createDefaultSkybox(scene.environmentTexture);
 
   // Create camera and light
@@ -180,7 +183,22 @@ const createScene = async function () {
   const light = new HemisphericLight("light", new Vector3(2, 2, -1), scene);
 
   maja.position = home
-  const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
+  const bs = objectSize / Math.sqrt(3)
+  // maja.setBoundingInfo(new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs)))
+  // maja.showBoundingBox = true;
+  const bariba = MeshBuilder.CreatePolyhedron("box", {type: 2, size: objectSize}, scene);
+
+  const bi = new BoundingInfo(
+    new Vector3(-bs, -bs, -bs),
+    new Vector3(bs, bs, bs)
+  )
+
+  // bi.boundingSphere = new BoundingSphere(-bs, bs)
+  bariba.setBoundingInfo(bi)
+
+  // bariba.setBoundingInfo(new Bp new BoundingSphere(new Vector3(0, 0, 0), objectSize))
+  // bariba.showBoundingBox = true;
+  // const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
   // bariba.material = pbr;
   bariba.position = maja.position.add(foodDistance)
 
@@ -188,15 +206,16 @@ const createScene = async function () {
   const SPS = new SolidParticleSystem("sps", scene, {
     particleIntersection: true,
     boundingSphereOnly: true,
-    bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)});
+    bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
+  });
 
-  SPS._bSphereOnly = true;
   // SPS.billboard = true;
   SPS.computeBoundingBox = false;
   const skudras: Skudra[] = [];
 
   // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
-  const poly = MeshBuilder.CreatePolyhedron("p", {size: skudraSize }, scene);
+  const poly = MeshBuilder.CreatePolyhedron("p", {type: 2, size: skudraSize }, scene);
+  // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
   // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
   SPS.addShape(poly, daudzums); // 120 polyhedrons
   poly.dispose();
