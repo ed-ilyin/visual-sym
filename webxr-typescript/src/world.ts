@@ -13,7 +13,7 @@ const atrums = 0.01; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
-function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
+const skudra = () => randomPolarToCartesian(0, outerSphere).addInPlace(home)
 const polyhedronType = 0
 const showBoundingBoxes = false
 
@@ -66,25 +66,24 @@ export async function createWorld(
     const h = objectsSize / Math.PI
     maja.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
     maja.showBoundingBox = showBoundingBoxes
-    
+
     // создаём еду
-    const bariba = MeshBuilder.CreatePolyhedron(
-        "box",
-        { type: 2, size: objectsSize / 2 },
-        scene
-        );
-        
-    const bs = objectsSize / 3
-    const bi = new BoundingInfo(
-        new Vector3(-bs, -bs, -bs),
-        new Vector3(bs, bs, bs)
-    )
+    // const bariba = MeshBuilder.CreatePolyhedron(
+    //     "box",
+    //     { type: 2, size: objectsSize / 2 },
+    //     scene
+    // );
+    // const bariba = MeshBuilder.CreateBox("box", { size: objectsSize }, scene);
+    const bariba = MeshBuilder.CreateCapsule("food");
+
+    // const bs = objectsSize / 3
+
+    // const bi =
+    //     new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs))
 
     // bi.boundingSphere = new BoundingSphere(-bs, bs)
-    bariba.setBoundingInfo(bi)
-    // bariba.setBoundingInfo(new Bp new BoundingSphere(new Vector3(0, 0, 0), objectsSize))
+    // bariba.setBoundingInfo(bi)
     bariba.showBoundingBox = showBoundingBoxes;
-    // const bariba = MeshBuilder.CreateBox("box", { size: objectsSize }, scene);
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
 

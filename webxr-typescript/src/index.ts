@@ -3,23 +3,21 @@ import { createWorld } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
+const createDefaultEngine = () =>
+  new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+
 // Load the 3D engine
 var engine: Engine = null;
 
-const createDefaultEngine = function () {
-  return new Engine
-    (canvas, true, { preserveDrawingBuffer: true, stencil: true });
-};
-
 // Create a default engine to load the scene
-try {
-  engine = createDefaultEngine();
-} catch (e) {
+try { engine = createDefaultEngine(); } catch (e) {
   console.log(
     "the available createEngine function failed. Creating the default engine instead"
   );
+
   engine = createDefaultEngine();
 }
+
 if (!engine) throw "engine should not be null.";
 
 //Create the scene
