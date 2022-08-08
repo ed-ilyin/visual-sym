@@ -15,7 +15,7 @@ const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 const polyhedronType = 0
-
+const showBoundingBoxes = false
 
 function polarToCartesian(radius: number, phi: number, theta: number) {
     const x = radius * Math.sin(phi) * Math.cos(theta);
@@ -49,7 +49,7 @@ export async function createWorld(
     // scene.createDefaultCamera(true, true, true);
     // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
     const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, outerSphere, home, scene);
-    camera.setTarget(home);
+    // camera.setTarget(home);
     camera.attachControl(canvas, true);
 
     // создаём текстуру для дома и еды
@@ -63,17 +63,18 @@ export async function createWorld(
     // const maja = MeshBuilder.CreateBox("maja", { size: objectsSize }, scene);
     maja.material = pbr;
     maja.position = home
-    const bs = objectsSize / Math.sqrt(3)
-    // maja.setBoundingInfo(new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs)))
-    // maja.showBoundingBox = true;
-
+    const h = objectsSize / Math.PI
+    maja.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
+    maja.showBoundingBox = showBoundingBoxes
+    
     // создаём еду
     const bariba = MeshBuilder.CreatePolyhedron(
         "box",
         { type: 2, size: objectsSize },
         scene
-    );
-
+        );
+        
+    const bs = objectsSize / Math.sqrt(3)
     const bi = new BoundingInfo(
         new Vector3(-bs, -bs, -bs),
         new Vector3(bs, bs, bs)
@@ -82,9 +83,9 @@ export async function createWorld(
     // bi.boundingSphere = new BoundingSphere(-bs, bs)
     bariba.setBoundingInfo(bi)
     // bariba.setBoundingInfo(new Bp new BoundingSphere(new Vector3(0, 0, 0), objectsSize))
-    // bariba.showBoundingBox = true;
+    bariba.showBoundingBox = showBoundingBoxes;
     // const bariba = MeshBuilder.CreateBox("box", { size: objectsSize }, scene);
-    // bariba.material = pbr;
+    bariba.material = pbr;
     bariba.position = home.add(foodDistance)
 
     // создаём муравьёв

@@ -5,9 +5,6 @@ import {
 import { Ant } from "./ant";
 import { Vieta } from "./vieta";
 
-const red = new Color4(1, 0, 0, 1);
-const blue = new Color4(0, 0, 1, 1);
-
 export class Colony {
   ants: Ant[] = []
   home: Mesh
@@ -57,8 +54,7 @@ export class Colony {
         // console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
         particle.color = this.colorFull
-        // разворот на 180 градусов
-        skudra.virziens.scaleInPlace(-1)
+        skudra.virziens.scaleInPlace(-1) // разворот на 180 градусов
       }
     }
 
@@ -69,8 +65,7 @@ export class Colony {
         // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
         particle.color = this.colorEmpty
-        // разворот на 180 градусов
-        skudra.virziens.scaleInPlace(-1)
+        skudra.virziens.scaleInPlace(-1) // разворот на 180 градусов
       }
     }
 
