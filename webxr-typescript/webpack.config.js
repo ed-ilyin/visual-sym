@@ -20,7 +20,7 @@ module.exports = {
         loader: "html-loader",
       },
       {
-          test: /\.(png|jpg|gif|env|glb|stl|babylon)$/i,
+          test: /\.(png|dds|jpg|gif|env|glb|stl|babylon)$/i,
           use: [
               {
                   loader: "url-loader",
@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin([
-      // { from: "src/assets", to: path.resolve(__dirname, "dist/assets") },
+      { from: "src/assets", to: path.resolve(__dirname, "dist/assets") },
       { from: "src/index.html", to: path.resolve(__dirname, "dist") },
     ]),
   ],

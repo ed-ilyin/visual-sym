@@ -3,25 +3,28 @@ import {
   CloudPoint,
   Color3,
   Color4,
+  CubeTexture,
   DeviceOrientationCamera,
   Engine,
   HemisphericLight,
   MeshBuilder,
+  PBRMaterial,
   PointLight,
   PointsCloudSystem,
   Scalar,
   Scene,
   SolidParticleSystem,
+  Texture,
   Vector3
 } from "babylonjs";
 
-const daudzums = 1000
-const objectSize = 0.2; // в метрах
-const skudraSize = 0.005; // в пикселях
-const atrums = 0.01; // в метрах
+const daudzums = 400
+const objectSize = 1; // в метрах
+const skudraSize = 0.03; // в пикселях
+const atrums = 0.1; // в метрах
 const dzirde = 0.4; // в метрах
 const home = new Vector3(0, 1, 2)
-const outerSphere = 2
+const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 
@@ -149,25 +152,45 @@ function randomPolarToCartesian(radiusMin: number, radiusMax: number) {
 
 const createScene = async function () {
   const scene = new Scene(engine);
+  // scene.clearColor = Color3.Black().toColor4();
+  scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("assets/environment.dds", scene);
+  const pbr = new PBRMaterial("pbr", scene);
+
+  // создаём дом и еду
+  const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
+
+  maja.material = pbr;
+
+  pbr.metallic = 0.0;
+  pbr.roughness = 0;    
+    
+  pbr.subSurface.isRefractionEnabled = true;
+  // scene.createDefaultCamera(true, true, true);
+  // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
+  const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, 10, home, scene);
+  scene.createDefaultSkybox(scene.environmentTexture);
 
   // Create camera and light
-  const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
   camera.setTarget(home);
   camera.attachControl(canvas, true);
 
   const light = new HemisphericLight("light", new Vector3(2, 2, -1), scene);
 
-  // создаём дом и еду
-  const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
   maja.position = home
   const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
+  // bariba.material = pbr;
   bariba.position = maja.position.add(foodDistance)
 
   //Create a manager for the player's sprite animation
-  const SPS = new SolidParticleSystem("sps", scene, { particleIntersection: true });
+  const SPS = new SolidParticleSystem("sps", scene, {
+    particleIntersection: true,
+    boundingSphereOnly: true,
+    bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)});
+
   SPS.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
+  // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
   const poly = MeshBuilder.CreatePolyhedron("p", {size: skudraSize }, scene);
   SPS.addShape(poly, daudzums); // 120 polyhedrons
   poly.dispose();
@@ -185,6 +208,14 @@ const createScene = async function () {
     }
   }
   SPS.initParticles();
+
+  // shared variables
+  const tmpPos = Vector3.Zero();          // current particle world position
+  const tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
+  var tmpDot = 0.0;                             // current dot product
+  const red = new Color4(1, 0, 0, 1);
+  const blue = new Color4(0, 0, 1, 1);
+
   SPS.updateParticle = function (particle) {
     const skudra = skudras[particle.idx]
 
@@ -194,8 +225,20 @@ const createScene = async function () {
     // букаха увеличила все счётчики на велечину своей скорости
     skudra.lidzMajai += skudra.atrums
     skudra.lidzBaribai += skudra.atrums
-    // skudra.lidzMajai += 1
-    // skudra.lidzBaribai += 1
+
+    // отражаем вектор от внешней сферы
+    if (home.subtract(particle.position).length() >= outerSphere) {
+      skudra.virziens.scaleInPlace(-1)
+      // particle.position.addToRef(mesh.position, tmpPos); // particle World position
+      // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere
+      // // tmpNormal.normalize();                             // normalize the sphere normal
+      // tmpDot = Vector3.Dot(tmpNormal, skudra.virziens);  // dot product (velocity, normal)
+      // // bounce result computation
+      // skudra.virziens.x = -skudra.virziens.x + 2.0 * tmpDot * tmpNormal.x;
+      // skudra.virziens.y = -skudra.virziens.y + 2.0 * tmpDot * tmpNormal.y;
+      // skudra.virziens.z = -skudra.virziens.z + 2.0 * tmpDot * tmpNormal.z;
+      // skudra.virziens.scaleInPlace(skudra.atrums);                      // aply restitution
+    }
 
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
@@ -206,7 +249,7 @@ const createScene = async function () {
       if (skudra.mekle == Vieta.Bariba) {
         // console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
-        particle.color = new Color4(1, 0, 0, 1)
+        particle.color = red
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
@@ -218,7 +261,7 @@ const createScene = async function () {
       if (skudra.mekle == Vieta.Maja) {
         // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
-        particle.color = new Color4(0, 0, 1, 1)
+        particle.color = blue
         // разворот на 180 градусов
         skudra.virziens.scaleInPlace(-1)
       }
@@ -238,12 +281,6 @@ const createScene = async function () {
       kliedz(citaSkudra, citasSkudrasVieta, distance, skudra, particle.position)
       particle.rotation = skudra.virziens
       citasSkudrasParicle.rotation = citaSkudra.virziens
-    }
-
-    // отражаем вектор от внешней сферы
-    if (home.subtract(particle.position).length() >= outerSphere) {
-      skudra.virziens.scaleInPlace(-1)
-      particle.rotation = skudra.virziens
     }
 
     return particle
