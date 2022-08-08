@@ -21,7 +21,7 @@ import {
 
 const daudzums = 500
 const objectSize = 1; // в метрах
-const skudraSize = 0.03; // в пикселях
+const skudraSize = 0.02; // в пикселях
 const atrums = 0.05; // в метрах
 const dzirde = 0.4; // в метрах
 const home = new Vector3(0, 1, 2)
@@ -59,11 +59,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  // const line = MeshBuilder.CreateLines("lines", {
-  //   points: [from, to],
-  //   updatable: true
-  // });
-  // setTimeout(() => line.dispose(), 20)
+  const line = MeshBuilder.CreateLines("lines", {
+    points: [from, to],
+    updatable: true
+  });
+  setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
@@ -185,7 +185,7 @@ const createScene = async function () {
 
   //Create a manager for the player's sprite animation
   const SPS = new SolidParticleSystem("sps", scene, {
-    // particleIntersection: true,
+    particleIntersection: true,
     boundingSphereOnly: true,
     bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)});
 
