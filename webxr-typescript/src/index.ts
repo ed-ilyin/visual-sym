@@ -208,7 +208,7 @@ const createScene = async function () {
   });
 
   // SPS.billboard = true;
-  SPS.computeBoundingBox = false;
+  SPS.computeBoundingBox = true;
   const skudras: Skudra[] = [];
 
   // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
