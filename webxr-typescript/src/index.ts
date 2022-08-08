@@ -61,9 +61,9 @@ class Skudra {
 function line(from: Vector3, to: Vector3) {
   const line = MeshBuilder.CreateLines("lines", {
     points: [from, to],
-    updatable: true
+    updatable: false
   });
-  setTimeout(() => line.dispose(), 20)
+  setTimeout(() => line.dispose(), 100)
 }
 
 function dzird(
