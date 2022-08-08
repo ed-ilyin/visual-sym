@@ -70,11 +70,11 @@ export async function createWorld(
     // создаём еду
     const bariba = MeshBuilder.CreatePolyhedron(
         "box",
-        { type: 2, size: objectsSize },
+        { type: 2, size: objectsSize / 2 },
         scene
         );
         
-    const bs = objectsSize / Math.sqrt(3)
+    const bs = objectsSize / 3
     const bi = new BoundingInfo(
         new Vector3(-bs, -bs, -bs),
         new Vector3(bs, bs, bs)

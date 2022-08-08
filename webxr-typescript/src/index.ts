@@ -5,13 +5,10 @@ const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
 // Load the 3D engine
 var engine: Engine = null;
-const sceneToRender = null;
 
 const createDefaultEngine = function () {
-  return new Engine(canvas, true, {
-    preserveDrawingBuffer: true,
-    stencil: true,
-  });
+  return new Engine
+    (canvas, true, { preserveDrawingBuffer: true, stencil: true });
 };
 
 // Create a default engine to load the scene
@@ -29,9 +26,6 @@ if (!engine) throw "engine should not be null.";
 createWorld(engine, canvas).then(sceneToRender => {
   engine.runRenderLoop(() => sceneToRender.render());
 });
-
-// Render the scene by using the engine
-engine.runRenderLoop(() => { if (sceneToRender) { sceneToRender.render(); } });
 
 // Resize the engine to fit the scene
 window.addEventListener("resize", () => engine.resize());

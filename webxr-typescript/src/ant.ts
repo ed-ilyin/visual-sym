@@ -8,7 +8,7 @@ export class Ant {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  dzirde = 2
+  dzirde = 1.5
 
   constructor(virziens: Vector3) {
     this.virziens = virziens;
