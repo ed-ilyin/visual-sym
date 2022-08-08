@@ -102,6 +102,10 @@ export async function createWorld(
     // SPS.billboard = true;
     SPS.computeBoundingBox = true;
     const colony = new Colony()
+    colony.food=bariba;
+    colony.home=maja;
+    colony.sps=SPS;
+
 
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
     const poly = MeshBuilder.CreatePolyhedron("p", { type: polyhedronType, size: skudraSize }, scene);
