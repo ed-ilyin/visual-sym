@@ -14,7 +14,7 @@ import {
   Vector3
 } from "babylonjs";
 
-import { Colony } from "./colony";
+import { createWorld } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -29,8 +29,6 @@ const createDefaultEngine = function () {
   });
 };
 
-scene
-
 // Create a default engine to load the scene
 try {
   engine = createDefaultEngine();
@@ -43,7 +41,7 @@ try {
 if (!engine) throw "engine should not be null.";
 
 //Create the scene
-createScene().then(sceneToRender => {
+createWorld(engine, canvas).then(sceneToRender => {
   engine.runRenderLoop(() => sceneToRender.render());
 });
 

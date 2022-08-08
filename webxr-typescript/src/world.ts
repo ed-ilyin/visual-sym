@@ -1,17 +1,21 @@
+
+
 import {
     Scene, Engine, CubeTexture, PBRMaterial, MeshBuilder, ArcRotateCamera,
-    HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, float, int, Color4, Scalar
+    HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, float, int, Color4, Scalar, Quaternion
 } from "babylonjs";
+import { Ant } from "./ant";
 
+import{Colony} from "./colony";
 
 const daudzums = 500
-const objectSize = 1; // в метрах
+const objectsSize = 1; // в метрах
 const skudraSize = 0.03; // в метрах
 const atrums = 0.02; // в метрах
 const dzirde = 2; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 10
-const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
+const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
 const polyhedronType = 0
 
@@ -30,14 +34,9 @@ function randomPolarToCartesian(radiusMin: number, radiusMax: number) {
         Scalar.RandomRange(0, Scalar.TwoPi))
 }
 
-export async function create(
+export async function createWorld(
     engine: Engine,
-    objectsSize: float,
-    outerSphere: float,
-    home: Vector3,
-    canvas: HTMLCanvasElement,
-    foodPosition: Vector3,
-    polyhedronType: int,
+    canvas: HTMLCanvasElement
 ) {
 
     // создаём сцену
@@ -90,7 +89,7 @@ export async function create(
     // bariba.showBoundingBox = true;
     // const bariba = MeshBuilder.CreateBox("box", { size: objectsSize }, scene);
     // bariba.material = pbr;
-    bariba.position = foodPosition
+    bariba.position = home.add(foodDistance)
 
     // создаём муравьёв
     //Create a manager for the player's sprite animation
@@ -102,7 +101,7 @@ export async function create(
 
     // SPS.billboard = true;
     SPS.computeBoundingBox = true;
-    // const skudras: Ant[] = [];
+    const colony = new Colony()
 
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
     const poly = MeshBuilder.CreatePolyhedron("p", { type: polyhedronType, size: skudraSize }, scene);
@@ -118,17 +117,19 @@ export async function create(
             const particle = SPS.particles[p];
             particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
             const virziens = randomPolarToCartesian(atrums, atrums)
-            skudras[p] = new Skudra(virziens)
+            colony.ants[p] = new Ant(virziens)
             particle.position = skudra()
-
+       
             particle.rotationQuaternion =
                 new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
         }
     }
+
     SPS.initParticles();
+    SPS.updateParticle = (particle) => colony.update(particle)
 
-
-    SPS.updateParticle = Colony.update
+    // A: nado particle emy dat :)))))
+    // E: a tak nizzja?
 
     SPS.afterUpdateParticles = function () {
         colony.bboxesComputed = true;
@@ -144,5 +145,4 @@ export async function create(
     });
 
     return scene;
-}
 }
