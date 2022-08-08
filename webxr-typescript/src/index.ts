@@ -1,33 +1,29 @@
 import {
   ArcRotateCamera,
-  CloudPoint,
-  Color3,
+  BoundingInfo,
   Color4,
   CubeTexture,
-  DeviceOrientationCamera,
   Engine,
-  GlowLayer,
   HemisphericLight,
   MeshBuilder,
   PBRMaterial,
-  PointLight,
-  PointsCloudSystem,
+  Quaternion,
   Scalar,
   Scene,
   SolidParticleSystem,
-  Texture,
   Vector3
 } from "babylonjs";
 
 const daudzums = 500
 const objectSize = 1; // в метрах
-const skudraSize = 0.1; // в пикселях
-const atrums = 10; // в метрах
-const dzirde = 0.02; // в метрах
-const home = new Vector3(0, 1, 2)
-const outerSphere = 100
+const skudraSize = 0.03; // в метрах
+const atrums = 0.02; // в метрах
+const dzirde = 1; // в метрах
+const home = new Vector3(0, 1, 1)
+const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectSize)
 function skudra() { return randomPolarToCartesian(0, outerSphere).addInPlace(home) }
+const polyhedronType = 0
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -45,7 +41,6 @@ const createDefaultEngine = function () {
 
 enum Vieta { Bariba, Maja }
 
-
 class Skudra {
   virziens = Vector3.Zero()
   atrums = atrums
@@ -61,11 +56,11 @@ class Skudra {
 }
 
 function line(from: Vector3, to: Vector3) {
-  const line = MeshBuilder.CreateLines("lines", {
-    points: [from, to],
-    updatable: false
-  });
-  setTimeout(() => line.dispose(), 1000)
+  // const line = MeshBuilder.CreateLines("lines", {
+  //   points: [from, to],
+  //   updatable: false
+  // });
+  // setTimeout(() => line.dispose(), 20)
 }
 
 function dzird(
@@ -87,7 +82,7 @@ function dzird(
           .subtract(skudrasKasDzirdVieta)
           .normalize()
           .scaleInPlace(skudraKasDzird.atrums)
-       console.log(`дом ${skudraKasDzird.virziens.length()}`)
+      // console.log(`дом ${skudraKasDzird.virziens.length()}`)
       
       line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
     }
@@ -161,6 +156,7 @@ const createScene = async function () {
 
   // создаём дом и еду
   const maja = MeshBuilder.CreateSphere("maja", { diameter: objectSize }, scene);
+  // const maja = MeshBuilder.CreatePolyhedron("maja", {type: 2, size: objectSize }, scene);
   // const maja = MeshBuilder.CreateBox("maja", { size: objectSize }, scene);
   // var gl = new GlowLayer("glow", scene);
   maja.material = pbr;
@@ -171,7 +167,7 @@ const createScene = async function () {
   pbr.subSurface.isRefractionEnabled = true;
   // scene.createDefaultCamera(true, true, true);
   // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
-  const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, 10, home, scene);
+  const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, outerSphere, home, scene);
   scene.createDefaultSkybox(scene.environmentTexture);
 
   // Create camera and light
@@ -181,7 +177,27 @@ const createScene = async function () {
   const light = new HemisphericLight("light", new Vector3(2, 2, -1), scene);
 
   maja.position = home
-  const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
+  const bs = objectSize / Math.sqrt(3)
+  // maja.setBoundingInfo(new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs)))
+  // maja.showBoundingBox = true;
+
+  const bariba = MeshBuilder.CreatePolyhedron(
+    "box",
+    {type: polyhedronType, size: objectSize},
+    scene
+  );
+
+  const bi = new BoundingInfo(
+    new Vector3(-bs, -bs, -bs),
+    new Vector3(bs, bs, bs)
+  )
+
+  // bi.boundingSphere = new BoundingSphere(-bs, bs)
+  bariba.setBoundingInfo(bi)
+
+  // bariba.setBoundingInfo(new Bp new BoundingSphere(new Vector3(0, 0, 0), objectSize))
+  // bariba.showBoundingBox = true;
+  // const bariba = MeshBuilder.CreateBox("box", { size: objectSize }, scene);
   // bariba.material = pbr;
   bariba.position = maja.position.add(foodDistance)
 
@@ -189,15 +205,16 @@ const createScene = async function () {
   const SPS = new SolidParticleSystem("sps", scene, {
     particleIntersection: true,
     boundingSphereOnly: true,
-    bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)});
+    bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
+  });
 
-  SPS._bSphereOnly = true;
   // SPS.billboard = true;
   SPS.computeBoundingBox = false;
   const skudras: Skudra[] = [];
 
   // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
-  const poly = MeshBuilder.CreatePolyhedron("p", {size: skudraSize }, scene);
+  const poly = MeshBuilder.CreatePolyhedron("p", {type: 0, size: skudraSize }, scene);
+  // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
   // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
   SPS.addShape(poly, daudzums); // 120 polyhedrons
   poly.dispose();
@@ -209,9 +226,11 @@ const createScene = async function () {
       const particle = SPS.particles[p];
       particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
       const virziens = randomPolarToCartesian(atrums, atrums)
-      particle.rotation = virziens
       skudras[p] = new Skudra(virziens)
       particle.position = skudra()
+
+      particle.rotationQuaternion =
+        new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
     }
   }
   SPS.initParticles();
@@ -253,10 +272,9 @@ const createScene = async function () {
     //console.log(particle.intersectsMesh(bariba))
     if (particle.intersectsMesh(bariba) && calculated_first_time) {
       skudra.lidzBaribai = 0
-      console.log(skudra.mekle, Vieta.Bariba)
 
       if (skudra.mekle == Vieta.Bariba) {
-        console.log('нашёл еду!')
+        // console.log('нашёл еду!')
         skudra.mekle = Vieta.Maja
         particle.color = red
         // разворот на 180 градусов
@@ -266,11 +284,9 @@ const createScene = async function () {
 
     if (particle.intersectsMesh(maja) && calculated_first_time) {
       skudra.lidzMajai = 0
-      console.log(skudra.mekle, Vieta.Maja)
-                  
 
       if (skudra.mekle == Vieta.Maja) {
-        console.log('нашёл дом!')
+        // console.log('нашёл дом!')
         skudra.mekle = Vieta.Bariba
         particle.color = blue
         // разворот на 180 градусов
