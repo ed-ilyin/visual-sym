@@ -4,13 +4,12 @@ import {
     Scalar, Quaternion
 } from "babylonjs";
 import { Ant } from "./ant";
-
 import { Colony } from "./colony";
 
 const daudzums = 500
 const objectsSize = 1; // в метрах
-const skudraSize = 0.03; // в метрах
-const atrums = 0.02; // в метрах
+const skudraSize = 0.02; // в метрах
+const atrums = 0.01; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 10
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
@@ -119,6 +118,7 @@ export async function createWorld(
             const virziens = randomPolarToCartesian(atrums, atrums)
             colony.ants[p] = new Ant(virziens)
             particle.position = skudra()
+            // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
 
             particle.rotationQuaternion =
                 new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())

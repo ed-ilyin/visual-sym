@@ -31,13 +31,7 @@ createWorld(engine, canvas).then(sceneToRender => {
 });
 
 // Render the scene by using the engine
-engine.runRenderLoop(function () {
-  if (sceneToRender) {
-    sceneToRender.render();
-  }
-});
+engine.runRenderLoop(() => { if (sceneToRender) { sceneToRender.render(); } });
 
 // Resize the engine to fit the scene
-window.addEventListener("resize", function () {
-  engine.resize();
-});
+window.addEventListener("resize", () => engine.resize());
