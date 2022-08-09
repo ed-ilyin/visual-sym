@@ -3,6 +3,7 @@ import {
     HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, Color4,
     Scalar, Quaternion
 } from "babylonjs";
+import { AdvancedDynamicTexture, Checkbox, Control, StackPanel } from "babylonjs-gui";
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
@@ -86,6 +87,28 @@ export async function createWorld(
     bariba.showBoundingBox = showBoundingBoxes;
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
+
+    var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var panel = new StackPanel();
+    panel.width = "200px";
+    panel.isVertical = true;
+    panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    advancedTexture.addControl(panel);
+
+    var checkbox = new Checkbox();
+    checkbox.width = "20px";
+    checkbox.height = "20px";
+    checkbox.isChecked = true;
+    checkbox.color = "green";
+    checkbox.onIsCheckedChangedObservable.add(function(value) {
+            maja.showBoundingBox=!maja.showBoundingBox;
+            bariba.showBoundingBox=!bariba.showBoundingBox;
+        
+    });
+    panel.addControl(checkbox);     
+
 
     // создаём муравьёв
     //Create a manager for the player's sprite animation
