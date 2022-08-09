@@ -1,13 +1,13 @@
 import {
     Scene, Engine, CubeTexture, PBRMaterial, MeshBuilder, ArcRotateCamera,
     HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, Color4,
-    Scalar, Quaternion
+    Scalar, Quaternion, Mesh, AbstractMesh
 } from "babylonjs";
-import { AdvancedDynamicTexture, Checkbox, Control, Slider, StackPanel } from "babylonjs-gui";
+import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel, TextBlock } from "babylonjs-gui";
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
-const daudzums = 600
+var daudzums = 600
 const objectsSize = 1; // в метрах
 const skudraSize = 0.02; // в метрах
 const atrums = 0.002; // в метрах
@@ -88,8 +88,10 @@ export async function createWorld(
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
 
-    var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
+    
+    var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
+        "myUI"
+      );
     var panel = new StackPanel();
     panel.width = "200px";
     panel.isVertical = true;
@@ -97,7 +99,6 @@ export async function createWorld(
     panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
     panel.paddingRightInPixels=100;
     advancedTexture.addControl(panel);
-
     var checkbox = new Checkbox();
     checkbox.width = "20px";
     checkbox.height = "20px";
@@ -106,20 +107,24 @@ export async function createWorld(
     checkbox.onIsCheckedChangedObservable.add(function(value) {
             maja.showBoundingBox=!maja.showBoundingBox;
             bariba.showBoundingBox=!bariba.showBoundingBox;
-        
     });
 
     var slider=new Slider();
     slider.width="250px";
     slider.height="15px";
     slider.color='orange';
-    slider.onValueChangedObservable.add(function (value){
-        console.log(parseInt(value.toString()));
+   
 
+    var button=Button.CreateSimpleButton("showHistory_button", "Apply/Reset" );
+    button.widthInPixels=200;
+    button.heightInPixels=105;
+    button.onPointerClickObservable.add(function(value){
+       daudzums=parseInt(slider.value.toString());
     });
 
     panel.addControl(slider);
-    panel.addControl(checkbox);   
+    panel.addControl(checkbox); 
+    panel.addControl(button);  
 
 
 

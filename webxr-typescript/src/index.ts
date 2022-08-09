@@ -1,4 +1,5 @@
 import { Engine } from "babylonjs";
+import { AdvancedDynamicTexture, Button, Control, Slider, StackPanel } from "babylonjs-gui";
 import { createWorld } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
@@ -8,7 +9,6 @@ const createDefaultEngine = () =>
 
 // Load the 3D engine
 var engine: Engine = null;
-
 // Create a default engine to load the scene
 try { engine = createDefaultEngine(); } catch (e) {
   console.log(
@@ -17,13 +17,10 @@ try { engine = createDefaultEngine(); } catch (e) {
 
   engine = createDefaultEngine();
 }
-
 if (!engine) throw "engine should not be null.";
-
 //Create the scene
-createWorld(engine, canvas).then(sceneToRender => {
+createWorld(engine, canvas).then(sceneToRender => {\
   engine.runRenderLoop(() => sceneToRender.render());
 });
-
 // Resize the engine to fit the scene
 window.addEventListener("resize", () => engine.resize());
