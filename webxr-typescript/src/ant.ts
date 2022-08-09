@@ -1,18 +1,75 @@
-import { Vector3 } from "babylonjs"
+import { SolidParticle, Vector3, float } from "babylonjs"
+import { Colony } from "./colony"
 import { Vieta } from "./vieta"
 
 export class Ant {
-  virziens = Vector3.Zero()
-  atrums: number
+  colony: Colony
+  velocity = Vector3.Zero()
+  speed = 0
   mekle = Vieta.Bariba
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
   dzirde = 2
 
-  constructor(virziens: Vector3) {
-    this.virziens = virziens;
-    this.atrums = virziens.length();
+  constructor(colony: Colony, velocity: Vector3) {
+    this.colony = colony
+    this.velocity = velocity;
+    this.speed = velocity.length();
+  }
+
+  setSpeed(speed: float) {
+    this.velocity.scaleInPlace(speed / this.speed)
+    this.speed = speed
+  }
+
+  update(particle: SolidParticle) {
+    // букаха походила
+    particle.position.addInPlace(this.velocity);
+
+    // букаха увеличила все счётчики на велечину своей скорости
+    this.lidzMajai += this.speed
+    this.lidzBaribai += this.speed
+
+    // отражаем вектор от внешней сферы
+    if (this.colony.position.subtract(particle.position).length() >= this.colony.radius) {
+      this.velocity.scaleInPlace(-1)
+      // particle.position.addToRef(mesh.position, tmpPos); // particle World position
+      // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere
+      // // tmpNormal.normalize();                             // normalize the sphere normal
+      // tmpDot = Vector3.Dot(tmpNormal, skudra.velocity);  // dot product (velocity, normal)
+      // // bounce result computation
+      // skudra.velocity.x = -skudra.velocity.x + 2.0 * tmpDot * tmpNormal.x;
+      // skudra.velocity.y = -skudra.velocity.y + 2.0 * tmpDot * tmpNormal.y;
+      // skudra.velocity.z = -skudra.velocity.z + 2.0 * tmpDot * tmpNormal.z;
+      // skudra.velocity.scaleInPlace(skudra.atrums);                      // aply restitution
+    }
+
+    // проверить не уткнулись ли в еду или дом
+    // обнулить сообтветсвующий счётчик
+    // поменять skudra.mekle на противоположный
+    //console.log(particle.intersectsMesh(bariba))
+    if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.food)) {
+      this.lidzBaribai = 0
+
+      if (this.mekle == Vieta.Bariba) {
+        // console.log('нашёл еду!')
+        this.mekle = Vieta.Maja
+        particle.color = this.colony.colorFull
+        this.velocity.scaleInPlace(-1) // разворот на 180 градусов
+      }
+    }
+
+    if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.home)) {
+      this.lidzMajai = 0
+
+      if (this.mekle == Vieta.Maja) {
+        // console.log('нашёл дом!')
+        this.mekle = Vieta.Bariba
+        particle.color = this.colony.colorEmpty
+        this.velocity.scaleInPlace(-1) // разворот на 180 градусов
+      }
+    }
   }
 
   kliedz(
@@ -63,12 +120,12 @@ export class Ant {
         // меняем направление на кричащую букаху
         // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
         // но динной в скорость слышащей букахи
-        this.virziens =
+        this.velocity =
           kliedzosasSkudrasVieta
             .subtract(skudrasKasDzirdVieta)
             .normalize()
-            .scaleInPlace(this.atrums)
-        // console.log(`дом ${this.virziens.length()}`)
+            .scaleInPlace(this.speed)
+        // console.log(`дом ${this.velocity.length()}`)
 
         this.line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
       }
@@ -83,12 +140,12 @@ export class Ant {
         // меняем направление на кричащую букаху
         // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
         // но динной в скорость слышащей букахи
-        this.virziens =
+        this.velocity =
           kliedzosasSkudrasVieta
             .subtract(skudrasKasDzirdVieta)
             .normalize()
-            .scaleInPlace(this.atrums)
-        // console.log(`хавка ${this.virziens.length()}`)
+            .scaleInPlace(this.speed)
+        // console.log(`хавка ${this.velocity.length()}`)
         this.line(kliedzosasSkudrasVieta, skudrasKasDzirdVieta)
       }
     }
