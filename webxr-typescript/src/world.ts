@@ -6,12 +6,12 @@ import {
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
-const daudzums = 1500
+const daudzums = 600
 const objectsSize = 1; // в метрах
 const skudraSize = 0.02; // в метрах
-const atrums = 0.01; // в метрах
+const atrums = 0.002; // в метрах
 const home = new Vector3(0, 1, 1)
-const outerSphere = 10
+const outerSphere = 5
 const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
 const skudra = () => randomPolarToCartesian(0, outerSphere).addInPlace(home)
 const polyhedronType = 0
