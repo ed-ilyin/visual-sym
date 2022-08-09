@@ -1,23 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es2017",
         "module": "commonjs",
         "noResolve": false,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
         "experimentalDecorators": true,
         "isolatedModules": false,
-        "lib": [
-            "dom",
-            "es2015.promise",
-            "es5"
-        ],
+        "strictNullChecks":true,
+        "lib": [ "dom" ],
         "declaration": true,
         "outDir": "./"
     },
-    "files": [
-        "./src/index.ts"
-    ]
+    "files": [ "./src/index.ts" ]
 }

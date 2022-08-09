@@ -5,7 +5,7 @@ import { Vieta } from "./vieta";
 import { randomToCartesian } from "./polar";
 
 function set_speed(colony:any,slider:any){
-  colony.ants.forEach(function (value) {
+  colony.ants.forEach(function (value: Ant) {
       value.atrums=slider.value;
   });
 }
@@ -108,7 +108,7 @@ export class Colony {
     return particle
   }
 
-  createSPS(quantity) {
+  createSPS(quantity: int) {
     //Create a manager for the player's sprite animation
     this.sps = new SolidParticleSystem("sps", this.scene, {
       particleIntersection: true,

@@ -7,7 +7,7 @@ const createDefaultEngine = () =>
   new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 
 // Load the 3D engine
-var engine: Engine = null;
+var engine: Engine
 // Create a default engine to load the scene
 try { engine = createDefaultEngine(); } catch (e) {
   console.log(
