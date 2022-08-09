@@ -1,5 +1,5 @@
-import { Color4, Mesh, SolidParticle, SolidParticleSystem, Vector3, Scene, MeshBuilder, Scalar, float, Quaternion, int }
-  from "babylonjs";
+import { Color4, Mesh, SolidParticle, SolidParticleSystem, Vector3, Scene,
+  MeshBuilder, float, Quaternion, int } from "babylonjs";
 import { Ant } from "./ant";
 import { Vieta } from "./vieta";
 import { randomToCartesian } from "./polar";

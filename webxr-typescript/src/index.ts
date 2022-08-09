@@ -1,5 +1,4 @@
 import { Engine } from "babylonjs";
-import { AdvancedDynamicTexture, Button, Control, Slider, StackPanel } from "babylonjs-gui";
 import { createWorld } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;

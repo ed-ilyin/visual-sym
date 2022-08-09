@@ -1,10 +1,9 @@
 import {
     Scene, Engine, CubeTexture, PBRMaterial, MeshBuilder, ArcRotateCamera,
-    HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, Color4,
-    Scalar, Quaternion, Mesh, AbstractMesh
+    HemisphericLight, Vector3, BoundingInfo
 } from "babylonjs";
-import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel, TextBlock } from "babylonjs-gui";
-import { Ant } from "./ant";
+import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel }
+    from "babylonjs-gui";
 import { Colony } from "./colony";
 import { randomToCartesian } from "./polar"
 
@@ -61,58 +60,57 @@ export async function createWorld(
     const bariba = MeshBuilder.CreateCapsule("food");
 
     // const bs = objectsSize / 3
-    
+
     // const bi =
     //     new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs))
-    
+
     // bi.boundingSphere = new BoundingSphere(-bs, bs)
     // bariba.setBoundingInfo(bi)
     bariba.showBoundingBox = showBoundingBoxes;
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
-    
+
     // создаём муравьёв
     const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
-    
+
     var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
         "myUI"
-      );
+    );
     var panel = new StackPanel();
     panel.width = "200px";
     panel.isVertical = true;
     panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
     panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    panel.paddingRightInPixels=100;
+    panel.paddingRightInPixels = 100;
     advancedTexture.addControl(panel);
     var checkbox = new Checkbox();
     checkbox.width = "20px";
     checkbox.height = "20px";
     checkbox.isChecked = false;
     checkbox.color = "green";
-    checkbox.onIsCheckedChangedObservable.add(function(value) {
-            maja.showBoundingBox=!maja.showBoundingBox;
-            bariba.showBoundingBox=!bariba.showBoundingBox;
+    checkbox.onIsCheckedChangedObservable.add(function (value) {
+        maja.showBoundingBox = !maja.showBoundingBox;
+        bariba.showBoundingBox = !bariba.showBoundingBox;
     });
 
-    var slider=new Slider();
-    slider.width="250px";
-    slider.height="15px";
-    slider.color='orange';
-    slider.minimum=0.0001;
-    slider.maximum=0.2;
+    var slider = new Slider();
+    slider.width = "250px";
+    slider.height = "15px";
+    slider.color = 'orange';
+    slider.minimum = 0.0001;
+    slider.maximum = 0.2;
     // slider.value=atrums;
 
-    var button=Button.CreateSimpleButton("showHistory_button", "Apply/Reset" );
-    button.widthInPixels=200;
-    button.heightInPixels=105;
-    button.onPointerClickObservable.add(function(){
+    var button = Button.CreateSimpleButton("showHistory_button", "Apply/Reset");
+    button.widthInPixels = 200;
+    button.heightInPixels = 105;
+    button.onPointerClickObservable.add(function () {
         colony.setQuantity(slider.value);
     });
 
     panel.addControl(slider);
-    panel.addControl(checkbox); 
-    panel.addControl(button);  
-
+    panel.addControl(checkbox);
+    panel.addControl(button);
 
     // const env = scene.createDefaultEnvironment();
 
