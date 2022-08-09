@@ -3,7 +3,7 @@ import {
     HemisphericLight, Vector3, SolidParticleSystem, BoundingInfo, Color4,
     Scalar, Quaternion
 } from "babylonjs";
-import { AdvancedDynamicTexture, Checkbox, Control, StackPanel } from "babylonjs-gui";
+import { AdvancedDynamicTexture, Checkbox, Control, Slider, StackPanel } from "babylonjs-gui";
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
@@ -95,6 +95,7 @@ export async function createWorld(
     panel.isVertical = true;
     panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
     panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    panel.paddingRightInPixels=100;
     advancedTexture.addControl(panel);
 
     var checkbox = new Checkbox();
@@ -107,7 +108,19 @@ export async function createWorld(
             bariba.showBoundingBox=!bariba.showBoundingBox;
         
     });
-    panel.addControl(checkbox);     
+
+    var slider=new Slider();
+    slider.width="250px";
+    slider.height="15px";
+    slider.color='orange';
+    slider.onValueChangedObservable.add(function (value){
+        console.log(parseInt(value.toString()));
+
+    });
+
+    panel.addControl(slider);
+    panel.addControl(checkbox);   
+
 
 
     // создаём муравьёв
