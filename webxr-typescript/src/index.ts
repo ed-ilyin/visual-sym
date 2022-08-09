@@ -19,7 +19,7 @@ try { engine = createDefaultEngine(); } catch (e) {
 }
 if (!engine) throw "engine should not be null.";
 //Create the scene
-createWorld(engine, canvas).then(sceneToRender => {\
+createWorld(engine, canvas).then(sceneToRender => {
   engine.runRenderLoop(() => sceneToRender.render());
 });
 // Resize the engine to fit the scene
