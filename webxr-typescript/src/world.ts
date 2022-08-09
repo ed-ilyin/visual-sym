@@ -72,10 +72,8 @@ export async function createWorld(
 
     // создаём муравьёв
     const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
-
-    var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
-        "myUI"
-    );
+    
+    var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
     var panel = new StackPanel();
     panel.width = "200px";
     panel.isVertical = true;
