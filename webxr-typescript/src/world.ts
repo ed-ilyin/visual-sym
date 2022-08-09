@@ -6,7 +6,7 @@ import {
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
-const daudzums = 500
+const daudzums = 1500
 const objectsSize = 1; // в метрах
 const skudraSize = 0.02; // в метрах
 const atrums = 0.01; // в метрах
@@ -43,12 +43,12 @@ export async function createWorld(
     scene.createDefaultSkybox(scene.environmentTexture);
 
     // создаём освещение
-    const light = new HemisphericLight("light", new Vector3(2, 2, -1), scene);
+    const light = new HemisphericLight("light", new Vector3(outerSphere, outerSphere, -1), scene);
 
     // создаём камеру
     // scene.createDefaultCamera(true, true, true);
     // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), scene);
-    const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, outerSphere, home, scene);
+    const camera = new ArcRotateCamera("camera", -(Math.PI / 3), Math.PI / 5 * 2, outerSphere * 2, home, scene);
     // camera.setTarget(home);
     camera.attachControl(canvas, true);
 
