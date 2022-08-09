@@ -8,6 +8,7 @@ import { Ant } from "./ant";
 import { Colony } from "./colony";
 import { randomToCartesian } from "./polar"
 
+const daudzums = 600
 const objectsSize = 1; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 5
@@ -71,7 +72,7 @@ export async function createWorld(
     bariba.position = home.add(foodDistance)
     
     // создаём муравьёв
-    const colony = new Colony(scene, maja, bariba, outerSphere);
+    const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
     
     var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
         "myUI"

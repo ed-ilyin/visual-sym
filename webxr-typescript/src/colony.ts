@@ -16,7 +16,6 @@ export class Colony {
   polyhedronType = 0
   skudraSize = 0.02; // в метрах
   atrums = 0.002; // в метрах
-  daudzums = 600
   scene: Scene
   colonyRadius = 5
   // shared variables
@@ -24,13 +23,13 @@ export class Colony {
   tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
   tmpDot = 0.0;                             // current dot product
 
-  constructor(scene: Scene, home: Mesh, food: Mesh, colonyRadius: float) {
+  constructor(scene: Scene, home: Mesh, food: Mesh, quantity: int, colonyRadius: float) {
     this.scene = scene
     this.home = home;
     this.food = food;
     this.colonyRadius = this.colonyRadius
     
-    this.createSPS()
+    this.createSPS(quantity)
     // SPS.billboard = true;
   }
 
@@ -103,7 +102,7 @@ export class Colony {
     return particle
   }
 
-  createSPS() {
+  createSPS(quantity) {
     //Create a manager for the player's sprite animation
     this.sps = new SolidParticleSystem("sps", this.scene, {
       particleIntersection: true,
@@ -116,7 +115,7 @@ export class Colony {
     const poly = MeshBuilder.CreatePolyhedron("p", { type: this.polyhedronType, size: this.skudraSize }, this.scene);
     // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
     // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
-    this.sps.addShape(poly, this.daudzums)
+    this.sps.addShape(poly, quantity)
     poly.dispose();
     const mesh = this.sps.buildMesh();
 
@@ -148,6 +147,6 @@ export class Colony {
 
   setQuantity(quantity: int) {
     this.sps.dispose()
-    this.createSPS()
+    this.createSPS(quantity)
   }
 }
