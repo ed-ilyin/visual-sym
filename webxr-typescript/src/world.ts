@@ -4,6 +4,7 @@ import {
     Scalar, Quaternion, Mesh, AbstractMesh
 } from "babylonjs";
 import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel, TextBlock } from "babylonjs-gui";
+import { particlesPixelShader } from "babylonjs/Shaders/particles.fragment";
 import { Ant } from "./ant";
 import { Colony } from "./colony";
 
@@ -88,7 +89,13 @@ export async function createWorld(
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
 
-    
+      // создаём муравьёв
+    //Create a manager for the player's sprite animation
+    const SPS = new SolidParticleSystem("sps", scene, {
+        particleIntersection: true,
+        boundingSphereOnly: true,
+        bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
+    });
     var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
         "myUI"
       );
@@ -113,28 +120,11 @@ export async function createWorld(
     slider.width="250px";
     slider.height="15px";
     slider.color='orange';
-   
-
-    var button=Button.CreateSimpleButton("showHistory_button", "Apply/Reset" );
-    button.widthInPixels=200;
-    button.heightInPixels=105;
-    button.onPointerClickObservable.add(function(value){
-       daudzums=parseInt(slider.value.toString());
-    });
-
+    slider.minimum=0.0001;
+    slider.maximum=0.2;
+    slider.value=atrums;
     panel.addControl(slider);
     panel.addControl(checkbox); 
-    panel.addControl(button);  
-
-
-
-    // создаём муравьёв
-    //Create a manager for the player's sprite animation
-    const SPS = new SolidParticleSystem("sps", scene, {
-        particleIntersection: true,
-        boundingSphereOnly: true,
-        bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
-    });
 
     // SPS.billboard = true;
     SPS.computeBoundingBox = true;
@@ -142,7 +132,6 @@ export async function createWorld(
     colony.food = bariba;
     colony.home = maja;
     colony.sps = SPS;
-
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
     const poly = MeshBuilder.CreatePolyhedron("p", { type: polyhedronType, size: skudraSize }, scene);
     // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
@@ -160,18 +149,20 @@ export async function createWorld(
             colony.ants[p] = new Ant(virziens)
             particle.position = skudra()
             // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
-
             particle.rotationQuaternion =
                 new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
         }
     }
 
     SPS.initParticles();
-    SPS.updateParticle = (particle) => colony.update(particle)
-
+    SPS.updateParticle =  function(particle) {
+        set_speed(colony,slider);
+        colony.update(particle);
+        return particle;
+    }
     SPS.afterUpdateParticles = function () {
         colony.bboxesComputed = true;
-        //console.log(calculated_first_time)
+        
     };
 
     scene.onBeforeRenderObservable.add(() => SPS.setParticles())
@@ -183,4 +174,10 @@ export async function createWorld(
     });
 
     return scene;
+}
+
+function set_speed(colony:any,slider:any){
+    colony.ants.forEach(function (value) {
+        value.atrums=slider.value;
+    });
 }
