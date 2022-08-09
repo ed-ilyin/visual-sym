@@ -1,9 +1,14 @@
-import {
-  Color4, Mesh, SolidParticle,
-  SolidParticleSystem, Vector3
-} from "babylonjs";
+import { Color4, Mesh, SolidParticle, SolidParticleSystem, Vector3, Scene, MeshBuilder, Scalar, float, Quaternion, int }
+  from "babylonjs";
 import { Ant } from "./ant";
 import { Vieta } from "./vieta";
+import { randomToCartesian } from "./polar";
+
+function set_speed(colony:any,slider:any){
+  colony.ants.forEach(function (value) {
+      value.atrums=slider.value;
+  });
+}
 
 export class Colony {
   ants: Ant[] = []
@@ -14,10 +19,25 @@ export class Colony {
   colorFull = new Color4(1, 0, 0, 1)
   colorEmpty = new Color4(0, 0, 1, 1)
   sps: SolidParticleSystem
+  polyhedronType = 0
+  skudraSize = 0.02; // в метрах
+  atrums = 0.002; // в метрах
+  scene: Scene
+  colonyRadius = 5
   // shared variables
   tmpPos = Vector3.Zero();          // current particle world position
   tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
   tmpDot = 0.0;                             // current dot product
+
+  constructor(scene: Scene, home: Mesh, food: Mesh, quantity: int, colonyRadius: float) {
+    this.scene = scene
+    this.home = home;
+    this.food = food;
+    this.colonyRadius = this.colonyRadius
+    
+    this.createSPS(quantity)
+    // SPS.billboard = true;
+  }
 
   update(particle: SolidParticle) {
     const skudra = this.ants[particle.idx]
@@ -86,5 +106,53 @@ export class Colony {
     }
 
     return particle
+  }
+
+  createSPS(quantity) {
+    //Create a manager for the player's sprite animation
+    this.sps = new SolidParticleSystem("sps", this.scene, {
+      particleIntersection: true,
+      boundingSphereOnly: true,
+      bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
+    });
+
+    this.sps.computeBoundingBox = true;
+    // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
+    const poly = MeshBuilder.CreatePolyhedron("p", { type: this.polyhedronType, size: this.skudraSize }, this.scene);
+    // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
+    // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
+    this.sps.addShape(poly, quantity)
+    poly.dispose();
+    const mesh = this.sps.buildMesh();
+
+    // initiate particles function
+    this.sps.initParticles = () => {
+      for (let p = 0; p < this.sps.nbParticles; p++) {
+        const particle = this.sps.particles[p];
+        particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
+        const virziens = randomToCartesian(this.atrums, this.atrums)
+        this.ants[p] = new Ant(virziens)
+        particle.position = randomToCartesian(0, this.colonyRadius).addInPlace(this.home.position)
+        // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
+
+        particle.rotationQuaternion =
+          new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
+      }
+    }
+
+    this.sps.initParticles();
+    this.sps.updateParticle = (particle) => this.update(particle)
+
+    this.sps.afterUpdateParticles = function () {
+      this.bboxesComputed = true;
+      //console.log(calculated_first_time)
+    };
+    
+    this.scene.onBeforeRenderObservable.add(() => this.sps.setParticles())
+  }
+
+  setQuantity(quantity: int) {
+    this.sps.dispose()
+    this.createSPS(quantity)
   }
 }

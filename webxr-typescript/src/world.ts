@@ -4,34 +4,16 @@ import {
     Scalar, Quaternion, Mesh, AbstractMesh
 } from "babylonjs";
 import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel, TextBlock } from "babylonjs-gui";
-import { particlesPixelShader } from "babylonjs/Shaders/particles.fragment";
 import { Ant } from "./ant";
 import { Colony } from "./colony";
+import { randomToCartesian } from "./polar"
 
-var daudzums = 600
+const daudzums = 600
 const objectsSize = 1; // в метрах
-const skudraSize = 0.02; // в метрах
-const atrums = 0.002; // в метрах
 const home = new Vector3(0, 1, 1)
 const outerSphere = 5
-const foodDistance = randomPolarToCartesian(outerSphere / 2, outerSphere - objectsSize)
-const skudra = () => randomPolarToCartesian(0, outerSphere).addInPlace(home)
-const polyhedronType = 0
+const foodDistance = randomToCartesian(outerSphere / 2, outerSphere - objectsSize)
 const showBoundingBoxes = false
-
-function polarToCartesian(radius: number, phi: number, theta: number) {
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
-    return new Vector3(x, y, z);
-}
-
-function randomPolarToCartesian(radiusMin: number, radiusMax: number) {
-    return polarToCartesian(
-        Scalar.RandomRange(radiusMin, radiusMax),
-        Scalar.RandomRange(0, Math.PI),
-        Scalar.RandomRange(0, Scalar.TwoPi))
-}
 
 export async function createWorld(
     engine: Engine,
@@ -79,23 +61,19 @@ export async function createWorld(
     const bariba = MeshBuilder.CreateCapsule("food");
 
     // const bs = objectsSize / 3
-
+    
     // const bi =
     //     new BoundingInfo(new Vector3(-bs, -bs, -bs), new Vector3(bs, bs, bs))
-
+    
     // bi.boundingSphere = new BoundingSphere(-bs, bs)
     // bariba.setBoundingInfo(bi)
     bariba.showBoundingBox = showBoundingBoxes;
     bariba.material = pbr;
     bariba.position = home.add(foodDistance)
-
-      // создаём муравьёв
-    //Create a manager for the player's sprite animation
-    const SPS = new SolidParticleSystem("sps", scene, {
-        particleIntersection: true,
-        boundingSphereOnly: true,
-        bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
-    });
+    
+    // создаём муравьёв
+    const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
+    
     var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
         "myUI"
       );
@@ -109,7 +87,7 @@ export async function createWorld(
     var checkbox = new Checkbox();
     checkbox.width = "20px";
     checkbox.height = "20px";
-    checkbox.isChecked = true;
+    checkbox.isChecked = false;
     checkbox.color = "green";
     checkbox.onIsCheckedChangedObservable.add(function(value) {
             maja.showBoundingBox=!maja.showBoundingBox;
@@ -122,50 +100,20 @@ export async function createWorld(
     slider.color='orange';
     slider.minimum=0.0001;
     slider.maximum=0.2;
-    slider.value=atrums;
+    // slider.value=atrums;
+
+    var button=Button.CreateSimpleButton("showHistory_button", "Apply/Reset" );
+    button.widthInPixels=200;
+    button.heightInPixels=105;
+    button.onPointerClickObservable.add(function(){
+        colony.setQuantity(slider.value);
+    });
+
     panel.addControl(slider);
     panel.addControl(checkbox); 
+    panel.addControl(button);  
 
-    // SPS.billboard = true;
-    SPS.computeBoundingBox = true;
-    const colony = new Colony()
-    colony.food = bariba;
-    colony.home = maja;
-    colony.sps = SPS;
-    // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
-    const poly = MeshBuilder.CreatePolyhedron("p", { type: polyhedronType, size: skudraSize }, scene);
-    // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
-    // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
-    SPS.addShape(poly, daudzums)
-    poly.dispose();
-    const mesh = SPS.buildMesh();
 
-    // initiate particles function
-    SPS.initParticles = () => {
-        for (let p = 0; p < SPS.nbParticles; p++) {
-            const particle = SPS.particles[p];
-            particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-            const virziens = randomPolarToCartesian(atrums, atrums)
-            colony.ants[p] = new Ant(virziens)
-            particle.position = skudra()
-            // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
-            particle.rotationQuaternion =
-                new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
-        }
-    }
-
-    SPS.initParticles();
-    SPS.updateParticle =  function(particle) {
-        set_speed(colony,slider);
-        colony.update(particle);
-        return particle;
-    }
-    SPS.afterUpdateParticles = function () {
-        colony.bboxesComputed = true;
-        
-    };
-
-    scene.onBeforeRenderObservable.add(() => SPS.setParticles())
     // const env = scene.createDefaultEnvironment();
 
     // initialize XR
@@ -176,8 +124,3 @@ export async function createWorld(
     return scene;
 }
 
-function set_speed(colony:any,slider:any){
-    colony.ants.forEach(function (value) {
-        value.atrums=slider.value;
-    });
-}
