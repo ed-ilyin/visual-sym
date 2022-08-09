@@ -1,4 +1,5 @@
-import { Scalar, Vector3 } from 'babylonjs'
+import { Scalar } from "@babylonjs/core/Maths/math.scalar";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 function toCartesian(radius: number, phi: number, theta: number) {
     const x = radius * Math.sin(phi) * Math.cos(theta);

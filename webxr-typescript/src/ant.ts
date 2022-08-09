@@ -1,5 +1,7 @@
-import { SolidParticle, Vector3, float } from "babylonjs"
 import { Colony } from "./colony"
+import { float } from "@babylonjs/core/types";
+import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
 
 export class Ant {

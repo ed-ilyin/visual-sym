@@ -1,16 +1,25 @@
-import {
-    Scene, Engine, CubeTexture, PBRMaterial, MeshBuilder, ArcRotateCamera,
-    HemisphericLight, Vector3, BoundingInfo
-} from "babylonjs";
-import { AdvancedDynamicTexture, Button, Checkbox, Control, Slider, StackPanel }
-    from "babylonjs-gui";
+import { Scene } from "@babylonjs/core";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { BoundingInfo } from "@babylonjs/core/Culling/boundingInfo";
+import { Engine } from "@babylonjs/core/Engines/engine";
+import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
+import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { Button } from "@babylonjs/gui/2D/controls/button";
+import { Checkbox } from "@babylonjs/gui/2D/controls/checkbox";
+import { Control } from "@babylonjs/gui/2D/controls/control";
+import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
+import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Colony } from "./colony";
 import { randomToCartesian } from "./polar"
 
 const daudzums = 600
-const objectsSize = 1; // в метрах
-const home = new Vector3(0, 1, 1)
-const outerSphere = 5
+const objectsSize = 0.3; // в метрах
+const outerSphere = 2; // в метрах
+const home = new Vector3(0, outerSphere, 0)
 const foodDistance = randomToCartesian(outerSphere / 2, outerSphere - objectsSize)
 const showBoundingBoxes = false
 
@@ -57,7 +66,7 @@ export async function createWorld(
     //     scene
     // );
     // const bariba = MeshBuilder.CreateBox("box", { size: objectsSize }, scene);
-    const bariba = MeshBuilder.CreateCapsule("food");
+    const bariba = MeshBuilder.CreateCapsule("food", { height: objectsSize, radius: objectsSize / 4 }, scene);
 
     // const bs = objectsSize / 3
 
@@ -72,7 +81,7 @@ export async function createWorld(
 
     // создаём муравьёв
     const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
-    
+
     var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
     var panel = new StackPanel();
     panel.width = "200px";
@@ -86,7 +95,7 @@ export async function createWorld(
     checkbox.height = "20px";
     checkbox.isChecked = false;
     checkbox.color = "green";
-    checkbox.onIsCheckedChangedObservable.add(function (value) {
+    checkbox.onIsCheckedChangedObservable.add(function () {
         maja.showBoundingBox = !maja.showBoundingBox;
         bariba.showBoundingBox = !bariba.showBoundingBox;
     });
@@ -97,7 +106,8 @@ export async function createWorld(
     slider.color = 'orange';
     slider.minimum = 0.0001;
     slider.maximum = 0.2;
-    // slider.value=atrums;
+    slider.value = daudzums;
+    slider.maximum = daudzums * 2
 
     var button = Button.CreateSimpleButton("showHistory_button", "Apply/Reset");
     button.widthInPixels = 200;
@@ -113,9 +123,14 @@ export async function createWorld(
     // const env = scene.createDefaultEnvironment();
 
     // initialize XR
+    const ground = MeshBuilder.CreateGround("ground", { width: outerSphere * 3, height: outerSphere * 3 }, scene);
+    ground.material = pbr;
+
     const xr = await scene.createDefaultXRExperienceAsync({
-        // floorMeshes: [env.ground]
+        floorMeshes: [ground]
     });
+
+    // const menu = new HandMenu(xr., "handMenu")
 
     return scene;
 }

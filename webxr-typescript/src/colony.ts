@@ -1,7 +1,12 @@
-import { Color4, Mesh, SolidParticle, SolidParticleSystem, Vector3, Scene,
-  MeshBuilder, float, Quaternion, int } from "babylonjs";
+import { Color4 } from "@babylonjs/core/Maths/math.color";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
+import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
+import { Scene } from "@babylonjs/core/scene";
+import { float, int } from "@babylonjs/core/types";
 import { Ant } from "./ant";
-import { Vieta } from "./vieta";
 import { randomToCartesian } from "./polar";
 
 export class Colony {
@@ -14,8 +19,8 @@ export class Colony {
   colorEmpty = new Color4(0, 0, 1, 1)
   sps: SolidParticleSystem
   polyhedronType = 0
-  skudraSize = 0.02; // в метрах
-  atrums = 0.002; // в метрах
+  skudraSize = 0.01; // в метрах
+  atrums = 0.01; // в метрах
   scene: Scene
   radius = 5
   position = Vector3.Zero()

@@ -33,10 +33,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new CopyPlugin([
+    new CopyPlugin({ patterns: [
       { from: "src/assets", to: path.resolve(__dirname, "dist/assets") },
       { from: "src/index.html", to: path.resolve(__dirname, "dist") },
-    ]),
+    ]}),
   ],
   mode: "development",
 };
