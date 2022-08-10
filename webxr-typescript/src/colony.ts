@@ -96,8 +96,6 @@ export class Colony {
       // if (distance <= dzirde) console.log('кто-то рядом')
       ant.kliedz(particle.position, distance, citaSkudra, citasSkudrasVieta)
       citaSkudra.kliedz(citasSkudrasVieta, distance, ant, particle.position)
-      particle.rotation = ant.velocity
-      citasSkudrasParicle.rotation = citaSkudra.velocity
     }
 
     return particle

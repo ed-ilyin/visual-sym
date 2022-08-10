@@ -34,7 +34,7 @@ export class World {
     objectsMaterial: PBRMaterial
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
-    speed: float = 0.002 // в метрах
+    speed: float = 0.05 // в метрах
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
