@@ -17,13 +17,14 @@ import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
-const worldCenter = new Vector3(0, 2, 0)
 const worldRadius = 2; // в метрах
+const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
 const antPopulation = 600
 const foodPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
 
 export class World {
+    center = worldCenter
     radius: float = 2 // в метрах
     objectsSize: float = 0.2 // в метрах
     scene: Scene
@@ -117,7 +118,7 @@ export class World {
         // const env = this.scene.createDefaultEnvironment();
 
         // initialize XR
-        const ground = MeshBuilder.CreateGround("ground", { width: worldRadius * 3, height: worldRadius * 3 }, this.scene);
+        const ground = MeshBuilder.CreateGround("ground", { width: worldRadius * 4, height: worldRadius * 4 }, this.scene);
         ground.material = this.objectsMaterial;
 
         const xr = await this.scene.createDefaultXRExperienceAsync({

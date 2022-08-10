@@ -34,7 +34,7 @@ export class Ant {
     this.lidzBaribai += this.speed
 
     // отражаем вектор от внешней сферы
-    if (this.colony.home.position.subtract(particle.position).length() >= this.colony.world.radius) {
+    if (this.colony.world.center.subtract(particle.position).length() >= this.colony.world.radius) {
       this.velocity.scaleInPlace(-1)
       // particle.position.addToRef(mesh.position, tmpPos); // particle World position
       // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere

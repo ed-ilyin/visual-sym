@@ -37,28 +37,6 @@ export class Colony {
     this.createSPS(population)
   }
 
-  update(particle: SolidParticle) {
-    const ant = this.ants[particle.id]
-    this.ants[particle.idx].update(particle)
-    // букаха кричит одно из пройденных путей
-    // Ищем кто услышал,
-    // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
-    // стороны и прогоняем только оставшихся (такая вот оптимизация)
-    for (var p = particle.idx + 1; p < this.sps.nbParticles; p++) {
-      const citaSkudra = this.ants[p]
-      const citasSkudrasParicle = this.sps.particles[p]
-      const citasSkudrasVieta = citasSkudrasParicle.position
-      const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
-      // if (distance <= dzirde) console.log('кто-то рядом')
-      ant.kliedz(particle.position, distance, citaSkudra, citasSkudrasVieta)
-      citaSkudra.kliedz(citasSkudrasVieta, distance, ant, particle.position)
-      particle.rotation = ant.velocity
-      citasSkudrasParicle.rotation = citaSkudra.velocity
-    }
-
-    return particle
-  }
-
   createSPS(quantity: int) {
     //Create a manager for the player's sprite animation
     this.sps = new SolidParticleSystem("sps", this.world.scene, {
@@ -84,7 +62,7 @@ export class Colony {
         particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
         const velocity = randomToCartesian(this.world.speed, this.world.speed)
         this.ants[p] = new Ant(this, velocity)
-        particle.position = randomToCartesian(0, this.world.radius).addInPlace(this.home.position)
+        particle.position = randomToCartesian(0, this.world.radius).addInPlace(this.world.center)
         // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
 
         particle.rotationQuaternion =
@@ -101,6 +79,28 @@ export class Colony {
     };
 
     this.world.scene.onBeforeRenderObservable.add(() => this.sps.setParticles())
+  }
+
+  update(particle: SolidParticle) {
+    const ant = this.ants[particle.id]
+    this.ants[particle.idx].update(particle)
+    // букаха кричит одно из пройденных путей
+    // Ищем кто услышал,
+    // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
+    // стороны и прогоняем только оставшихся (такая вот оптимизация)
+    for (var p = particle.idx + 1; p < this.sps.nbParticles; p++) {
+      const citaSkudra = this.ants[p]
+      const citasSkudrasParicle = this.sps.particles[p]
+      const citasSkudrasVieta = citasSkudrasParicle.position
+      const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
+      // if (distance <= dzirde) console.log('кто-то рядом')
+      ant.kliedz(particle.position, distance, citaSkudra, citasSkudrasVieta)
+      citaSkudra.kliedz(citasSkudrasVieta, distance, ant, particle.position)
+      particle.rotation = ant.velocity
+      citasSkudrasParicle.rotation = citaSkudra.velocity
+    }
+
+    return particle
   }
 
   setQuantity(quantity: int) {
