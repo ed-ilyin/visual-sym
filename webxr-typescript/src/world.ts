@@ -16,7 +16,7 @@ import { Scene } from "@babylonjs/core";
 import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { GUI3DManager, HandMenu, TouchHolographicButton } from "@babylonjs/gui";
+import { GUI3DManager, HandMenu, NearMenu, TouchHolographicButton } from "@babylonjs/gui";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -137,24 +137,16 @@ export class World {
         });
       
 
-        var near = new  HandMenu(xr.baseExperience,"near");
+        var near = new  NearMenu("near");
         near.position=new Vector3(-1,-1,-1);
         manager.addControl(near);
         
         var button0 = new TouchHolographicButton("button0");
-        button0.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
+        button0.imageUrl = "https://ui-avatars.com/api/?name=S+B";
         button0.text = "Button 0";
         near.addButton(button0);
         
-        var button1 = new TouchHolographicButton("button1");
-        button1.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
-        button1.text = "Button 1";
-        near.addButton(button1);
-        
-        var button2 = new TouchHolographicButton("button2");
-        button2.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
-        button2.text = "Button 2";
-        near.addButton(button2);
+       
 
         return this.scene;
     }
