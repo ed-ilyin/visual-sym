@@ -1,39 +1,40 @@
+import { BoundingInfo } from "@babylonjs/core/Culling/boundingInfo";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
-import { Scene } from "@babylonjs/core/scene";
-import { float, int } from "@babylonjs/core/types";
+import { int } from "@babylonjs/core/types";
 import { Ant } from "./ant";
 import { randomToCartesian } from "./polar";
+import { World } from "./world";
 
 export class Colony {
   ants: Ant[] = []
   home: Mesh
-  tooFarFromHome = 2.0
-  food: Mesh
   bboxesComputed = false
+  sps: SolidParticleSystem
+  world: World
   colorFull = new Color4(1, 0, 0, 1)
   colorEmpty = new Color4(0, 0, 1, 1)
-  sps: SolidParticleSystem
-  polyhedronType = 0
-  skudraSize = 0.01; // в метрах
-  speed = 0.001; // метров за кадр
-  scene: Scene
-  radius = 2
+
   // shared variables
   tmpPos = Vector3.Zero();          // current particle world position
   tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
   tmpDot = 0.0;                             // current dot product
 
-  constructor(scene: Scene, home: Mesh, food: Mesh, quantity: int, radius: float) {
-    this.scene = scene
-    this.home = home;
-    this.food = food;
-    this.radius = this.radius
-    this.createSPS(quantity)
+  constructor(world: World, position: Vector3, population: int) {
+    this.world = world
+    
+    // создаём дом
+    this.home = MeshBuilder.CreateSphere("maja", { diameter: world.objectsSize }, world.scene);
+    this.home.material = this.world.objectsMaterial;
+    this.home.position = position
+    const h = this.world.objectsSize / Math.PI
+    this.home.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
+
+    this.createSPS(population)
   }
 
   update(particle: SolidParticle) {
@@ -60,7 +61,7 @@ export class Colony {
 
   createSPS(quantity: int) {
     //Create a manager for the player's sprite animation
-    this.sps = new SolidParticleSystem("sps", this.scene, {
+    this.sps = new SolidParticleSystem("sps", this.world.scene, {
       particleIntersection: true,
       boundingSphereOnly: true,
       bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
@@ -69,7 +70,7 @@ export class Colony {
     // this.sps.billboard = true;
     this.sps.computeBoundingBox = true;
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
-    const poly = MeshBuilder.CreatePolyhedron("p", { type: this.polyhedronType, size: this.skudraSize }, this.scene);
+    const poly = MeshBuilder.CreatePolyhedron("p", { type: this.world.antPolyhedronType, size: this.world.antSize }, this.world.scene);
     // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
     // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
     this.sps.addShape(poly, quantity)
@@ -81,9 +82,9 @@ export class Colony {
       for (let p = 0; p < this.sps.nbParticles; p++) {
         const particle = this.sps.particles[p];
         particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-        const velocity = randomToCartesian(this.speed, this.speed)
+        const velocity = randomToCartesian(this.world.speed, this.world.speed)
         this.ants[p] = new Ant(this, velocity)
-        particle.position = randomToCartesian(0, this.radius).addInPlace(this.home.position)
+        particle.position = randomToCartesian(0, this.world.radius).addInPlace(this.home.position)
         // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
 
         particle.rotationQuaternion =
@@ -98,8 +99,8 @@ export class Colony {
       this.bboxesComputed = true;
       //console.log(calculated_first_time)
     };
-    
-    this.scene.onBeforeRenderObservable.add(() => this.sps.setParticles())
+
+    this.world.scene.onBeforeRenderObservable.add(() => this.sps.setParticles())
   }
 
   setQuantity(quantity: int) {

@@ -1,5 +1,5 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { createWorld } from "./world";
+import { World } from "./world";
 
 const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
@@ -21,7 +21,7 @@ try { engine = createDefaultEngine(); } catch (e) {
 if (!engine) throw "engine should not be null.";
 
 //Create the scene
-createWorld(engine, canvas).then(sceneToRender => {
+new World().createScene(engine, canvas).then(sceneToRender => {
   engine.runRenderLoop(() => sceneToRender.render());
 });
 
