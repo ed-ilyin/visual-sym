@@ -20,7 +20,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
-const antPopulation = 600
+const antPopulation = 700
 const foodPosition: Vector3[] =
     [...Array(2)].map(() => randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter))
 console.log(foodPosition)
@@ -34,7 +34,7 @@ export class World {
     objectsMaterial: PBRMaterial
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
-    speed: float = 0.02 // в метрах
+    speed: float = 0.005 // в метрах
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену

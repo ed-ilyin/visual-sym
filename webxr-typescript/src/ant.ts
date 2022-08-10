@@ -4,6 +4,8 @@ import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
 
+const dzirde = 0.5
+
 export class Ant {
   colony: Colony
   velocity = Vector3.Zero()
@@ -12,7 +14,6 @@ export class Ant {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  dzirde = 0.3
   acceleration = Vector3.Zero()
   homeForce: float = 0
   tmpVelocity = Vector3.Zero()
@@ -22,7 +23,7 @@ export class Ant {
     this.colony = colony
     this.velocity = velocity;
     this.speed = velocity.length();
-    this.homeForce = this.speed / 200
+    this.homeForce = this.speed / 500
   }
 
   setSpeed(speed: float) {
@@ -99,17 +100,17 @@ export class Ant {
       case Vieta.Maja: {
         this.kliegs = Vieta.Bariba
 
-        if (distance <= this.dzirde) citaSkudra.dzird(
+        if (distance <= dzirde) citaSkudra.dzird(
           skudrasVieta,
-          Vieta.Maja, this.lidzMajai + this.dzirde,
+          Vieta.Maja, this.lidzMajai + dzirde,
           citasSkudrasVieta)
       }
       case Vieta.Bariba: {
         this.kliegs = Vieta.Maja
 
-        if (distance <= this.dzirde) citaSkudra.dzird(
+        if (distance <= dzirde) citaSkudra.dzird(
           skudrasVieta,
-          Vieta.Bariba, this.lidzBaribai + this.dzirde,
+          Vieta.Bariba, this.lidzBaribai + dzirde,
           citasSkudrasVieta)
       }
     }
