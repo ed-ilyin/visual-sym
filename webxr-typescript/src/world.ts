@@ -24,8 +24,8 @@ const antPopulation = 600
 const foodPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
 
 export class World {
+    radius: float = worldRadius // в метрах
     center = worldCenter
-    radius: float = 2 // в метрах
     objectsSize: float = 0.2 // в метрах
     scene: Scene
     foodMesh: Mesh
