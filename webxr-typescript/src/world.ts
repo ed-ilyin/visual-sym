@@ -21,14 +21,16 @@ const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
 const antPopulation = 600
-const foodPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
+const foodPosition: Vector3[] =
+    [...Array(2)].map(() => randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter))
+console.log(foodPosition)
 
 export class World {
     radius: float = worldRadius // в метрах
     center = worldCenter
     objectsSize: float = 0.2 // в метрах
     scene: Scene
-    foodMesh: Mesh
+    foodMesh: Mesh[] = []
     objectsMaterial: PBRMaterial
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
@@ -65,13 +67,16 @@ export class World {
         this.objectsMaterial.subSurface.isRefractionEnabled = true;
 
         // создаём еду
-        this.foodMesh = MeshBuilder.CreateCapsule(
-            "food",
-            { height: this.objectsSize, radius: this.objectsSize / 4 },
-            this.scene);
-
-        this.foodMesh.material = this.objectsMaterial;
-        this.foodMesh.position = foodPosition
+        this.foodMesh = foodPosition.map((position) => {
+            const food = MeshBuilder.CreateCapsule(
+                `food${position}`,
+                { height: this.objectsSize, radius: this.objectsSize / 4 },
+                this.scene)
+            food.position = position
+            food.material = this.objectsMaterial
+            return food
+        });
+        console.log(this.foodMesh)
 
         // создаём муравьёв
         const colony = new Colony(this, colonyPosition, antPopulation);

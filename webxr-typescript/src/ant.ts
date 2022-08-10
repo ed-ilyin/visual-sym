@@ -52,14 +52,16 @@ export class Ant {
     // поменять skudra.mekle на противоположный
     // console.log(particle.intersectsMesh(this.colony.food))
     // console.log(this.colony.bboxesComputed)
-    if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.world.foodMesh)) {
-      this.lidzBaribai = 0
+    for (let mesh of this.colony.world.foodMesh) {
+      if (this.colony.bboxesComputed && particle.intersectsMesh(mesh)) {
+        this.lidzBaribai = 0
 
-      if (this.mekle == Vieta.Bariba) {
-        // console.log('нашёл еду!')
-        this.mekle = Vieta.Maja
-        particle.color = this.colony.colorFull
-        this.velocity.scaleInPlace(-1) // разворот на 180 градусов
+        if (this.mekle == Vieta.Bariba) {
+          // console.log('нашёл еду!')
+          this.mekle = Vieta.Maja
+          particle.color = this.colony.colorFull
+          this.velocity.scaleInPlace(-1) // разворот на 180 градусов
+        }
       }
     }
 
