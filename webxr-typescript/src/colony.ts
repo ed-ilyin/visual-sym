@@ -44,7 +44,6 @@ export class Colony {
       boundingSphereOnly: true,
       bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
     });
-    // this.sps.mesh.position = this.home.position
     // this.sps.billboard = true;
     this.sps.computeBoundingBox = true;
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
@@ -54,6 +53,7 @@ export class Colony {
     this.sps.addShape(poly, quantity)
     poly.dispose();
     const mesh = this.sps.buildMesh();
+    mesh.position = this.world.center
 
     // initiate particles function
     this.sps.initParticles = () => {
@@ -62,7 +62,7 @@ export class Colony {
         particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
         const velocity = randomToCartesian(this.world.speed, this.world.speed)
         this.ants[p] = new Ant(this, velocity)
-        particle.position = randomToCartesian(0, this.world.radius).addInPlace(this.world.center)
+        particle.position = randomToCartesian(0, this.world.radius)
         // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
 
         particle.rotationQuaternion =
