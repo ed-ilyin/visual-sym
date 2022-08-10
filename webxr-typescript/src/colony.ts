@@ -35,9 +35,7 @@ export class Colony {
     this.home = home;
     this.food = food;
     this.radius = this.radius
-    
     this.createSPS(quantity)
-    // SPS.billboard = true;
   }
 
   update(particle: SolidParticle) {
@@ -70,6 +68,7 @@ export class Colony {
       bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
     });
 
+    // this.sps.billboard = true;
     this.sps.computeBoundingBox = true;
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
     const poly = MeshBuilder.CreatePolyhedron("p", { type: this.polyhedronType, size: this.skudraSize }, this.scene);
