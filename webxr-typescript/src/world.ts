@@ -123,7 +123,10 @@ export class World {
         // const env = this.scene.createDefaultEnvironment();
 
         // initialize XR
-        const ground = MeshBuilder.CreateGround("ground", { width: worldRadius * 4, height: worldRadius * 4 }, this.scene);
+        const ground = MeshBuilder.CreateGround("ground",
+            { width: worldRadius * 8, height: worldRadius * 8 },
+            this.scene);
+
         ground.material = this.objectsMaterial;
 
         const xr = await this.scene.createDefaultXRExperienceAsync({
