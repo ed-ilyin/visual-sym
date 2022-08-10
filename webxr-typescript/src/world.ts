@@ -8,6 +8,7 @@ import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { float, int } from "@babylonjs/core/types";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
@@ -15,7 +16,6 @@ import { Scene } from "@babylonjs/core";
 import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 const worldCenter = new Vector3(0, 2, 0)
 const worldRadius = 2; // в метрах

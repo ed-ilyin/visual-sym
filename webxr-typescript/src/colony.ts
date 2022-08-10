@@ -1,13 +1,13 @@
+import { Ant } from "./ant";
 import { BoundingInfo } from "@babylonjs/core/Culling/boundingInfo";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
-import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { int } from "@babylonjs/core/types";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { randomToCartesian } from "./polar";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
-import { int } from "@babylonjs/core/types";
-import { Ant } from "./ant";
-import { randomToCartesian } from "./polar";
 import { World } from "./world";
 
 export class Colony {
