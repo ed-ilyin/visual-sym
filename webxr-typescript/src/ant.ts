@@ -12,7 +12,7 @@ export class Ant {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  dzirde = 0.4
+  dzirde = 0.3
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony

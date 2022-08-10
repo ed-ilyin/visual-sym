@@ -29,6 +29,9 @@ export async function createWorld(
 ) {
     // создаём сцену
     const scene = new Scene(engine);
+    // Fog
+    // scene.fogMode = Scene.FOGMODE_EXP;
+    // scene.fogDensity = 0.05;
     // scene.clearColor = Color3.Black().toColor4();
     scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("assets/environment.dds", scene);
     // var gl = new GlowLayer("glow", scene);

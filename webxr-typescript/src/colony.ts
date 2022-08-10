@@ -20,11 +20,9 @@ export class Colony {
   sps: SolidParticleSystem
   polyhedronType = 0
   skudraSize = 0.01; // в метрах
-  atrums = 0.01; // в метрах
+  speed = 0.001; // метров за кадр
   scene: Scene
   radius = 2
-  // position = Vector3.Zero()
-  velocity = 0.01
   // shared variables
   tmpPos = Vector3.Zero();          // current particle world position
   tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
@@ -83,7 +81,7 @@ export class Colony {
       for (let p = 0; p < this.sps.nbParticles; p++) {
         const particle = this.sps.particles[p];
         particle.color = new Color4(Math.random(), Math.random(), Math.random(), Math.random());
-        const velocity = randomToCartesian(this.atrums, this.atrums)
+        const velocity = randomToCartesian(this.speed, this.speed)
         this.ants[p] = new Ant(this, velocity)
         particle.position = randomToCartesian(0, this.radius).addInPlace(this.home.position)
         // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
