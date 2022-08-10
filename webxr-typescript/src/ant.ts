@@ -13,7 +13,6 @@ export class Ant {
   lidzMajai = 0
   lidzBaribai = 0
   dzirde = 0.3
-  homePosition = Vector3.Zero()
   acceleration = Vector3.Zero()
   homeForce: float = 0
   tmpVelocity = Vector3.Zero()
@@ -22,20 +21,23 @@ export class Ant {
     this.colony = colony
     this.velocity = velocity;
     this.speed = velocity.length();
-    this.homePosition = colony.home.position.subtract(colony.world.center)
+    this.homeForce = this.speed / 10
   }
 
   setSpeed(speed: float) {
     this.velocity.scaleInPlace(speed / this.speed)
     this.speed = speed
-    this.homeForce = this.speed * 10000000000000000000
   }
 
   update(particle: SolidParticle) {
     // букаха походила
-    this.homePosition.subtractToRef(particle.position, this.acceleration)
-    this.acceleration.normalize().scaleInPlace(this.homeForce)
-    this.velocity.addInPlace(this.acceleration).normalizeToRef(this.tmpVelocity).scaleInPlace(this.speed)
+    
+      .subtractToRef(particle.position, this.acceleration)
+      .normalize()
+      .scaleInPlace(this.homeForce)
+    this.velocity.addInPlace(this.acceleration)
+    this.velocity.normalizeToRef(this.tmpVelocity)
+    this.tmpVelocity.scaleInPlace(this.speed)
     particle.position.addInPlace(this.tmpVelocity);
 
     // букаха увеличила все счётчики на велечину своей скорости
@@ -45,15 +47,15 @@ export class Ant {
     // отражаем вектор от внешней сферы
     // if (particle.position.length() >= this.colony.world.radius) {
     //   this.velocity.scaleInPlace(-1)
-      // particle.position.addToRef(mesh.position, tmpPos); // particle World position
-      // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere
-      // // tmpNormal.normalize();                             // normalize the sphere normal
-      // tmpDot = Vector3.Dot(tmpNormal, skudra.velocity);  // dot product (velocity, normal)
-      // // bounce result computation
-      // skudra.velocity.x = -skudra.velocity.x + 2.0 * tmpDot * tmpNormal.x;
-      // skudra.velocity.y = -skudra.velocity.y + 2.0 * tmpDot * tmpNormal.y;
-      // skudra.velocity.z = -skudra.velocity.z + 2.0 * tmpDot * tmpNormal.z;
-      // skudra.velocity.scaleInPlace(skudra.atrums);                      // aply restitution
+    // particle.position.addToRef(mesh.position, tmpPos); // particle World position
+    // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere
+    // // tmpNormal.normalize();                             // normalize the sphere normal
+    // tmpDot = Vector3.Dot(tmpNormal, skudra.velocity);  // dot product (velocity, normal)
+    // // bounce result computation
+    // skudra.velocity.x = -skudra.velocity.x + 2.0 * tmpDot * tmpNormal.x;
+    // skudra.velocity.y = -skudra.velocity.y + 2.0 * tmpDot * tmpNormal.y;
+    // skudra.velocity.z = -skudra.velocity.z + 2.0 * tmpDot * tmpNormal.z;
+    // skudra.velocity.scaleInPlace(skudra.atrums);                      // aply restitution
     // }
 
     // проверить не уткнулись ли в еду или дом
