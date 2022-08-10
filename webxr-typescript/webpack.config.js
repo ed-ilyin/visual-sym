@@ -8,6 +8,7 @@ module.exports = {
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "dist"),
+    sourceMapFilename: "[name].js.map"
   },
   resolve: {
     extensions: [".ts", ".js"],
@@ -30,6 +31,11 @@ module.exports = {
               },
           ],
       },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
+      }
     ],
   },
   plugins: [

@@ -23,7 +23,7 @@ const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlac
 const antPopulation = 700
 const foodPosition: Vector3[] =
     [...Array(2)].map(() => randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter))
-console.log(foodPosition)
+// console.log(foodPosition)
 
 export class World {
     radius: float = worldRadius // в метрах
@@ -76,7 +76,7 @@ export class World {
             food.material = this.objectsMaterial
             return food
         });
-        console.log(this.foodMesh)
+        // console.log(this.foodMesh)
 
         // создаём муравьёв
         const colony = new Colony(this, colonyPosition, antPopulation);

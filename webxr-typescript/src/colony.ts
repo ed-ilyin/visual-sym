@@ -1,7 +1,7 @@
 import { Ant } from "./ant";
 import { BoundingInfo } from "@babylonjs/core/Culling/boundingInfo";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
-import { int } from "@babylonjs/core/types";
+import { float, int } from "@babylonjs/core/types";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -18,11 +18,6 @@ export class Colony {
   world: World
   colorFull = new Color4(1, 0, 0, 1)
   colorEmpty = new Color4(0, 0, 1, 1)
-
-  // shared variables
-  tmpPos = Vector3.Zero();          // current particle world position
-  tmpNormal = Vector3.Zero();       // current sphere normal on intersection point
-  tmpDot = 0.0;                             // current dot product
 
   constructor(world: World, position: Vector3, population: int) {
     this.world = world
@@ -83,7 +78,6 @@ export class Colony {
 
   update(particle: SolidParticle) {
     const ant = this.ants[particle.id]
-    this.ants[particle.idx].update(particle)
     // букаха кричит одно из пройденных путей
     // Ищем кто услышал,
     // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
@@ -98,6 +92,7 @@ export class Colony {
       citaSkudra.kliedz(citasSkudrasVieta, distance, ant, particle.position)
     }
 
+    this.ants[particle.idx].update(particle)
     return particle
   }
 
