@@ -12,7 +12,7 @@ import { randomToCartesian } from "./polar";
 export class Colony {
   ants: Ant[] = []
   home: Mesh
-  tooFarFromHome = 10.0
+  tooFarFromHome = 2.0
   food: Mesh
   bboxesComputed = false
   colorFull = new Color4(1, 0, 0, 1)
@@ -22,8 +22,8 @@ export class Colony {
   skudraSize = 0.01; // в метрах
   atrums = 0.01; // в метрах
   scene: Scene
-  radius = 5
-  position = Vector3.Zero()
+  radius = 2
+  // position = Vector3.Zero()
   velocity = 0.01
   // shared variables
   tmpPos = Vector3.Zero();          // current particle world position
@@ -67,7 +67,7 @@ export class Colony {
       boundingSphereOnly: true,
       bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
     });
-
+    // this.sps.mesh.position = this.home.position
     // this.sps.billboard = true;
     this.sps.computeBoundingBox = true;
     // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
@@ -96,7 +96,7 @@ export class Colony {
     this.sps.initParticles();
     this.sps.updateParticle = (particle) => this.update(particle)
 
-    this.sps.afterUpdateParticles = function () {
+    this.sps.afterUpdateParticles = () => {
       this.bboxesComputed = true;
       //console.log(calculated_first_time)
     };

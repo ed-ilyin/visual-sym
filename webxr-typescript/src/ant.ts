@@ -12,7 +12,7 @@ export class Ant {
   kliegs = Vieta.Maja
   lidzMajai = 0
   lidzBaribai = 0
-  dzirde = 2
+  dzirde = 0.4
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony
@@ -34,7 +34,7 @@ export class Ant {
     this.lidzBaribai += this.speed
 
     // отражаем вектор от внешней сферы
-    if (this.colony.position.subtract(particle.position).length() >= this.colony.radius) {
+    if (this.colony.home.position.subtract(particle.position).length() >= this.colony.radius) {
       this.velocity.scaleInPlace(-1)
       // particle.position.addToRef(mesh.position, tmpPos); // particle World position
       // home.subtractToRef(tmpPos, tmpNormal);             // normal to the sphere
@@ -50,7 +50,8 @@ export class Ant {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    //console.log(particle.intersectsMesh(bariba))
+    // console.log(particle.intersectsMesh(this.colony.food))
+    // console.log(this.colony.bboxesComputed)
     if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.food)) {
       this.lidzBaribai = 0
 

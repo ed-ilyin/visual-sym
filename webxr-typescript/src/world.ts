@@ -17,10 +17,10 @@ import { Colony } from "./colony";
 import { randomToCartesian } from "./polar"
 
 const daudzums = 600
-const objectsSize = 0.3; // в метрах
+const objectsSize = 0.2; // в метрах
 const outerSphere = 2; // в метрах
 const home = new Vector3(0, outerSphere, 0)
-const foodDistance = randomToCartesian(outerSphere / 2, outerSphere - objectsSize)
+const foodPosition = randomToCartesian(outerSphere / 2, outerSphere - objectsSize).addInPlace(home)
 const showBoundingBoxes = false
 
 export async function createWorld(
@@ -77,7 +77,7 @@ export async function createWorld(
     // bariba.setBoundingInfo(bi)
     bariba.showBoundingBox = showBoundingBoxes;
     bariba.material = pbr;
-    bariba.position = home.add(foodDistance)
+    bariba.position = foodPosition
 
     // создаём муравьёв
     const colony = new Colony(scene, maja, bariba, daudzums, outerSphere);
