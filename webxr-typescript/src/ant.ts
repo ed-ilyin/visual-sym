@@ -16,12 +16,13 @@ export class Ant {
   acceleration = Vector3.Zero()
   homeForce: float = 0
   tmpVelocity = Vector3.Zero()
+  relativeWorldCenter = Vector3.Zero()
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony
     this.velocity = velocity;
     this.speed = velocity.length();
-    this.homeForce = this.speed / 10
+    this.homeForce = this.speed / 200
   }
 
   setSpeed(speed: float) {
@@ -31,7 +32,7 @@ export class Ant {
 
   update(particle: SolidParticle) {
     // букаха походила
-    
+    this.relativeWorldCenter
       .subtractToRef(particle.position, this.acceleration)
       .normalize()
       .scaleInPlace(this.homeForce)
