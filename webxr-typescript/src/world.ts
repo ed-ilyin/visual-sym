@@ -12,11 +12,12 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
-import { Scene } from "@babylonjs/core";
+import { Scene, WebXRExperienceHelper, WebXRFeatureName } from "@babylonjs/core";
 import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-
+import { Button3D, Control3D, GUI3DManager, HandMenu, MeshButton3D, NearMenu, Slider3D, StackPanel3D, TouchHolographicButton, VolumeBasedPanel } from "@babylonjs/gui";
+//import "@babylonjs/loaders"
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
@@ -37,6 +38,8 @@ export class World {
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
         this.scene = new Scene(engine);
+        var manager = new GUI3DManager(this.scene);
+    
         // Fog
         // scene.clearColor = Color3.Black().toColor4();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("assets/environment.dds", this.scene);
@@ -75,58 +78,35 @@ export class World {
 
         // создаём муравьёв
         const colony = new Colony(this, colonyPosition, antPopulation);
+    
 
         // UI
-        var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
-        var panel = new StackPanel();
-        panel.width = "200px";
-        panel.isVertical = true;
-        panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        panel.paddingRightInPixels = 100;
-        advancedTexture.addControl(panel);
-        var checkbox = new Checkbox();
-        checkbox.width = "20px";
-        checkbox.height = "20px";
-        checkbox.isChecked = false;
-        checkbox.color = "green";
-        checkbox.onIsCheckedChangedObservable.add(function () {
-            colony.home.showBoundingBox = !colony.home.showBoundingBox;
-            this.foodMesh.showBoundingBox = !this.foodMesh.showBoundingBox;
-        });
+        
 
-        var slider = new Slider();
-        slider.width = "250px";
-        slider.height = "15px";
-        slider.color = 'orange';
-        slider.minimum = 0.0001;
-        slider.maximum = 0.2;
-        slider.value = antPopulation
-        slider.maximum = antPopulation * 2
+        var manager = new GUI3DManager(this.scene);
 
-        var button = Button.CreateSimpleButton("showHistory_button", "Apply/Reset");
-        button.widthInPixels = 200;
-        button.heightInPixels = 105;
-        button.onPointerClickObservable.add(function () {
-            colony.setQuantity(slider.value);
-        });
+        // Let's add a slate
+        var near = new  NearMenu("near");
+        manager.addControl(near);
+        
+        var button0 = new TouchHolographicButton("button0");
+        button0.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
+        button0.text = "Button 0";
+        near.addButton(button0);
+        
+        var button1 = new TouchHolographicButton("button1");
+        button1.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
+        button1.text = "Button 1";
+        near.addButton(button1);
+        
+        var button2 = new TouchHolographicButton("button2");
+        button2.imageUrl = "https://ichef.bbci.co.uk/news/976/cpsprodpb/1374A/production/_124309697_djigettyimages-1353421153.jpg";
+        button2.text = "Button 2";
+        near.addButton(button2);
 
-        panel.addControl(slider);
-        panel.addControl(checkbox);
-        panel.addControl(button);
-
-        // const env = this.scene.createDefaultEnvironment();
-
-        // initialize XR
-        const ground = MeshBuilder.CreateGround("ground", { width: worldRadius * 4, height: worldRadius * 4 }, this.scene);
-        ground.material = this.objectsMaterial;
-
-        const xr = await this.scene.createDefaultXRExperienceAsync({
-            floorMeshes: [ground]
-        });
-
-        // const menu = new HandMenu(xr., "handMenu")
-
+ 
+      
         return this.scene;
+
     }
 }
