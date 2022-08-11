@@ -4,7 +4,6 @@ import { GUI3DManager } from "@babylonjs/gui/3D/gui3DManager";
 import { NearMenu } from "@babylonjs/gui/3D/controls/nearMenu";
 import { Scene } from "@babylonjs/core/scene";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
-import { TouchHolographicMenu } from "@babylonjs/gui/3D/controls/touchHolographicMenu";
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
 import { WebXRFeatureName } from "@babylonjs/core/XR/webXRFeaturesManager";
 
