@@ -59,15 +59,15 @@ export class World {
         camera.attachControl(canvas, true);
 
         // создаём текстуру для дома и еды
-        this.objectsMaterial = new PBRMaterial("this.objectsMaterial", this.scene);
+        this.objectsMaterial = new PBRMaterial("glass", this.scene);
         this.objectsMaterial.metallic = 0.0;
         this.objectsMaterial.roughness = 0;
         this.objectsMaterial.subSurface.isRefractionEnabled = true;
         // создаём еду
 
-        this.foodMesh = foodPosition.map((position) => {
+        this.foodMesh = foodPosition.map((position, i) => {
             const food = MeshBuilder.CreateCapsule(
-                `food${position}`,
+                `food${i}`,
                 { height: this.objectsSize, radius: this.objectsSize / 4 },
                 this.scene)
             food.position = position

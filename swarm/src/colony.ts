@@ -24,7 +24,7 @@ export class Colony {
     this.world = world
     
     // создаём дом
-    this.home = MeshBuilder.CreateSphere("maja", { diameter: world.objectsSize }, world.scene);
+    this.home = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
     this.home.material = this.world.objectsMaterial;
     this.home.position = position
     const h = this.world.objectsSize / Math.PI
@@ -35,7 +35,7 @@ export class Colony {
 
   createSPS(quantity: int) {
     //Create a manager for the player's sprite animation
-    this.sps = new SolidParticleSystem("sps", this.world.scene, {
+    this.sps = new SolidParticleSystem("swarm", this.world.scene, {
       particleIntersection: true,
       boundingSphereOnly: true,
       bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
