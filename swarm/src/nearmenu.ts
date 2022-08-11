@@ -8,30 +8,38 @@ import { TouchHolographicMenu } from "@babylonjs/gui/3D/controls/touchHolographi
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
 import { WebXRFeatureName } from "@babylonjs/core/XR/webXRFeaturesManager";
 
-export var create_menu = function (scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
-    // xr.baseExperience.camera.position = new Vector3(0, 0, -0.3);
+export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
+
     try {
         xr.baseExperience.featuresManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
     } catch (err) {
         console.log("Articulated hand tracking not supported in this browser.");
     }
-    var manager = new GUI3DManager(scene);
+
+    const manager = new GUI3DManager(scene);
     manager.useRealisticScaling = true;
-    var nearMenu = new NearMenu("NearMenu");
-    nearMenu.rows = 3;
-    manager.addControl(nearMenu);
-    nearMenu.isPinned = false;
-    nearMenu.position.y = 1.61;
-    addMenuButtons(nearMenu, colony);
-    return scene;
-};
-var addMenuButtons = function (menu: TouchHolographicMenu, colony: Colony) {
-    var reset_apply = new TouchHolographicButton();
+    const menu = new NearMenu("NearMenu");
+    menu.rows = 3;
+    manager.addControl(menu);
+    menu.isPinned = false;
+    menu.position.y = 1.61;
+
+    const reset_apply = new TouchHolographicButton();
     reset_apply.onPointerClickObservable.add(() => {
         colony.setQuantity(colony.sps.nbParticles);
     });
-    menu.addButton(reset_apply);
     reset_apply.text = "Refresh";
     reset_apply.imageUrl = "https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconRefresh.png"
-}
+    menu.addButton(reset_apply);
 
+    const debug = new TouchHolographicButton();
+    debug.onPointerClickObservable.add(async () => {
+        menu.removeControl(debug);
+        debug.dispose()
+        await import('@babylonjs/core/Debug/debugLayer'); // Augments the scene with the debug methods
+        await import('@babylonjs/inspector'); // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+        scene.debugLayer.show()
+    });
+    debug.text = "Debug";
+    menu.addButton(debug);
+}
