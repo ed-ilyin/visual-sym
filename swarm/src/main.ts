@@ -28,5 +28,3 @@ import('@babylonjs/core/Materials/Node/Blocks');
     // Resize the engine to fit the scene
     window.addEventListener("resize", () => engine.resize());
 })()
-
-//DEBUG

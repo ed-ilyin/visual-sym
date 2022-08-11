@@ -35,8 +35,10 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     debug.onPointerClickObservable.add(async () => {
         menu.removeControl(debug);
         debug.dispose()
-        await import('@babylonjs/core/Debug/debugLayer'); // Augments the scene with the debug methods
-        await import('@babylonjs/inspector'); // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+        await Promise.all([
+         import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
+         import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+        ]);
         scene.debugLayer.show()
     });
     debug.text = "Debug";
