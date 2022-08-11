@@ -3,7 +3,7 @@ import { float } from "@babylonjs/core/types";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+// import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 const dzirde = 0.6
 
@@ -96,15 +96,13 @@ export class Ant {
     }
   }
 
-  line(from: Vector3, to: Vector3) {
+  // line(from: Vector3, to: Vector3) {
     // const line = MeshBuilder.CreateLines("lines", {
     //   points: [from, to],
     //   updatable: false
     // });
     // setTimeout(() => line.dispose(), 20)
-  }
-
-
+  // }
 
   dzird(
     kliedzosasSkudrasVieta: Vector3,

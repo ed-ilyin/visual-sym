@@ -1,7 +1,7 @@
 import { Ant } from "./ant";
 import { BoundingInfo } from "@babylonjs/core/Culling/boundingInfo";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
-import { float, int } from "@babylonjs/core/types";
+import { int } from "@babylonjs/core/types";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -14,7 +14,7 @@ export class Colony {
   ants: Ant[] = []
   home: Mesh
   bboxesComputed = false
-  sps: SolidParticleSystem
+  sps!: SolidParticleSystem;
   world: World
   colorFull = new Color4(1, 0, 0, 1)
   colorEmpty = new Color4(0, 0, 1, 1)

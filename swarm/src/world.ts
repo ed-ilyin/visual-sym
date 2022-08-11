@@ -42,7 +42,7 @@ export class World {
         // const gl = new GlowLayer("glow", this.scene);
         this.scene.createDefaultSkybox(this.scene.environmentTexture);
         // создаём освещение
-        const light = new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
+        new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
         // создаём камеру
         // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), this.scene);
         const camera = new ArcRotateCamera(
@@ -72,7 +72,7 @@ export class World {
             food.material = this.objectsMaterial
             return food
         });
-        const colony = new Colony(this, colonyPosition, antPopulation);
+        new Colony(this, colonyPosition, antPopulation);
 
         // here we add XR support
 
@@ -86,7 +86,7 @@ export class World {
             floorMeshes: [ground]
         });
 
-        create_menu(this.scene);
+        create_menu(this.scene, xr);
 
         return this.scene;
     };

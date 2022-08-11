@@ -39,8 +39,8 @@ jobs:
     - name: Build
       run: |
         npm install
-        npx webpack
-      working-directory: webxr-typescript
+        npm run build
+      working-directory: swarm
 
     - name: Setup Pages
       uses: actions/configure-pages@v1
@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-pages-artifact@v1
       with:
         # Upload entire repository
-        path: 'webxr-typescript/dist'
+        path: 'swarm/dist'
 
     - name: Deploy to GitHub Pages
       id: deployment
