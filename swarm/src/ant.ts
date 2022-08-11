@@ -1,3 +1,4 @@
+'use strict';
 import { Colony } from "./colony"
 import { float } from "@babylonjs/core/types";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";

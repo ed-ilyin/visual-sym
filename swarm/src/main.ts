@@ -1,3 +1,4 @@
+'use strict';
 import './style.css'
 import "@babylonjs/loaders/glTF";
 import { Engine } from "@babylonjs/core/Engines/engine";

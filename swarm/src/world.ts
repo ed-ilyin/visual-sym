@@ -1,4 +1,5 @@
 
+'use strict';
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Colony } from "./colony";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";

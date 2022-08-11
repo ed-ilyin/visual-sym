@@ -1,3 +1,4 @@
+'use strict';
 import { Vector3, WebXRDefaultExperience, WebXRFeatureName } from "@babylonjs/core";
 import { Scene } from "@babylonjs/core/scene";
 import { GUI3DManager, HandMenu, NearMenu, TouchHolographicButton, TouchHolographicMenu } from "@babylonjs/gui";
