@@ -1,8 +1,8 @@
-import { Vector2, Vector3, WebXRDefaultExperience, WebXRFeatureName } from "@babylonjs/core";
+import { WebXRDefaultExperience, WebXRFeatureName } from "@babylonjs/core";
 import { Scene } from "@babylonjs/core/scene";
-import { Button3D, GUI3DManager, HandMenu, HolographicSlate, MeshButton3D, NearMenu, RadioButton, Slider, Slider3D, TouchHolographicButton, TouchHolographicMenu, TouchMeshButton3D } from "@babylonjs/gui";
+import { GUI3DManager, NearMenu, TouchHolographicButton, TouchHolographicMenu } from "@babylonjs/gui";
 import { Colony } from "./colony";
-export var create_menu = function (scene: Scene, xr: WebXRDefaultExperience,colony:Colony) {
+export var create_menu = function (scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
     // xr.baseExperience.camera.position = new Vector3(0, 0, -0.3);
     try {
         xr.baseExperience.featuresManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
@@ -16,17 +16,17 @@ export var create_menu = function (scene: Scene, xr: WebXRDefaultExperience,colo
     manager.addControl(nearMenu);
     nearMenu.isPinned = false;
     nearMenu.position.y = 1.61;
-    addMenuButtons(nearMenu,colony);
+    addMenuButtons(nearMenu, colony);
     return scene;
 };
-var addMenuButtons = function (menu: TouchHolographicMenu,colony:Colony) {
+var addMenuButtons = function (menu: TouchHolographicMenu, colony: Colony) {
     var reset_apply = new TouchHolographicButton();
-    reset_apply.onPointerClickObservable.add(()=> {
-         colony.createSPS(Math.random() * 1000);
+    reset_apply.onPointerClickObservable.add(() => {
+        colony.createSPS(Math.random() * 1000);
         alert("vot i gadai");
     });
     menu.addButton(reset_apply);
     reset_apply.text = "Refresh";
-    reset_apply.imageUrl = "https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconRefresh.png" 
+    reset_apply.imageUrl = "https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconRefresh.png"
 }
 

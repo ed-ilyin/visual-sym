@@ -18,8 +18,9 @@ const canvas = document.getElementById("app") as HTMLCanvasElement;
 const engine = new Engine(canvas, true);
 
 //Create the scene
-const scene = await new World().createScene(engine, canvas)
-engine.runRenderLoop(() => scene.render());
+new World().createScene(engine, canvas).then(scene => {
+    engine.runRenderLoop(() => scene.render())
+})
 
 // Resize the engine to fit the scene
 window.addEventListener("resize", () => engine.resize());

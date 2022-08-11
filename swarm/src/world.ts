@@ -45,7 +45,7 @@ export class World {
         // создаём освещение
         new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
         // создаём камеру
-    
+
         const camera = new ArcRotateCamera(
             "camera",
             -(Math.PI / 3),
@@ -53,7 +53,7 @@ export class World {
             worldRadius * 2,
             worldCenter,
             this.scene);
-        
+
         camera.minZ = 0.01;
         camera.wheelDeltaPercentage = 0.01;
         camera.attachControl(canvas, true);
@@ -74,7 +74,8 @@ export class World {
             food.material = this.objectsMaterial
             return food
         });
-        new Colony(this, colonyPosition, antPopulation);
+
+        const colony = new Colony(this, colonyPosition, antPopulation);
 
         // here we add XR support
 
@@ -87,10 +88,10 @@ export class World {
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
+
         //const sessionManager = await xr.baseExperience.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
 
-        create_menu(this.scene, xr);
-        
+        create_menu(this.scene, xr, colony);
 
         return this.scene;
     };
