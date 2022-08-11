@@ -19,10 +19,10 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
-const colonyPosition = randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter)
-const antPopulation = 700
+const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
+const antPopulation = 500
 const foodPosition: Vector3[] =
-    [...Array(2)].map(() => randomToCartesian(worldRadius / 2, worldRadius).addInPlace(worldCenter))
+    [...Array(2)].map(() => randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
 // console.log(foodPosition)
 
 export class World {
@@ -95,9 +95,10 @@ export class World {
         checkbox.height = "20px";
         checkbox.isChecked = false;
         checkbox.color = "green";
-        checkbox.onIsCheckedChangedObservable.add(function () {
-            colony.home.showBoundingBox = !colony.home.showBoundingBox;
-            this.foodMesh.showBoundingBox = !this.foodMesh.showBoundingBox;
+        checkbox.onIsCheckedChangedObservable.add((e) => {
+            colony.home.showBoundingBox = e
+            this.foodMesh.forEach(food => food.showBoundingBox = e)
+            colony.sps.mesh.showBoundingBox = e
         });
 
         var slider = new Slider();
