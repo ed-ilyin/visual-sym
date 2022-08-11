@@ -12,6 +12,7 @@ import { randomToCartesian } from "./polar"
 import { Scene } from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { create_menu } from "./nearmenu";
+import environment from './environment.dds?url';
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -38,7 +39,7 @@ export class World {
         this.scene = new Scene(engine);
         // Fog
         // scene.clearColor = Color3.Black().toColor4();
-        this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("environment.dds", this.scene);
+        this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(environment, this.scene);
         // const gl = new GlowLayer("glow", this.scene);
         this.scene.createDefaultSkybox(this.scene.environmentTexture);
         // создаём освещение
