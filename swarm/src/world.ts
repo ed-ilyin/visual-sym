@@ -10,7 +10,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
-import { Scene } from "@babylonjs/core";
+import { FreeCamera, Scene } from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { create_menu } from "./nearmenu";
 import environment from './environment.dds?url';
@@ -18,7 +18,7 @@ import environment from './environment.dds?url';
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
-const antPopulation = 500
+const antPopulation = 900
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
@@ -46,7 +46,7 @@ export class World {
         // создаём освещение
         new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
         // создаём камеру
-        // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), this.scene);
+    
         const camera = new ArcRotateCamera(
             "camera",
             -(Math.PI / 3),
@@ -54,7 +54,8 @@ export class World {
             worldRadius * 2,
             worldCenter,
             this.scene);
-
+        
+        camera.minZ = 0.01;
         camera.wheelDeltaPercentage = 0.01;
         camera.attachControl(canvas, true);
 
@@ -87,8 +88,10 @@ export class World {
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
+        //const sessionManager = await xr.baseExperience.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
 
         create_menu(this.scene, xr);
+        
 
         return this.scene;
     };
