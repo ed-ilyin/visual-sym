@@ -5,7 +5,7 @@ export var create_menu = function (scene: { createDefaultXRExperienceAsync: () =
     var manager = new GUI3DManager();
 
     scene.createDefaultXRExperienceAsync().then((xr) => {
-        xr.baseExperience.camera.position = new Vector3(0, 0, -0.3);
+        // xr.baseExperience.camera.position = new Vector3(0, 0, -0.3);
         try {
             xr.baseExperience.featuresManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {xrInput: xr.input});
         } catch (err) {

@@ -72,17 +72,19 @@ export class World {
             return food
         });
         const colony = new Colony(this, colonyPosition, antPopulation);
+
+        // here we add XR support
+
         const ground = MeshBuilder.CreateGround("ground",
             { width: worldRadius * 8, height: worldRadius * 8 },
             this.scene);
 
         ground.material = this.objectsMaterial;
 
-
-        // here we add XR support
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
+
         create_menu(this.scene,colony.home);
 
         return this.scene;
