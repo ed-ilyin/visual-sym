@@ -12,12 +12,13 @@ import { randomToCartesian } from "./polar"
 import { Scene } from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { create_menu } from "./nearmenu";
-import environment from './environment.dds?url';
+import environment from './textures/environment.dds?url';
+import { woodFloor } from "./wood-plank";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
-const antPopulation = 600
+const antPopulation = 500
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
@@ -29,7 +30,7 @@ export class World {
     objectsSize: float = 0.2 // в метрах
     scene!: Scene;
     foodMesh: Mesh[] = []
-    objectsMaterial!: PBRMaterial;
+    glassMaterial!: PBRMaterial;
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
     speed: float = 0.005 // в метрах
@@ -59,10 +60,10 @@ export class World {
         camera.attachControl(canvas, true);
 
         // создаём текстуру для дома и еды
-        this.objectsMaterial = new PBRMaterial("glass", this.scene);
-        this.objectsMaterial.metallic = 0.0;
-        this.objectsMaterial.roughness = 0;
-        this.objectsMaterial.subSurface.isRefractionEnabled = true;
+        this.glassMaterial = new PBRMaterial("glass", this.scene);
+        this.glassMaterial.metallic = 0.0;
+        this.glassMaterial.roughness = 0;
+        this.glassMaterial.subSurface.isRefractionEnabled = true;
         // создаём еду
 
         this.foodMesh = foodPosition.map((position, i) => {
@@ -71,7 +72,7 @@ export class World {
                 { height: this.objectsSize, radius: this.objectsSize / 4 },
                 this.scene)
             food.position = position
-            food.material = this.objectsMaterial
+            food.material = this.glassMaterial
             return food
         });
 
@@ -79,11 +80,7 @@ export class World {
 
         // here we add XR support
 
-        const ground = MeshBuilder.CreateGround("ground",
-            { width: worldRadius * 8, height: worldRadius * 8 },
-            this.scene);
-
-        ground.material = this.objectsMaterial;
+        let ground = woodFloor(this.scene, worldRadius * 4, this.scene.environmentTexture)
 
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]

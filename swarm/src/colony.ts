@@ -25,7 +25,7 @@ export class Colony {
     
     // создаём дом
     this.home = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
-    this.home.material = this.world.objectsMaterial;
+    this.home.material = this.world.glassMaterial;
     this.home.position = position
     const h = this.world.objectsSize / Math.PI
     this.home.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
