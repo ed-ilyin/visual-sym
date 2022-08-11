@@ -1,4 +1,3 @@
-
 'use strict';
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Colony } from "./colony";
@@ -10,7 +9,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
-import { FreeCamera, Scene } from "@babylonjs/core";
+import { Scene } from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { create_menu } from "./nearmenu";
 import environment from './environment.dds?url';
@@ -18,7 +17,7 @@ import environment from './environment.dds?url';
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
-const antPopulation = 900
+const antPopulation = 600
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
