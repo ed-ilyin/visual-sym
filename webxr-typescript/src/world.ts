@@ -1,9 +1,6 @@
-import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { Button } from "@babylonjs/gui/2D/controls/button";
-import { Checkbox } from "@babylonjs/gui/2D/controls/checkbox";
 import { Colony } from "./colony";
-import { Control } from "@babylonjs/gui/2D/controls/control";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { float, int } from "@babylonjs/core/types";
@@ -12,11 +9,9 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
-import { Scene, TransformNode } from "@babylonjs/core";
-import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
-import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
+import { Scene } from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { GUI3DManager, HandMenu, HolographicButton, NearMenu, SpherePanel, TouchHolographicButton } from "@babylonjs/gui";
+import {create_menu} from "./nearmenu";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -45,10 +40,8 @@ export class World {
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("assets/environment.dds", this.scene);
         // const gl = new GlowLayer("glow", this.scene);
         this.scene.createDefaultSkybox(this.scene.environmentTexture);
-
         // создаём освещение
         const light = new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
-
         // создаём камеру
         // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), this.scene);
         const camera = new ArcRotateCamera(
@@ -67,8 +60,8 @@ export class World {
         this.objectsMaterial.metallic = 0.0;
         this.objectsMaterial.roughness = 0;
         this.objectsMaterial.subSurface.isRefractionEnabled = true;
-
         // создаём еду
+
         this.foodMesh = foodPosition.map((position) => {
             const food = MeshBuilder.CreateCapsule(
                 `food${position}`,
@@ -78,96 +71,22 @@ export class World {
             food.material = this.objectsMaterial
             return food
         });
-        // console.log(this.foodMesh)
-
-        // создаём муравьёв
         const colony = new Colony(this, colonyPosition, antPopulation);
-
-        // UI
-        /*
-        var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
-        var panel = new StackPanel();
-        panel.width = "200px";
-        panel.isVertical = true;
-        panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        panel.paddingRightInPixels = 100;
-        advancedTexture.addControl(panel);
-        var checkbox = new Checkbox();
-        checkbox.width = "20px";
-        checkbox.height = "20px";
-        checkbox.isChecked = false;
-        checkbox.color = "green";
-        checkbox.onIsCheckedChangedObservable.add((e) => {
-            colony.home.showBoundingBox = e
-            this.foodMesh.forEach(food => food.showBoundingBox = e)
-            colony.sps.mesh.showBoundingBox = e
-        });
-
-        var slider = new Slider();
-        slider.width = "250px";
-        slider.height = "15px";
-        slider.color = 'orange';
-        slider.minimum = 0.0001;
-        slider.maximum = 0.2;
-        slider.value = antPopulation
-        slider.maximum = antPopulation * 2
-
-        var button = Button.CreateSimpleButton("showHistory_button", "Apply/Reset");
-        button.widthInPixels = 200;
-        button.heightInPixels = 105;
-        button.onPointerClickObservable.add(function () {
-            colony.setQuantity(slider.value);
-        });
-
-        panel.addControl(slider);
-        panel.addControl(checkbox);
-        panel.addControl(button);
-
-        // const env = this.scene.createDefaultEnvironment();
-
-        // initialize XR
-        */
         const ground = MeshBuilder.CreateGround("ground",
             { width: worldRadius * 8, height: worldRadius * 8 },
             this.scene);
 
         ground.material = this.objectsMaterial;
 
+
         // here we add XR support
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
-
-        // MENU
-
-        // Create the 3D UI manager
-        const manager = new GUI3DManager(this.scene);
-        manager.useRealisticScaling = true;
-
-        // Create Near Menu with Touch Holographic Buttons + behaviour
-        const near = new NearMenu("NearMenu");
-        manager.addControl(near);
-        // near.defaultBehavior.followBehavior.minimumDistance = 1
-        // near.defaultBehavior.followBehavior.defaultDistance = 2
-        // near.defaultBehavior.followBehavior.maximumDistance = 3
-        // near.defaultBehavior.followBehavior.pitchOffset = -20
-        // near.defaultBehavior.followBehavior.ignoreCameraPitchAndRoll = false
-
-        const button0 = new TouchHolographicButton("button0");
-        // button0.imageUrl = "./textures/IconFollowMe.png";
-        button0.text = "Button 0";
-        near.addButton(button0);
-
-        const button1 = new TouchHolographicButton("button0");
-        // button0.imageUrl = "./textures/IconFollowMe.png";
-        button1.text = "Button 1";
-        near.addButton(button1);
-
-        // Create Hand Menu with Touch Holographic Buttons + behaviour
-        const handMenu = new HandMenu(xr.baseExperience, "HandMenu");
-        manager.addControl(handMenu);
+        create_menu(this.scene,colony.home);
 
         return this.scene;
-    }
+    };
+    
+    
 }
