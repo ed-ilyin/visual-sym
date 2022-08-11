@@ -1,3 +1,4 @@
+import "@babylonjs/loaders/glTF";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { World } from "./world";
 
