@@ -12,10 +12,11 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
-import { Scene } from "@babylonjs/core";
+import { Scene, TransformNode } from "@babylonjs/core";
 import { Slider } from "@babylonjs/gui/2D/controls/sliders/slider";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { GUI3DManager, HandMenu, HolographicButton, NearMenu, SpherePanel, TouchHolographicButton } from "@babylonjs/gui";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -82,6 +83,7 @@ export class World {
         const colony = new Colony(this, colonyPosition, antPopulation);
 
         // UI
+        /*
         var advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
         var panel = new StackPanel();
         panel.width = "200px";
@@ -124,17 +126,59 @@ export class World {
         // const env = this.scene.createDefaultEnvironment();
 
         // initialize XR
+        */
         const ground = MeshBuilder.CreateGround("ground",
             { width: worldRadius * 8, height: worldRadius * 8 },
             this.scene);
 
         ground.material = this.objectsMaterial;
 
+       
+
+        // const menu = new HandMenu(xr., "handMenu")
+        var manager = new GUI3DManager(this.scene);
+
+        // Let's add a slate
+        
+        const env = this.scene.createDefaultEnvironment();
+        
+        // here we add XR support
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
+      
 
-        // const menu = new HandMenu(xr., "handMenu")
+        //var camera = new ArcRotateCamera("cam", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
+        var anchor = new TransformNode("");
+    
+        camera.wheelDeltaPercentage = 0.01;
+        camera.attachControl(canvas, true);
+    
+        // Create the 3D UI manager
+        var manager = new GUI3DManager(this.scene);
+    
+        var panel = new SpherePanel();
+        panel.margin = 0.2;
+     
+        manager.addControl(panel);
+        panel.linkToTransformNode(anchor);
+        panel.position.z = -1.5;
+    
+        // Let's add some buttons!
+        var addButton = function() {
+            var button = new HolographicButton("orientation");
+            panel.addControl(button);
+    
+            button.text = "Button #" + panel.children.length;
+        }
+    
+        panel.blockLayout = true;
+        for (var index = 0; index < 60; index++) {
+            addButton();    
+        }
+        panel.blockLayout = false;
+        
+       
 
         return this.scene;
     }
