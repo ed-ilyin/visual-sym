@@ -45,20 +45,17 @@ export class World {
         // создаём освещение
         new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
         // создаём камеру
-        // const camera = new DeviceOrientationCamera("DevOr_camera", new Vector3(0, 0, 0), this.scene);
-        var camera = new FreeCamera("camera1", new Vector3(0, 1.7, -0.3), this.scene);
-    camera.minZ = 0.01;
-        
-        /*const camera = new ArcRotateCamera(
+    
+        const camera = new ArcRotateCamera(
             "camera",
             -(Math.PI / 3),
             Math.PI / 5 * 2,
             worldRadius * 2,
             worldCenter,
             this.scene);
-            */
-
-        //camera.wheelDeltaPercentage = 0.01;
+        
+        camera.minZ = 0.01;
+        camera.wheelDeltaPercentage = 0.01;
         camera.attachControl(canvas, true);
 
         // создаём текстуру для дома и еды
