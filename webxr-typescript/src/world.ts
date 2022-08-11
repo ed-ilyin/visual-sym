@@ -43,7 +43,7 @@ export class World {
         // Fog
         // scene.clearColor = Color3.Black().toColor4();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("assets/environment.dds", this.scene);
-        // var gl = new GlowLayer("glow", this.scene);
+        // const gl = new GlowLayer("glow", this.scene);
         this.scene.createDefaultSkybox(this.scene.environmentTexture);
 
         // создаём освещение
@@ -59,6 +59,7 @@ export class World {
             worldCenter,
             this.scene);
 
+        camera.wheelDeltaPercentage = 0.01;
         camera.attachControl(canvas, true);
 
         // создаём текстуру для дома и еды
@@ -133,52 +134,39 @@ export class World {
 
         ground.material = this.objectsMaterial;
 
-       
-
-        // const menu = new HandMenu(xr., "handMenu")
-        var manager = new GUI3DManager(this.scene);
-
-        // Let's add a slate
-        
-        // const env = this.scene.createDefaultEnvironment();
-        
         // here we add XR support
         const xr = await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
-      
 
-        //var camera = new ArcRotateCamera("cam", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
-        var anchor = new TransformNode("");
-    
-        camera.wheelDeltaPercentage = 0.01;
-        camera.attachControl(canvas, true);
-    
+        // MENU
+
         // Create the 3D UI manager
-        var manager = new GUI3DManager(this.scene);
-    
-        var panel = new SpherePanel();
-        panel.margin = 0.2;
-     
-        manager.addControl(panel);
-        panel.linkToTransformNode(anchor);
-        panel.position.z = -1.5;
-    
-        // Let's add some buttons!
-        var addButton = function() {
-            var button = new HolographicButton("orientation");
-            panel.addControl(button);
-    
-            button.text = "Button #" + panel.children.length;
-        }
-    
-        panel.blockLayout = true;
-        for (var index = 0; index < 60; index++) {
-            addButton();    
-        }
-        panel.blockLayout = false;
-        
-       
+        const manager = new GUI3DManager(this.scene);
+        manager.useRealisticScaling = true;
+
+        // Create Near Menu with Touch Holographic Buttons + behaviour
+        const near = new NearMenu("NearMenu");
+        manager.addControl(near);
+        // near.defaultBehavior.followBehavior.minimumDistance = 1
+        // near.defaultBehavior.followBehavior.defaultDistance = 2
+        // near.defaultBehavior.followBehavior.maximumDistance = 3
+        // near.defaultBehavior.followBehavior.pitchOffset = -20
+        // near.defaultBehavior.followBehavior.ignoreCameraPitchAndRoll = false
+
+        const button0 = new TouchHolographicButton("button0");
+        // button0.imageUrl = "./textures/IconFollowMe.png";
+        button0.text = "Button 0";
+        near.addButton(button0);
+
+        const button1 = new TouchHolographicButton("button0");
+        // button0.imageUrl = "./textures/IconFollowMe.png";
+        button1.text = "Button 1";
+        near.addButton(button1);
+
+        // Create Hand Menu with Touch Holographic Buttons + behaviour
+        const handMenu = new HandMenu(xr.baseExperience, "HandMenu");
+        manager.addControl(handMenu);
 
         return this.scene;
     }
