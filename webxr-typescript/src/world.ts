@@ -140,7 +140,7 @@ export class World {
 
         // Let's add a slate
         
-        const env = this.scene.createDefaultEnvironment();
+        // const env = this.scene.createDefaultEnvironment();
         
         // here we add XR support
         const xr = await this.scene.createDefaultXRExperienceAsync({
