@@ -49,9 +49,9 @@ export class World {
 
         const camera = new ArcRotateCamera(
             "camera",
-            -(Math.PI / 3),
-            Math.PI / 5 * 2,
-            worldRadius * 2,
+            (Math.PI / 5 * 6),
+            Math.PI/2,
+            worldRadius * 3,
             worldCenter,
             this.scene);
 

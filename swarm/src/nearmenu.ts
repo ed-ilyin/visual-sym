@@ -1,15 +1,12 @@
 'use strict';
 import { Colony } from "./colony";
 import { GUI3DManager } from "@babylonjs/gui/3D/gui3DManager";
-import { NearMenu } from "@babylonjs/gui/3D/controls/nearMenu";
 import { Scene } from "@babylonjs/core/scene";
-import { Slider3D } from "@babylonjs/gui/3D/controls/slider3D";
-import { StackPanel3D } from "@babylonjs/gui/3D/controls/stackPanel3D";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
 import { WebXRFeatureName } from "@babylonjs/core/XR/webXRFeaturesManager";
-import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
-import { SpriteManagerTreeItemComponent } from "@babylonjs/inspector/components/sceneExplorer/entities/spriteManagerTreeItemComponent";
+import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
+import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls/selector";
 
 export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
 
@@ -18,18 +15,46 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     } catch (err) {
         console.log("Articulated hand tracking not supported in this browser.");
     }
-
+    
     // Manager
     const manager = new GUI3DManager(scene);
     manager.useRealisticScaling = true;
 
-    // Near Menu
-    const menu = new NearMenu("NearMenu");
-    manager.addControl(menu);
+    // Holographic Slate
+    const slate = new HolographicSlate()
+    manager.addControl(slate);
+
+    // Selection Panel
+    const selector = new SelectionPanel("selector");
+    selector.width = 0.25;
+    selector.height = 0.48;
+    selector.horizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT;
+    selector.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+     
+    slate.content = selector
+    selector.height = 10
+	var toSize = function(isChecked: boolean) {
+		if (isChecked) {
+        }
+        else {
+        }
+	}
+    const transformGroup = new CheckboxGroup("Поотмечаем");
+	transformGroup.addCheckbox("Small", toSize);
+    transformGroup.addCheckbox("High", console.log);
+
+    const sliderGroup = new SliderGroup("Подвигаем");
+    sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value, "м/с", 0, 0.1, 0.005)
+    sliderGroup.addSlider("Популяция", console.log, "штук", 0, 2000, 500);
+
+    selector.addGroup(transformGroup);
+    selector.addGroup(sliderGroup);
 
     // Reset button
     const reset_apply = new TouchHolographicButton();
-    menu.addButton(reset_apply);
+    // menu.addButton(reset_apply);
+    // sphere.addControl(reset_apply);
+    // stack.addControl(reset_apply);
     reset_apply.onPointerClickObservable.add(() => {
         colony.setQuantity(colony.sps.nbParticles);
     });
@@ -38,7 +63,8 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
 
     // Debug button
     const debug = new TouchHolographicButton();
-    menu.addButton(debug);
+    // menu.addButton(debug);
+    // sphere.addControl(debug);
     debug.onPointerClickObservable.add(async () => {
         debug.dispose()
         await Promise.all([
@@ -48,20 +74,6 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
         scene.debugLayer.show()
     });
     debug.text = "Debug";
-    
-    // Stack Panel 3D
-    const panel = new StackPanel3D();
-    manager.addControl(panel);
-    panel.position.y = 1
-    
-    // Slider 3D
-    const slider3d = new Slider3D("slider3d", true);
-    panel.addControl(slider3d);
-    slider3d.scaling.scaleInPlace(20)
-    slider3d.maximum = colony.sps.nbParticles * 2
-    slider3d.value = colony.sps.nbParticles
-    slider3d.step = 100
-    slider3d.sliderBackplateMaterial.baseColor = Color3.White().toColor4()
 
     return scene;
 };
