@@ -1,6 +1,5 @@
 'use strict';
 import { Colony } from "./colony"
-import { float } from "@babylonjs/core/types";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
@@ -16,21 +15,19 @@ export class Ant {
   lidzMajai = 0
   lidzBaribai = 0
   acceleration = Vector3.Zero()
-  attraction: float = 0
   tmpVelocity = Vector3.Zero()
   relativeWorldCenter = Vector3.Zero()
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony
     this.velocity = velocity;
-    this.attraction = colony.world.speed / 400
   }
 
   update(particle: SolidParticle) {
     // букаха походила
     this.relativeWorldCenter
       .subtractToRef(particle.position, this.acceleration)
-    this.acceleration.normalize().scaleInPlace(this.attraction)
+    this.acceleration.normalize().scaleInPlace(this.colony.world.attraction)
     this.velocity
       .addInPlace(this.acceleration)
       .normalizeToRef(this.tmpVelocity)

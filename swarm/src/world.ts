@@ -34,6 +34,7 @@ export class World {
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
     speed: float = 0.005 // в метрах
+    attraction: float = this.speed / 100
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену

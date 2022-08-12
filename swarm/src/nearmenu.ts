@@ -16,9 +16,10 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     // Holographic Slate
     const slate = new HolographicSlate()
-    slate.title = "Colony";
-    slate.dimensions = new Vector2(16, 18);
-    slate.titleBarHeight = 1.5
+    slate.title = "Swarm";
+    slate.minDimensions = new Vector2(1, 1);
+    slate.dimensions = new Vector2(9, 10);
+    // slate.titleBarHeight = 1
     manager.addControl(slate);
 
     // Selection Panel
@@ -42,7 +43,11 @@ export function create_menu(scene: Scene, colony: Colony) {
     transformGroup.addCheckbox("High", console.log);
 
     const sliderGroup = new SliderGroup("Подвигаем");
-    sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value, "м/с", 0, 0.1, 0.005)
+    sliderGroup.addSlider("Скорость",
+        (value) => colony.world.speed = value,
+        "км/ч", 0, 0.1, 0.005,
+        (value) => Math.round(value * 3600));
+    sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v, "м/с", 0, 0.01, colony.world.attraction);
     sliderGroup.addSlider("Популяция", console.log, "штук", 0, 2000, 500);
 
     selector.addGroup(transformGroup);
