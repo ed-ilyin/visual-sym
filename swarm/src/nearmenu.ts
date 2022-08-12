@@ -8,6 +8,8 @@ import { StackPanel3D } from "@babylonjs/gui/3D/controls/stackPanel3D";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
 import { WebXRFeatureName } from "@babylonjs/core/XR/webXRFeaturesManager";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
+import { SpriteManagerTreeItemComponent } from "@babylonjs/inspector/components/sceneExplorer/entities/spriteManagerTreeItemComponent";
 
 export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
 
@@ -24,9 +26,6 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     // Near Menu
     const menu = new NearMenu("NearMenu");
     manager.addControl(menu);
-    menu.rows = 3;
-    menu.isPinned = false;
-    menu.position.y = 1.61;
 
     // Reset button
     const reset_apply = new TouchHolographicButton();
@@ -52,7 +51,6 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     
     // Stack Panel 3D
     const panel = new StackPanel3D();
-    menu.addControl(panel);
     manager.addControl(panel);
     panel.position.y = 1
     
@@ -60,10 +58,10 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     const slider3d = new Slider3D("slider3d", true);
     panel.addControl(slider3d);
     slider3d.scaling.scaleInPlace(20)
-    slider3d.minimum = 0
     slider3d.maximum = colony.sps.nbParticles * 2
     slider3d.value = colony.sps.nbParticles
     slider3d.step = 100
+    slider3d.sliderBackplateMaterial.baseColor = Color3.White().toColor4()
 
     return scene;
 };
