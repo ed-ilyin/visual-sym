@@ -4,8 +4,9 @@ import { GUI3DManager } from "@babylonjs/gui/3D/gui3DManager";
 import { Scene } from "@babylonjs/core/scene";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
 import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
-import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls/selector";
+import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls";
 import { Control } from "@babylonjs/gui/2D/controls/control";
+import { Vector2 } from "@babylonjs/core/Maths/math.vector";
 
 export function create_menu(scene: Scene, colony: Colony) {
 
@@ -15,17 +16,21 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     // Holographic Slate
     const slate = new HolographicSlate()
+    slate.title = "Colony";
+    slate.dimensions = new Vector2(16, 18);
+    slate.titleBarHeight = 1.5
     manager.addControl(slate);
 
     // Selection Panel
     const selector = new SelectionPanel("selector");
-    selector.width = 0.25;
-    selector.height = 0.48;
-    selector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    selector.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    selector.color = "#123e"
+    selector.background = "#edce"
+    selector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    selector.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    selector.height = "100%";
 
     slate.content = selector
-    selector.height = 10
+    // selector.height = 10
     var toSize = function (isChecked: boolean) {
         if (isChecked) {
         }
