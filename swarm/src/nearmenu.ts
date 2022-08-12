@@ -3,19 +3,12 @@ import { Colony } from "./colony";
 import { GUI3DManager } from "@babylonjs/gui/3D/gui3DManager";
 import { Scene } from "@babylonjs/core/scene";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
-import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
-import { WebXRFeatureName } from "@babylonjs/core/XR/webXRFeaturesManager";
 import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
 import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls/selector";
+import { Control } from "@babylonjs/gui/2D/controls/control";
 
-export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Colony) {
+export function create_menu(scene: Scene, colony: Colony) {
 
-    try {
-        xr.baseExperience.featuresManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
-    } catch (err) {
-        console.log("Articulated hand tracking not supported in this browser.");
-    }
-    
     // Manager
     const manager = new GUI3DManager(scene);
     manager.useRealisticScaling = true;
@@ -28,19 +21,19 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
     const selector = new SelectionPanel("selector");
     selector.width = 0.25;
     selector.height = 0.48;
-    selector.horizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT;
-    selector.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-     
+    selector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    selector.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+
     slate.content = selector
     selector.height = 10
-	var toSize = function(isChecked: boolean) {
-		if (isChecked) {
+    var toSize = function (isChecked: boolean) {
+        if (isChecked) {
         }
         else {
         }
-	}
+    }
     const transformGroup = new CheckboxGroup("Поотмечаем");
-	transformGroup.addCheckbox("Small", toSize);
+    transformGroup.addCheckbox("Small", toSize);
     transformGroup.addCheckbox("High", console.log);
 
     const sliderGroup = new SliderGroup("Подвигаем");

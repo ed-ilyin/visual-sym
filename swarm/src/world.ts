@@ -82,13 +82,13 @@ export class World {
 
         let ground = woodFloor(this.scene, worldRadius * 4, this.scene.environmentTexture)
 
-        const xr = await this.scene.createDefaultXRExperienceAsync({
+        await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         });
 
         //const sessionManager = await xr.baseExperience.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
 
-        create_menu(this.scene, xr, colony);
+        create_menu(this.scene, colony);
 
         return this.scene;
     };
