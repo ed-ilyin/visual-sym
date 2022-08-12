@@ -67,7 +67,8 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
 
 
     var slider4 = new Slider3D("slider4", true);
-    panel.addControl(slider4);
+  //  menu.addControl(slider4);// tak ne rabotaet
+  panel.addControl(slider4); // tak rabotaet
     slider4.maximum =  2 * Math.PI;
     slider4.scaling.x = 20;
     slider4.scaling.y = 20;
@@ -90,7 +91,7 @@ export function create_menu(scene: Scene, xr: WebXRDefaultExperience, colony: Co
             slider4.mesh.position.x = Math.min(Math.max(position, slider4.start), slider4.end);
         }
     });
-
+    menu.addControl(panel);
     return scene;
 };
 
