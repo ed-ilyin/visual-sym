@@ -51,7 +51,7 @@ export class World {
 
         this.acrCamera = new ArcRotateCamera(
             "arc",
-            (Math.PI / 5 * 6),
+            (Math.PI / 3 * 5),
             Math.PI / 2,
             worldRadius * 3,
             worldCenter,
@@ -60,7 +60,6 @@ export class World {
         this.acrCamera.minZ = 0.01;
         this.acrCamera.wheelDeltaPercentage = 0.01;
         this.acrCamera.attachControl(canvas, true);
-        // this.acrCamera.useAutoRotationBehavior = true;
 
         // создаём текстуру для дома и еды
         this.glassMaterial = new PBRMaterial("glass", this.scene);

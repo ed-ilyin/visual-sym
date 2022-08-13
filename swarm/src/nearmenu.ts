@@ -19,8 +19,20 @@ export function create_menu(scene: Scene, colony: Colony) {
     slate.title = "Swarm";
     slate.minDimensions = new Vector2(2, 3);
     slate.dimensions = new Vector2(9, 10);
-    slate.position = new Vector3(3, 7, 0);
-    slate.scaling.scaleInPlace(10)
+    slate.position = new Vector3(-2, 7, 7);
+    const scale = 10
+    slate.scaling.scaleInPlace(scale)
+    // slate.position = new Vector3(-1.6, 7, -4);
+    // slate.scaling.scaleInPlace(2)
+    slate._followButton.onToggleObservable.add((v) => {
+        console.log(v)
+        if (v) {
+            console.log(slate.scaling)
+            slate.scaling = new Vector3(1, 1, 1)
+            console.log(slate.scaling)
+        }
+        else { slate.scaling.scaleInPlace(scale) }
+    })
 
     // Selection Panel
     const selector = new SelectionPanel("selector");
