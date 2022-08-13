@@ -35,16 +35,24 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     slate.content = selector
     const transformGroup = new CheckboxGroup("Поотмечаем");
-    transformGroup.addCheckbox("Auto Rotation",
+    transformGroup.addCheckbox("Auto Rotation (wait)",
         (v) => colony.world.acrCamera.useAutoRotationBehavior = v);
-    transformGroup.addCheckbox("High", console.log);
+    transformGroup.addCheckbox("Debug", async (v) => {
+        if (v) {
+            await Promise.all([
+                import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
+                import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+            ]);
+            scene.debugLayer.show()
+        } else { scene.debugLayer.hide() }
+    });
 
     const sliderGroup = new SliderGroup("Подвигаем");
     sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value,
         "км/ч", 0, 0.05, colony.world.speed,
-        (value) => Math.round(value * 10000));
+        (value) => Math.round(value * 1000));
     sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
-        "м/с²", 0, 1, colony.world.attraction,
+        "м/с²", 0, 0.00005, colony.world.attraction,
         (v) => Math.round(v * 1000000));
     sliderGroup.addSlider("Популяция", (v) => console.log(Math.round(v)),
         "штук", 0, 2000, 500);
