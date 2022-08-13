@@ -22,7 +22,7 @@ export function woodFloor(scene: Scene, size: float, eqTexture: BaseTexture) {
     wood.albedoTexture = new Texture(albedo, scene);
 
     const woodPlank =
-        MeshBuilder.CreateBox("plane", { width: size, height: 0.1, depth: size }, scene);
+        MeshBuilder.CreateCylinder("plane", { diameter: size * 2, height: 0.1 }, scene);
 
     woodPlank.material = wood;
 

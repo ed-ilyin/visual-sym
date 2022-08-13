@@ -26,12 +26,11 @@ export function create_menu(scene: Scene, colony: Colony) {
     // slate.scaling.scaleInPlace(2)
     slate._followButton.onToggleObservable.add((v) => {
         console.log(v)
-        if (v) {
-            console.log(slate.scaling)
-            slate.scaling = new Vector3(1, 1, 1)
-            console.log(slate.scaling)
+        if (v) { slate.scaling.scaleInPlace(1/scale) }
+        else {
+            slate.position = new Vector3(-2, 7, 7);
+            slate.scaling.scaleInPlace(scale)
         }
-        else { slate.scaling.scaleInPlace(scale) }
     })
 
     // Selection Panel
@@ -65,7 +64,7 @@ export function create_menu(scene: Scene, colony: Colony) {
         (v) => Math.round(v * 1000000));
 
     sliderGroup.addSlider("Популяция", (v) => console.log(Math.round(v)),
-        "штук", 0, 2000, 500);
+        "штук", 0, 2000, colony.sps.nbParticles);
 
     selector.addGroup(transformGroup);
     selector.addGroup(sliderGroup);
