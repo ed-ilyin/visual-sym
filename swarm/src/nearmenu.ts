@@ -6,7 +6,7 @@ import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolograp
 import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
 import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls";
 import { Control } from "@babylonjs/gui/2D/controls/control";
-import { Vector2 } from "@babylonjs/core/Maths/math.vector";
+import { Vector2, Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 export function create_menu(scene: Scene, colony: Colony) {
 
@@ -16,11 +16,14 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     // Holographic Slate
     const slate = new HolographicSlate()
-    slate.title = "Swarm";
-    slate.minDimensions = new Vector2(1, 1);
-    slate.dimensions = new Vector2(9, 10);
-    // slate.titleBarHeight = 1
     manager.addControl(slate);
+    slate.title = "Swarm";
+    slate.minDimensions = new Vector2(2, 3);
+    slate.dimensions = new Vector2(9, 10);
+    // slate.dimensions = new Vector2(90, 100);
+    slate.position = new Vector3(0, 7, 0);
+    // slate._followButton.isToggled = true;
+    slate.scaling.scaleInPlace(10)
 
     // Selection Panel
     const selector = new SelectionPanel("selector");
@@ -31,23 +34,17 @@ export function create_menu(scene: Scene, colony: Colony) {
     selector.height = "100%";
 
     slate.content = selector
-    // selector.height = 10
-    var toSize = function (isChecked: boolean) {
-        if (isChecked) {
-        }
-        else {
-        }
-    }
     const transformGroup = new CheckboxGroup("Поотмечаем");
-    transformGroup.addCheckbox("Small", toSize);
+    transformGroup.addCheckbox("Small", console.log);
     transformGroup.addCheckbox("High", console.log);
 
     const sliderGroup = new SliderGroup("Подвигаем");
-    sliderGroup.addSlider("Скорость",
-        (value) => colony.world.speed = value,
-        "км/ч", 0, 0.1, 0.005,
-        (value) => Math.round(value * 3600));
-    sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v, "м/с", 0, 0.001, colony.world.attraction);
+    sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value,
+        "км/ч", 0, 0.05, colony.world.speed,
+        (value) => Math.round(value * 10000));
+    sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
+        "м/с²", 0, 0.001, colony.world.attraction,
+        (v) => Math.round(v * 100000));
     sliderGroup.addSlider("Популяция", console.log, "штук", 0, 2000, 500);
 
     selector.addGroup(transformGroup);
