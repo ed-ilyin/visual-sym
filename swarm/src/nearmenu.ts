@@ -5,7 +5,6 @@ import { Scene } from "@babylonjs/core/scene";
 import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolographicButton";
 import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
 import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls";
-import { Control } from "@babylonjs/gui/2D/controls/control";
 import { Vector2, Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 export function create_menu(scene: Scene, colony: Colony) {
@@ -20,23 +19,19 @@ export function create_menu(scene: Scene, colony: Colony) {
     slate.title = "Swarm";
     slate.minDimensions = new Vector2(2, 3);
     slate.dimensions = new Vector2(9, 10);
-    // slate.dimensions = new Vector2(90, 100);
     slate.position = new Vector3(3, 7, 0);
-    // slate._followButton.isToggled = true;
     slate.scaling.scaleInPlace(10)
 
     // Selection Panel
     const selector = new SelectionPanel("selector");
-    selector.color = "#123e"
     selector.background = "#edce"
-    selector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    selector.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    selector.height = "100%";
-
     slate.content = selector
+
     const transformGroup = new CheckboxGroup("Поотмечаем");
+
     transformGroup.addCheckbox("Auto Rotation (wait)",
         (v) => colony.world.acrCamera.useAutoRotationBehavior = v);
+
     transformGroup.addCheckbox("Debug", async (v) => {
         if (v) {
             await Promise.all([
@@ -48,12 +43,15 @@ export function create_menu(scene: Scene, colony: Colony) {
     });
 
     const sliderGroup = new SliderGroup("Подвигаем");
+
     sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value,
         "км/ч", 0, 0.05, colony.world.speed,
         (value) => Math.round(value * 1000));
+
     sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
         "м/с²", 0, 0.00005, colony.world.attraction,
         (v) => Math.round(v * 1000000));
+
     sliderGroup.addSlider("Популяция", (v) => console.log(Math.round(v)),
         "штук", 0, 2000, 500);
 
