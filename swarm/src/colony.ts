@@ -69,10 +69,7 @@ export class Colony {
     this.sps.initParticles();
     this.sps.updateParticle = (particle) => this.update(particle)
 
-    this.sps.afterUpdateParticles = () => {
-      this.bboxesComputed = true;
-      //console.log(calculated_first_time)
-    };
+    this.sps.afterUpdateParticles = () => this.bboxesComputed = true;
 
     this.world.scene.onBeforeRenderObservable.add(() => this.sps.setParticles())
   }
@@ -88,7 +85,6 @@ export class Colony {
       const citasSkudrasParicle = this.sps.particles[p]
       const citasSkudrasVieta = citasSkudrasParicle.position
       const distance = Vector3.Distance(particle.position, citasSkudrasVieta);
-      // if (distance <= dzirde) console.log('кто-то рядом')
       ant.kliedz(particle.position, distance, citaSkudra, citasSkudrasVieta)
       citaSkudra.kliedz(citasSkudrasVieta, distance, ant, particle.position)
     }

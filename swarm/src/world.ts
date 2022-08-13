@@ -18,11 +18,11 @@ import { woodFloor } from "./wood-plank";
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
+const colonySpeed = 0.005
 const antPopulation = 500
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
-// console.log(foodPosition)
 
 export class World {
     radius: float = worldRadius // в метрах
@@ -33,8 +33,9 @@ export class World {
     glassMaterial!: PBRMaterial;
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
-    speed: float = 0.005 // в метрах
-    attraction: float = this.speed / 100
+    speed: float = colonySpeed // в метрах
+    attraction: float = Math.sqrt(colonySpeed) / 10000
+    acrCamera!: ArcRotateCamera
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
@@ -48,17 +49,18 @@ export class World {
         new HemisphericLight("light", new Vector3(worldRadius, worldRadius, -worldRadius), this.scene);
         // создаём камеру
 
-        const camera = new ArcRotateCamera(
-            "camera",
+        this.acrCamera = new ArcRotateCamera(
+            "arc",
             (Math.PI / 5 * 6),
-            Math.PI/2,
+            Math.PI / 2,
             worldRadius * 3,
             worldCenter,
             this.scene);
 
-        camera.minZ = 0.01;
-        camera.wheelDeltaPercentage = 0.01;
-        camera.attachControl(canvas, true);
+        this.acrCamera.minZ = 0.01;
+        this.acrCamera.wheelDeltaPercentage = 0.01;
+        this.acrCamera.attachControl(canvas, true);
+        // this.acrCamera.useAutoRotationBehavior = true;
 
         // создаём текстуру для дома и еды
         this.glassMaterial = new PBRMaterial("glass", this.scene);

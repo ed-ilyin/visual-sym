@@ -41,14 +41,11 @@ export class Ant {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    // console.log(particle.intersectsMesh(this.colony.food))
-    // console.log(this.colony.bboxesComputed)
     for (let mesh of this.colony.world.foodMesh) {
       if (this.colony.bboxesComputed && particle.intersectsMesh(mesh)) {
         this.lidzBaribai = 0
 
         if (this.mekle == Vieta.Bariba) {
-          // console.log('нашёл еду!')
           this.mekle = Vieta.Maja
           particle.color = this.colony.colorFull
           this.velocity.scaleInPlace(-1) // разворот на 180 градусов
@@ -60,7 +57,6 @@ export class Ant {
       this.lidzMajai = 0
 
       if (this.mekle == Vieta.Maja) {
-        // console.log('нашёл дом!')
         this.mekle = Vieta.Bariba
         particle.color = this.colony.colorEmpty
         this.velocity.scaleInPlace(-1) // разворот на 180 градусов

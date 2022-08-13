@@ -21,7 +21,7 @@ export function create_menu(scene: Scene, colony: Colony) {
     slate.minDimensions = new Vector2(2, 3);
     slate.dimensions = new Vector2(9, 10);
     // slate.dimensions = new Vector2(90, 100);
-    slate.position = new Vector3(0, 7, 0);
+    slate.position = new Vector3(3, 7, 0);
     // slate._followButton.isToggled = true;
     slate.scaling.scaleInPlace(10)
 
@@ -35,7 +35,8 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     slate.content = selector
     const transformGroup = new CheckboxGroup("Поотмечаем");
-    transformGroup.addCheckbox("Small", console.log);
+    transformGroup.addCheckbox("Auto Rotation",
+        (v) => colony.world.acrCamera.useAutoRotationBehavior = v);
     transformGroup.addCheckbox("High", console.log);
 
     const sliderGroup = new SliderGroup("Подвигаем");
@@ -43,9 +44,10 @@ export function create_menu(scene: Scene, colony: Colony) {
         "км/ч", 0, 0.05, colony.world.speed,
         (value) => Math.round(value * 10000));
     sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
-        "м/с²", 0, 0.001, colony.world.attraction,
-        (v) => Math.round(v * 100000));
-    sliderGroup.addSlider("Популяция", console.log, "штук", 0, 2000, 500);
+        "м/с²", 0, 1, colony.world.attraction,
+        (v) => Math.round(v * 1000000));
+    sliderGroup.addSlider("Популяция", (v) => console.log(Math.round(v)),
+        "штук", 0, 2000, 500);
 
     selector.addGroup(transformGroup);
     selector.addGroup(sliderGroup);
