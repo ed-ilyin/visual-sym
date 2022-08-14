@@ -5,8 +5,6 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
 // import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
-const dzirde = 0.6
-
 export class Ant {
   colony: Colony
   velocity = Vector3.Zero()
@@ -74,17 +72,17 @@ export class Ant {
       case Vieta.Maja: {
         this.kliegs = Vieta.Bariba
 
-        if (distance <= dzirde) citaSkudra.dzird(
+        if (distance <= this.colony.loudness) citaSkudra.dzird(
           skudrasVieta,
-          Vieta.Maja, this.lidzMajai + dzirde,
+          Vieta.Maja, this.lidzMajai + this.colony.loudness,
           citasSkudrasVieta)
       }
       case Vieta.Bariba: {
         this.kliegs = Vieta.Maja
 
-        if (distance <= dzirde) citaSkudra.dzird(
+        if (distance <= this.colony.loudness) citaSkudra.dzird(
           skudrasVieta,
-          Vieta.Bariba, this.lidzBaribai + dzirde,
+          Vieta.Bariba, this.lidzBaribai + this.colony.loudness,
           citasSkudrasVieta)
       }
     }

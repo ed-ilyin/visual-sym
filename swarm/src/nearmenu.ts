@@ -55,13 +55,17 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     const sliderGroup = new SliderGroup("Подвигаем");
 
-    sliderGroup.addSlider("Скорость", (value) => colony.world.speed = value,
+    sliderGroup.addSlider("Скорость", (v) => colony.world.speed = v,
         "км/ч", 0, 0.05, colony.world.speed,
-        (value) => Math.round(value * 1000));
+        (v) => Math.round(v * 1000));
 
     sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
         "м/с²", 0, 0.00005, colony.world.attraction,
         (v) => Math.round(v * 1000000));
+
+    sliderGroup.addSlider("Громкость", (v) => colony.loudness = v,
+        "см", 0, 3, colony.loudness,
+        (v) => Math.round(v * 100));
 
     sliderGroup.addSlider("Популяция", (v) => console.log(Math.round(v)),
         "штук", 0, 2000, colony.sps.nbParticles);
