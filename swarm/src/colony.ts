@@ -9,7 +9,7 @@ import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { randomToCartesian } from "./polar";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
-import {PointerDragBehavior,Vector4} from "@babylonjs/core";
+import {PointerDragBehavior} from "@babylonjs/core";
 import { World } from "./world";
 
 export class Colony {
