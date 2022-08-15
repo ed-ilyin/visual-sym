@@ -24,7 +24,6 @@ export class Colony {
 
   constructor(world: World, position: Vector3, population: int) {
     this.world = world
-
     // создаём дом
     this.home = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
     this.home.material = this.world.glassMaterial;
