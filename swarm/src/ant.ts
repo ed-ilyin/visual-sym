@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 import { Colony } from "./colony"
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -55,7 +55,7 @@ export class Ant {
       }
     }
 
-    if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.home)) {
+    if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.home.mesh)) {
       this.lidzMajai = 0
 
       if (this.mekle == Vieta.Maja) {
