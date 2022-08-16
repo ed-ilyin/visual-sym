@@ -135,20 +135,22 @@ export class Ant {
   }
 
   takenFoodAtHome(){
-    this.colony.home.size=this.colony.home.size+(Ant.OneBiteSize)*20;
+    this.colony.home.size=this.colony.home.size+(Ant.OneBiteSize);
     var scale_home=this.colony.home.size/this.colony.home.original_size
-    this.colony.home.mesh.scaling=new Vector3(scale_home,scale_home,scale_home);
+    this.colony.home.mesh.scaling.scaleInPlace(scale_home);
   }
   ed(value:any) {
     
     value.amout_food=value.amout_food-Ant.OneBiteSize;
     var scale=value.amout_food/value.original_size
-    value.mesh.scaling =new Vector3(scale,scale,scale);
+    value.mesh.scaling.scaleInPlace(scale)
 
 
     if (value.amout_food < 0){
-      value.mesh.dispose();
-      value.amout_food=0;
+      value.mesh.position=new Vector3( Math.random(), Math.random(), Math.random());
+      value.scaling=new Vector3(1,1,1);
+      value.amout_food=100;
+
     }
   }
 }
