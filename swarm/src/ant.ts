@@ -130,7 +130,7 @@ export class Ant {
   }
 
   takenFoodAtHome(){
-    this.colony.home.size=this.colony.home.size+(Ant.OneBiteSize)*200;
+    this.colony.home.size=this.colony.home.size+(Ant.OneBiteSize)*20;
     var scale_home=this.colony.home.size/this.colony.home.original_size
     this.colony.home.mesh.scaling=new Vector3(scale_home,scale_home,scale_home);
   }
