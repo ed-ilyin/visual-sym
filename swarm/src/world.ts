@@ -15,7 +15,6 @@ import { create_menu } from "./nearmenu";
 import environment from './textures/environment.dds?url';
 import { woodFloor } from "./wood-plank";
 import {SixDofDragBehavior } from "@babylonjs/core";
-import { Ant } from "./ant";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)

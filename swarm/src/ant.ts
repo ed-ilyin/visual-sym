@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 import { Colony } from "./colony"
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
