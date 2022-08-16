@@ -15,6 +15,7 @@ import { create_menu } from "./nearmenu";
 import environment from './textures/environment.dds?url';
 import { woodFloor } from "./wood-plank";
 import {SixDofDragBehavior } from "@babylonjs/core";
+import { Ant } from "./ant";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -24,23 +25,36 @@ const antPopulation = 500
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
+class Food {
+    mesh: Mesh;
+    amout_food: number;
+    original_size:number;
+    constructor(mesh: Mesh, amount_food: number,original_size:number){
+    this.mesh = mesh;
+    this.amout_food = amount_food;
+    this.original_size=original_size;
 
+    }
+}
+          
 export class World {
     radius: float = worldRadius // в метрах
     center = worldCenter
     objectsSize: float = 0.2 // в метрах
     scene!: Scene;
-    foodMesh: Mesh[] = []
+    foods: Food[] = []
     glassMaterial!: PBRMaterial;
     antPolyhedronType: int = 0
     antSize: float = 0.01 // в метрах
     speed: float = colonySpeed // в метрах
     attraction: float = Math.sqrt(colonySpeed) / 10000
     acrCamera!: ArcRotateCamera
+    static amountFoodAvablile=10;
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
         this.scene = new Scene(engine);
+        
         // Fog
         // scene.clearColor = Color3.Black().toColor4();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(environment, this.scene);
@@ -68,24 +82,27 @@ export class World {
         this.glassMaterial.roughness = 0;
         this.glassMaterial.subSurface.isRefractionEnabled = true;
         // создаём еду
-
-        this.foodMesh = foodPosition.map((position, i) => {
-            const food = MeshBuilder.CreateCapsule(
+        foodPosition.map((value,i) => {
+            var food_amout=World.amountFoodAvablile;
+            var object= MeshBuilder.CreateCapsule(
                 `food${i}`,
-                { height: this.objectsSize, radius: this.objectsSize / 4 },
-                this.scene)
-            food.position = position
-            food.material = this.glassMaterial
-            return food
-        });
+                 { height: food_amout/100, radius: food_amout/100},
+                 this.scene);
+            var food=new Food(object,food_amout,food_amout);
+            food.mesh.position=value;
+            food.mesh.material=this.glassMaterial;
+            this.foods.push(food);
+            
 
-      
+
+          
+        });
         
-        this.foodMesh.forEach(function (value) {
+        this.foods.forEach(function (value) {
             var sixDofDragBehavior = new SixDofDragBehavior();
             sixDofDragBehavior.dragDeltaRatio = 0.2;
             sixDofDragBehavior.zDragFactor = 0.2;
-            value.addBehavior(sixDofDragBehavior)
+            value.mesh.addBehavior(sixDofDragBehavior)
         });
 
         const colony = new Colony(this, colonyPosition, antPopulation);

@@ -12,9 +12,22 @@ import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSyst
 import {SixDofDragBehavior} from "@babylonjs/core";
 import { World } from "./world";
 
+class Home {
+  mesh:Mesh
+  original_size:number
+  size:number
+  constructor(mesh:Mesh,original_size:number,size:number){
+    this.mesh=mesh;
+    this.original_size=original_size;
+    this.size=size;
+  }
+
+}
+
+
 export class Colony {
   ants: Ant[] = []
-  home: Mesh
+  home: Home
   bboxesComputed = false
   sps!: SolidParticleSystem;
   world: World
@@ -24,17 +37,19 @@ export class Colony {
 
   constructor(world: World, position: Vector3, population: int) {
     this.world = world
+
+ 
     // создаём дом
-    this.home = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
-    this.home.material = this.world.glassMaterial;
-    this.home.position = position
+    var home_mesh = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
+    this.home=new Home(home_mesh,100,100);
+    this.home.mesh.material = this.world.glassMaterial;
+    this.home.mesh.position = position
     const h = this.world.objectsSize / Math.PI
-    this.home.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
+    this.home.mesh.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
     var sixDofDragBehavior = new SixDofDragBehavior();
     sixDofDragBehavior.dragDeltaRatio = 0.2;
     sixDofDragBehavior.zDragFactor = 0.2;
-
-    this.home.addBehavior(sixDofDragBehavior);
+    this.home.mesh.addBehavior(sixDofDragBehavior);
     this.createSPS(population)
   }
 

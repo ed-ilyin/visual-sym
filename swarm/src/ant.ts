@@ -15,10 +15,13 @@ export class Ant {
   acceleration = Vector3.Zero()
   tmpVelocity = Vector3.Zero()
   relativeWorldCenter = Vector3.Zero()
+  static OneBiteSize=0.01
+
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony
     this.velocity = velocity;
+   
   }
 
   update(particle: SolidParticle) {
@@ -39,13 +42,14 @@ export class Ant {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    for (let mesh of this.colony.world.foodMesh) {
-      if (this.colony.bboxesComputed && particle.intersectsMesh(mesh)) {
+    for (let value of this.colony.world.foods) {
+      if (this.colony.bboxesComputed && particle.intersectsMesh(value.mesh)) {
         this.lidzBaribai = 0
 
-        if (this.mekle == Vieta.Bariba) {
+        if (this.mekle == Vieta.Bariba && value.amout_food > 0) {
           this.mekle = Vieta.Maja
           particle.color = this.colony.colorFull
+          this.ed(value);
           this.velocity.scaleInPlace(-1) // разворот на 180 градусов
         }
       }
@@ -119,6 +123,17 @@ export class Ant {
     if (sadzirdetaVieta == Vieta.Bariba && sadzirdetsAttalums < this.lidzBaribai) {
       this.lidzBaribai = sadzirdetsAttalums
       pivot()
+    }
+  }
+
+  ed(value:any) {
+    value.amout_food=value.amout_food-Ant.OneBiteSize;
+    var scale=value.amout_food/value.original_size
+    value.mesh.scaling =new Vector3(scale,scale,scale);
+    console.log(value.amout_food/value.original_size);
+    if (value.amout_food < 0){
+      value.mesh.dispose();
+      value.amout_food=0;
     }
   }
 }
