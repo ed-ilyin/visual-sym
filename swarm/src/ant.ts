@@ -5,6 +5,9 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
 // import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
+const scalingEmpty = new Vector3(1,1,1)
+const scalingFull = new Vector3(2,2,2)
+
 export class Ant {
   colony: Colony
   velocity = Vector3.Zero()
@@ -48,8 +51,9 @@ export class Ant {
 
         if (this.mekle == Vieta.Bariba && value.amout_food > 0) {
           this.mekle = Vieta.Maja
-          particle.color = this.colony.colorFull
+          // particle.color = this.colony.colorFull
           this.ed(value);
+          particle.scaling = scalingFull
           
           this.velocity.scaleInPlace(-1) // разворот на 180 градусов
         }
@@ -58,12 +62,13 @@ export class Ant {
 
     if (this.colony.bboxesComputed && particle.intersectsMesh(this.colony.home.mesh)) {
       this.lidzMajai = 0
-     
 
       if (this.mekle == Vieta.Maja) {
         this.takenFoodAtHome();
         this.mekle = Vieta.Bariba
-        particle.color = this.colony.colorEmpty
+        // particle.color = this.colony.colorEmpty
+        particle.scaling = scalingEmpty
+          
         this.velocity.scaleInPlace(-1) // разворот на 180 градусов
       }
     }

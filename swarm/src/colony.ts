@@ -5,25 +5,24 @@ import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { float, int } from "@babylonjs/core/types";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { randomToCartesian } from "./polar";
+import { Scalar } from "@babylonjs/core/Maths/math.scalar";
+import { SixDofDragBehavior } from "@babylonjs/core/Behaviors/Meshes/sixDofDragBehavior";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
-import {SixDofDragBehavior} from "@babylonjs/core";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { World } from "./world";
 
 class Home {
-  mesh:Mesh
-  original_size:number
-  size:number
-  constructor(mesh:Mesh,original_size:number,size:number){
-    this.mesh=mesh;
-    this.original_size=original_size;
-    this.size=size;
+  mesh: Mesh
+  original_size: number
+  size: number
+  constructor(mesh: Mesh, original_size: number, size: number) {
+    this.mesh = mesh;
+    this.original_size = original_size;
+    this.size = size;
   }
-
 }
-
 
 export class Colony {
   ants: Ant[] = []
@@ -38,10 +37,9 @@ export class Colony {
   constructor(world: World, position: Vector3, population: int) {
     this.world = world
 
- 
     // создаём дом
     var home_mesh = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
-    this.home=new Home(home_mesh,100,100);
+    this.home = new Home(home_mesh, 100, 100);
     this.home.mesh.material = this.world.glassMaterial;
     this.home.mesh.position = position
     const h = this.world.objectsSize / Math.PI
@@ -79,10 +77,10 @@ export class Colony {
         const velocity = randomToCartesian(this.world.speed, this.world.speed)
         this.ants[p] = new Ant(this, velocity)
         particle.position = randomToCartesian(0, this.world.radius)
-        // particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
+        particle.rotation = new Vector3(Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi), Scalar.RandomRange(0, Scalar.TwoPi))
 
-        particle.rotationQuaternion =
-          new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
+        // particle.rotationQuaternion =
+        //   new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
       }
     }
 
