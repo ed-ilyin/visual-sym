@@ -33,7 +33,7 @@ export class Colony {
   world: World
   colorFull = new Color4(1, 0, 0, 1)
   colorEmpty = new Color4(0, 0, 1, 1)
-  loudness: float = 1
+  loudness: float = 0.5
 
   constructor(world: World, position: Vector3, population: int) {
     this.world = world

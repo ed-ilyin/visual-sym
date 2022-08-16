@@ -60,7 +60,7 @@ export function create_menu(scene: Scene, colony: Colony) {
         (v) => Math.round(v * 1000));
 
     sliderGroup.addSlider("Gravity", (v) => colony.world.attraction = v,
-        "м/с²", 0, 0.00005, colony.world.attraction,
+        "м/с²", 0, 0.001, colony.world.attraction,
         (v) => Math.round(v * 1000000));
 
     sliderGroup.addSlider("Громкость", (v) => colony.loudness = v,
