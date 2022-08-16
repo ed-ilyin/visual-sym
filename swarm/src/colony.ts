@@ -9,6 +9,7 @@ import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { randomToCartesian } from "./polar";
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { SolidParticleSystem } from "@babylonjs/core/Particles/solidParticleSystem";
+import {SixDofDragBehavior} from "@babylonjs/core";
 import { World } from "./world";
 
 export class Colony {
@@ -23,14 +24,17 @@ export class Colony {
 
   constructor(world: World, position: Vector3, population: int) {
     this.world = world
-    
     // создаём дом
     this.home = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
     this.home.material = this.world.glassMaterial;
     this.home.position = position
     const h = this.world.objectsSize / Math.PI
     this.home.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
+    var sixDofDragBehavior = new SixDofDragBehavior();
+    sixDofDragBehavior.dragDeltaRatio = 0.2;
+    sixDofDragBehavior.zDragFactor = 0.2;
 
+    this.home.addBehavior(sixDofDragBehavior);
     this.createSPS(population)
   }
 

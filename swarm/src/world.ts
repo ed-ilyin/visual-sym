@@ -14,6 +14,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { create_menu } from "./nearmenu";
 import environment from './textures/environment.dds?url';
 import { woodFloor } from "./wood-plank";
+import {SixDofDragBehavior } from "@babylonjs/core";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -76,6 +77,15 @@ export class World {
             food.position = position
             food.material = this.glassMaterial
             return food
+        });
+
+      
+        
+        this.foodMesh.forEach(function (value) {
+            var sixDofDragBehavior = new SixDofDragBehavior();
+            sixDofDragBehavior.dragDeltaRatio = 0.2;
+            sixDofDragBehavior.zDragFactor = 0.2;
+            value.addBehavior(sixDofDragBehavior)
         });
 
         const colony = new Colony(this, colonyPosition, antPopulation);
