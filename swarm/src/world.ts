@@ -91,10 +91,6 @@ export class World {
             food.mesh.position=value;
             food.mesh.material=this.glassMaterial;
             this.foods.push(food);
-            
-
-
-          
         });
         
         this.foods.forEach(function (value) {
