@@ -81,14 +81,15 @@ export class World {
         this.glassMaterial.metallic = 0.0;
         this.glassMaterial.roughness = 0;
         this.glassMaterial.subSurface.isRefractionEnabled = true;
+
         // создаём еду
         foodPosition.map((value, i) => {
-            var food_amout = World.amountFoodAvablile;
+            var food_amount = World.amountFoodAvablile;
             var object = MeshBuilder.CreateCapsule(
                 `food${i}`,
-                { height: food_amout / 100, radius: food_amout / 100 },
+                { height: food_amount / 50, radius: food_amount / 200 },
                 this.scene);
-            var food = new Food(object, food_amout, food_amout);
+            var food = new Food(object, food_amount, food_amount);
             food.mesh.position = value;
             food.mesh.material = this.glassMaterial;
             this.foods.push(food);
