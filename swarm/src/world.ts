@@ -24,15 +24,16 @@ const antPopulation = 500
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
+
 class Food {
     mesh: Mesh;
     amout_food: number;
     original_size: number;
+
     constructor(mesh: Mesh, amount_food: number, original_size: number) {
         this.mesh = mesh;
         this.amout_food = amount_food;
         this.original_size = original_size;
-
     }
 }
 
@@ -96,8 +97,8 @@ export class World {
 
         this.foods.forEach(function (value) {
             var sixDofDragBehavior = new SixDofDragBehavior();
-            sixDofDragBehavior.dragDeltaRatio = 0.2;
-            sixDofDragBehavior.zDragFactor = 0.2;
+            // sixDofDragBehavior.dragDeltaRatio = 0.2;
+            // sixDofDragBehavior.zDragFactor = 0.2;
             value.mesh.addBehavior(sixDofDragBehavior)
         });
 

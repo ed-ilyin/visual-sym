@@ -5,8 +5,8 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
 // import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
-const scalingEmpty = new Vector3(1,1,1)
-const scalingFull = new Vector3(2,2,2)
+const scalingEmpty = new Vector3(1, 1, 1)
+const scalingFull = new Vector3(2, 2, 2)
 
 export class Ant {
   colony: Colony
@@ -18,13 +18,13 @@ export class Ant {
   acceleration = Vector3.Zero()
   tmpVelocity = Vector3.Zero()
   relativeWorldCenter = Vector3.Zero()
-  static OneBiteSize=0.01
+  static OneBiteSize = 0.1
 
 
   constructor(colony: Colony, velocity: Vector3) {
     this.colony = colony
     this.velocity = velocity;
-   
+
   }
 
   update(particle: SolidParticle) {
@@ -54,7 +54,7 @@ export class Ant {
           // particle.color = this.colony.colorFull
           this.ed(value);
           particle.scaling = scalingFull
-          
+
           this.velocity.scaleInPlace(-1) // разворот на 180 градусов
         }
       }
@@ -68,7 +68,7 @@ export class Ant {
         this.mekle = Vieta.Bariba
         // particle.color = this.colony.colorEmpty
         particle.scaling = scalingEmpty
-          
+
         this.velocity.scaleInPlace(-1) // разворот на 180 градусов
       }
     }
@@ -101,11 +101,11 @@ export class Ant {
   }
 
   // line(from: Vector3, to: Vector3) {
-    // const line = MeshBuilder.CreateLines("lines", {
-    //   points: [from, to],
-    //   updatable: false
-    // });
-    // setTimeout(() => line.dispose(), 20)
+  // const line = MeshBuilder.CreateLines("lines", {
+  //   points: [from, to],
+  //   updatable: false
+  // });
+  // setTimeout(() => line.dispose(), 20)
   // }
 
   dzird(
@@ -134,23 +134,23 @@ export class Ant {
     }
   }
 
-  takenFoodAtHome(){
-    this.colony.home.size=this.colony.home.size+(Ant.OneBiteSize);
-    var scale_home=this.colony.home.size/this.colony.home.original_size
-    this.colony.home.mesh.scaling.scaleInPlace(scale_home);
+  takenFoodAtHome() {
+    this.colony.home.size += Ant.OneBiteSize * 10;
+    const scale_home = this.colony.home.size / this.colony.home.original_size
+    this.colony.home.mesh.scaling.x = scale_home
+    this.colony.home.mesh.scaling.y = scale_home
+    this.colony.home.mesh.scaling.z = scale_home
   }
-  ed(value:any) {
-    
-    value.amout_food=value.amout_food-Ant.OneBiteSize;
-    var scale=value.amout_food/value.original_size
+
+  ed(value: any) {
+    value.amout_food = value.amout_food - Ant.OneBiteSize;
+    var scale = value.amout_food / value.original_size
     value.mesh.scaling.scaleInPlace(scale)
 
-
-    if (value.amout_food < 0){
-      value.mesh.position=new Vector3( Math.random(), Math.random(), Math.random());
-      value.scaling=new Vector3(1,1,1);
-      value.amout_food=100;
-
+    if (value.amout_food < 0) {
+      value.mesh.position = new Vector3(Math.random(), Math.random(), Math.random());
+      value.scaling = new Vector3(1, 1, 1);
+      value.amout_food = 100;
     }
   }
 }

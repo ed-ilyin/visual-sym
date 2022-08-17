@@ -45,8 +45,8 @@ export class Colony {
     const h = this.world.objectsSize / Math.PI
     this.home.mesh.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
     var sixDofDragBehavior = new SixDofDragBehavior();
-    sixDofDragBehavior.dragDeltaRatio = 0.2;
-    sixDofDragBehavior.zDragFactor = 0.2;
+    // sixDofDragBehavior.dragDeltaRatio = 0.2;
+    // sixDofDragBehavior.zDragFactor = 0.2;
     this.home.mesh.addBehavior(sixDofDragBehavior);
     this.createSPS(population)
   }
