@@ -3,6 +3,7 @@ import { Colony } from "./colony"
 import { SolidParticle } from "@babylonjs/core/Particles/solidParticle";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Vieta } from "./vieta"
+import { Food } from "./food"
 // import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 const scalingEmpty = new Vector3(1, 1, 1)
@@ -81,22 +82,21 @@ export class Ant {
 
     // что в этот раз надо кричать?
     switch (this.kliegs) {
-      case Vieta.Maja: {
+      case Vieta.Maja:
         this.kliegs = Vieta.Bariba
 
         if (distance <= this.colony.loudness) citaSkudra.dzird(
           skudrasVieta,
           Vieta.Maja, this.lidzMajai + this.colony.loudness,
           citasSkudrasVieta)
-      }
-      case Vieta.Bariba: {
+        break;
+      case Vieta.Bariba:
         this.kliegs = Vieta.Maja
 
         if (distance <= this.colony.loudness) citaSkudra.dzird(
           skudrasVieta,
           Vieta.Bariba, this.lidzBaribai + this.colony.loudness,
           citasSkudrasVieta)
-      }
     }
   }
 
@@ -145,7 +145,7 @@ export class Ant {
     this.colony.home.mesh.scaling.addInPlace(this.oneBiteSize)
   }
 
-  ed(value: any) {
+  ed(value: Food) {
     value.amout_food = value.amout_food - Ant.OneBiteSize;
     const scale = value.amout_food / value.original_size
     value.mesh.scaling.scaleInPlace(scale)

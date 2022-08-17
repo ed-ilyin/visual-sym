@@ -15,6 +15,7 @@ import { create_menu } from "./nearmenu";
 import environment from './textures/environment.dds?url';
 import { woodFloor } from "./wood-plank";
 import { SixDofDragBehavior } from "@babylonjs/core";
+import { Food } from "./food";
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
@@ -24,18 +25,6 @@ const antPopulation = 500
 const foodPosition: Vector3[] =
     [...Array(3)].map(() =>
         randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter))
-
-class Food {
-    mesh: Mesh;
-    amout_food: number;
-    original_size: number;
-
-    constructor(mesh: Mesh, amount_food: number, original_size: number) {
-        this.mesh = mesh;
-        this.amout_food = amount_food;
-        this.original_size = original_size;
-    }
-}
 
 export class World {
     radius: float = worldRadius // в метрах
