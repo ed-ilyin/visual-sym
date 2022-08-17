@@ -1,5 +1,6 @@
-# eds-webxr-project
-Project for @edilyin
+# visual-sym
+
+Visual Simulators
 
 ```
 npm install && npm run dev
