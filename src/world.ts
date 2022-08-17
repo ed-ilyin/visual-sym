@@ -22,7 +22,7 @@ const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(
     worldCenter
 )
 const colonySpeed = 0.02
-const antPopulation = 1500
+const antPopulation = 150
 const foodPosition: Vector3[] = [...Array<undefined>(3)].map(() =>
     randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
 )
