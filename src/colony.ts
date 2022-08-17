@@ -38,13 +38,13 @@ export class Colony {
     this.world = world
 
     // создаём дом
-    var home_mesh = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
+    const home_mesh = MeshBuilder.CreateSphere("home", { diameter: world.objectsSize }, world.scene);
     this.home = new Home(home_mesh, 100, 100);
     this.home.mesh.material = this.world.glassMaterial;
     this.home.mesh.position = position
     const h = this.world.objectsSize / Math.PI
     this.home.mesh.setBoundingInfo(new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h)))
-    var sixDofDragBehavior = new SixDofDragBehavior();
+    const sixDofDragBehavior = new SixDofDragBehavior();
     // sixDofDragBehavior.dragDeltaRatio = 0.2;
     // sixDofDragBehavior.zDragFactor = 0.2;
     this.home.mesh.addBehavior(sixDofDragBehavior);
@@ -98,7 +98,7 @@ export class Colony {
     // Ищем кто услышал,
     // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
     // стороны и прогоняем только оставшихся (такая вот оптимизация)
-    for (var p = particle.idx + 1; p < this.sps.nbParticles; p++) {
+    for (let p = particle.idx + 1; p < this.sps.nbParticles; p++) {
       const citaSkudra = this.ants[p]
       const citasSkudrasParicle = this.sps.particles[p]
       const citasSkudrasVieta = citasSkudrasParicle.position

@@ -45,7 +45,7 @@ export class Ant {
     // проверить не уткнулись ли в еду или дом
     // обнулить сообтветсвующий счётчик
     // поменять skudra.mekle на противоположный
-    for (let value of this.colony.world.foods) {
+    for (const value of this.colony.world.foods) {
       if (this.colony.bboxesComputed && particle.intersectsMesh(value.mesh)) {
         this.lidzBaribai = 0
 
@@ -147,7 +147,7 @@ export class Ant {
 
   ed(value: any) {
     value.amout_food = value.amout_food - Ant.OneBiteSize;
-    var scale = value.amout_food / value.original_size
+    const scale = value.amout_food / value.original_size
     value.mesh.scaling.scaleInPlace(scale)
 
     if (value.amout_food < 0) {

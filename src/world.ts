@@ -84,12 +84,12 @@ export class World {
 
         // создаём еду
         foodPosition.map((value, i) => {
-            var food_amount = World.amountFoodAvablile;
-            var object = MeshBuilder.CreateCapsule(
+            const food_amount = World.amountFoodAvablile;
+            const object = MeshBuilder.CreateCapsule(
                 `food${i}`,
                 { height: food_amount / 50, radius: food_amount / 200 },
                 this.scene);
-            var food = new Food(object, food_amount, food_amount);
+            const food = new Food(object, food_amount, food_amount);
             food.mesh.position = value;
             food.mesh.material = this.glassMaterial;
             this.foods.push(food);
@@ -97,7 +97,7 @@ export class World {
         });
 
         this.foods.forEach(function (value) {
-            var sixDofDragBehavior = new SixDofDragBehavior();
+            const sixDofDragBehavior = new SixDofDragBehavior();
             // sixDofDragBehavior.dragDeltaRatio = 0.2;
             // sixDofDragBehavior.zDragFactor = 0.2;
             value.mesh.addBehavior(sixDofDragBehavior)
@@ -107,7 +107,7 @@ export class World {
 
         // here we add XR support
 
-        let ground = woodFloor(this.scene, worldRadius * 4, this.scene.environmentTexture)
+        const ground = woodFloor(this.scene, worldRadius * 4, this.scene.environmentTexture)
 
         await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
@@ -118,7 +118,7 @@ export class World {
         create_menu(this.scene, colony);
 
         return this.scene;
-    };
+    }
 
 
 }

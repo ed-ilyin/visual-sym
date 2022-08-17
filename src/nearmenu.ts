@@ -99,5 +99,5 @@ export function create_menu(scene: Scene, colony: Colony) {
     debug.text = "Debug";
 
     return scene;
-};
+}
 
