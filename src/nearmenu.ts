@@ -6,6 +6,8 @@ import { TouchHolographicButton } from "@babylonjs/gui/3D/controls/touchHolograp
 import { HolographicSlate } from "@babylonjs/gui/3D/controls/holographicSlate";
 import { CheckboxGroup, SelectionPanel, SliderGroup } from "@babylonjs/gui/2D/controls";
 import { Vector2, Vector3 } from "@babylonjs/core/Maths/math.vector";
+// import { Vector3WithInfo } from "@babylonjs/gui/3D/vector3WithInfo";
+// import { EventState } from "@babylonjs/core/Misc/observable";
 
 export function create_menu(scene: Scene, colony: Colony) {
 
@@ -43,15 +45,15 @@ export function create_menu(scene: Scene, colony: Colony) {
     transformGroup.addCheckbox("Auto Rotation (wait)",
         (v) => colony.world.acrCamera.useAutoRotationBehavior = v);
 
-    transformGroup.addCheckbox("Debug", async (v) => {
+    transformGroup.addCheckbox("Debug", void (async (v: boolean) => {
         if (v) {
             await Promise.all([
                 import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
                 import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
             ]);
-            scene.debugLayer.show()
+            await scene.debugLayer.show()
         } else { scene.debugLayer.hide() }
-    });
+    }));
 
     const sliderGroup = new SliderGroup("Подвигаем");
 
@@ -88,14 +90,14 @@ export function create_menu(scene: Scene, colony: Colony) {
     const debug = new TouchHolographicButton();
     // menu.addButton(debug);
     // sphere.addControl(debug);
-    debug.onPointerClickObservable.add(async () => {
+    debug.onPointerClickObservable.add(() => void (async () => {
         debug.dispose()
-        await Promise.all([
+        await (Promise.all([
             import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
             import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
-        ]);
-        scene.debugLayer.show()
-    });
+        ]))
+        await scene.debugLayer.show()
+    }))
     debug.text = "Debug";
 
     return scene;

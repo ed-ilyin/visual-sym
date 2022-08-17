@@ -12,7 +12,7 @@ import('@babylonjs/loaders/glTF')
 //  FragmentOutput[FragmentOutputBlock] is not connected and is not optional.
 import('@babylonjs/core/Materials/Node/Blocks');
 
-(async () => {
+void (async () => {
     const canvas = document.getElementById("app") as HTMLCanvasElement;
 
     // Load the 3D engine
