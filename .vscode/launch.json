@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Edge against localhost",
             "url": "https://localhost:5173",
-            "webRoot": "${workspaceFolder}/swarm"
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

@@ -7,7 +7,7 @@
 			"problemMatcher": [
 				"$tsc-watch"
 			],
-			"label": "npm: dev - swarm",
+			"label": "npm: dev",
 			"detail": "vite",
 			"isBackground": true
 		}
