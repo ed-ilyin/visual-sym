@@ -18,7 +18,7 @@ export class Ant {
   acceleration = Vector3.Zero()
   tmpVelocity = Vector3.Zero()
   relativeWorldCenter = Vector3.Zero()
-  static OneBiteSize = 0.1
+  static OneBiteSize = 0.0002
 
 
   constructor(colony: Colony, velocity: Vector3) {
@@ -134,12 +134,15 @@ export class Ant {
     }
   }
 
+  oneBiteSize = new Vector3(0.001, 0.001, 0.001)
+
   takenFoodAtHome() {
-    this.colony.home.size += Ant.OneBiteSize * 10;
-    const scale_home = this.colony.home.size / this.colony.home.original_size
-    this.colony.home.mesh.scaling.x = scale_home
-    this.colony.home.mesh.scaling.y = scale_home
-    this.colony.home.mesh.scaling.z = scale_home
+    // this.colony.home.size += Ant.OneBiteSize * 10;
+    // const scale_home = this.colony.home.size / this.colony.home.original_size
+    // this.colony.home.mesh.scaling.x = scale_home
+    // this.colony.home.mesh.scaling.y = scale_home
+    // this.colony.home.mesh.scaling.z = scale_home
+    this.colony.home.mesh.scaling.addInPlace(this.oneBiteSize)
   }
 
   ed(value: any) {
