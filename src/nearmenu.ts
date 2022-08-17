@@ -10,8 +10,6 @@ import {
   SliderGroup
 } from '@babylonjs/gui/2D/controls'
 import { Vector2, Vector3 } from '@babylonjs/core/Maths/math.vector'
-// import { Vector3WithInfo } from "@babylonjs/gui/3D/vector3WithInfo";
-// import { EventState } from "@babylonjs/core/Misc/observable";
 
 export function create_menu(scene: Scene, colony: Colony) {
   // Manager
@@ -115,10 +113,13 @@ export function create_menu(scene: Scene, colony: Colony) {
   // menu.addButton(reset_apply);
   // sphere.addControl(reset_apply);
   // stack.addControl(reset_apply);
+
   reset_apply.onPointerClickObservable.add(() => {
     colony.setQuantity(colony.sps.nbParticles)
   })
+
   reset_apply.text = 'Refresh'
+
   reset_apply.imageUrl =
     'https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconRefresh.png'
 
@@ -126,18 +127,16 @@ export function create_menu(scene: Scene, colony: Colony) {
   const debug = new TouchHolographicButton()
   // menu.addButton(debug);
   // sphere.addControl(debug);
-  debug.onPointerClickObservable.add(
-    () =>
-      void (async () => {
-        debug.dispose()
-        await Promise.all([
-          import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
-          import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
-        ])
-        await scene.debugLayer.show()
-      })
-  )
-  debug.text = 'Debug'
 
+  debug.onPointerClickObservable.add(() => async () => {
+    debug.dispose()
+    await Promise.all([
+      import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
+      import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+    ])
+    await scene.debugLayer.show()
+  })
+
+  debug.text = 'Debug'
   return scene
 }
