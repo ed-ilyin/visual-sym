@@ -150,7 +150,7 @@ export class Ant {
     const scale = value.amout_food / value.original_size
     value.mesh.scaling.scaleInPlace(scale)
 
-    if (value.amout_food < 0) {
+    if (value.amout_food< 0) {
       value.mesh.position = new Vector3(Math.random(), Math.random(), Math.random());
       // value.scaling = new Vector3(1, 1, 1);
       value.amout_food = 100;

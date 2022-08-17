@@ -1,20 +1,20 @@
 'use strict';
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Colony } from "./colony";
+import { create_menu } from "./nearmenu";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { float, int } from "@babylonjs/core/types";
+import { Food } from "./food";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { randomToCartesian } from "./polar"
 import { Scene } from "@babylonjs/core";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { create_menu } from "./nearmenu";
-import environment from './textures/environment.dds?url';
-import { woodFloor } from "./wood-plank";
 import { SixDofDragBehavior } from "@babylonjs/core";
-import { Food } from "./food";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { woodFloor } from "./wood-plank";
+import environment from './textures/environment.dds?url';
 
 const worldRadius = 2; // в метрах
 const worldCenter = new Vector3(0, worldRadius, 0)
