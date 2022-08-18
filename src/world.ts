@@ -7,11 +7,9 @@ import { Engine } from '@babylonjs/core/Engines/engine'
 import { float, int } from '@babylonjs/core/types'
 import { Food } from './food'
 import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight'
-import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder'
 import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial'
 import { randomToCartesian } from './polar'
 import { Scene } from '@babylonjs/core'
-import { SixDofDragBehavior } from '@babylonjs/core'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { woodFloor } from './wood-plank'
 import environment from './textures/environment.dds?url'
@@ -22,8 +20,8 @@ const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(
     worldCenter
 )
 const colonySpeed = 0.02
-const antPopulation = 150
-const foodPosition: Vector3[] = [...Array<undefined>(3)].map(() =>
+const antPopulation = 500
+const food: Vector3[] = [...Array<undefined>(3)].map(() =>
     randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
 )
 
@@ -39,7 +37,6 @@ export class World {
     speed: float = colonySpeed // в метрах
     attraction: float = Math.pow(colonySpeed, 2) / 2
     acrCamera!: ArcRotateCamera
-    static amountFoodAvablile = 10
 
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
@@ -81,24 +78,8 @@ export class World {
         this.glassMaterial.subSurface.isRefractionEnabled = true
 
         // создаём еду
-        foodPosition.map((value, i) => {
-            const food_amount = World.amountFoodAvablile
-            const object = MeshBuilder.CreateCapsule(
-                `food${i}`,
-                { height: food_amount / 50, radius: food_amount / 200 },
-                this.scene
-            )
-            const food = new Food(object, food_amount, food_amount)
-            food.mesh.position = value
-            food.mesh.material = this.glassMaterial
-            this.foods.push(food)
-        })
-
-        this.foods.forEach(function (value) {
-            const sixDofDragBehavior = new SixDofDragBehavior()
-            // sixDofDragBehavior.dragDeltaRatio = 0.2;
-            // sixDofDragBehavior.zDragFactor = 0.2;
-            value.mesh.addBehavior(sixDofDragBehavior)
+        this.foods = foodPosition.map((position, i) => {
+            return food
         })
 
         const colony = new Colony(this, colonyPosition, antPopulation)

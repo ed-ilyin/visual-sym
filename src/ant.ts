@@ -50,12 +50,11 @@ export class Ant {
                 if (particle.intersectsMesh(food.mesh)) {
                     this.lidzBaribai = 0
 
-                    if (this.mekle == Vieta.Bariba && food.amount > 0) {
+                    if (this.mekle == Vieta.Bariba && food.volume > 0) {
                         this.mekle = Vieta.Maja
                         // particle.color = this.colony.colorFull
-                        this.ed(food)
+                        this.eats(food)
                         particle.scaling = scalingFull
-
                         this.velocity.scaleInPlace(-1) // разворот на 180 градусов
                     }
                 }
@@ -69,7 +68,6 @@ export class Ant {
                     this.mekle = Vieta.Bariba
                     // particle.color = this.colony.colorEmpty
                     particle.scaling = scalingEmpty
-
                     this.velocity.scaleInPlace(-1) // разворот на 180 градусов
                 }
             }
@@ -163,19 +161,19 @@ export class Ant {
         this.colony.home.mesh.scaling.addInPlace(this.oneBiteSize)
     }
 
-    ed(value: Food) {
-        value.amount = value.amount - Ant.OneBiteSize
-        const scale = value.amount / value.original_size
-        value.mesh.scaling.scaleInPlace(scale)
+    eats(food: Food) {
+        food.volume -= Ant.OneBiteSize
+        const scale = food.volume / food.original_volume
+        food.mesh.scaling.scaleInPlace(scale)
 
-        if (value.amount < 0) {
-            value.mesh.position = new Vector3(
+        if (food.volume < 0) {
+            food.mesh.position = new Vector3(
                 Math.random(),
                 Math.random(),
                 Math.random()
             )
-            value.mesh.scaling = new Vector3(1, 1, 1)
-            value.amount = 100
+            food.mesh.scaling = new Vector3(1, 1, 1)
+            food.volume = 100
         }
     }
 }
