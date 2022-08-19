@@ -21,9 +21,6 @@ const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(
 )
 const colonySpeed = 0.02
 const antPopulation = 500
-const food: Vector3[] = [...Array<undefined>(3)].map(() =>
-    randomToCartesian(worldRadius, worldRadius).addInPlace(worldCenter)
-)
 
 export class World {
     radius: float = worldRadius // в метрах
@@ -38,11 +35,22 @@ export class World {
     attraction: float = Math.pow(colonySpeed, 2) / 2
     acrCamera!: ArcRotateCamera
 
+    static worldRadius() {
+        return worldRadius
+    }
+    static worldCenter() {
+        return worldCenter
+    }
+
     async createScene(engine: Engine, canvas: HTMLCanvasElement) {
         // создаём сцену
         this.scene = new Scene(engine)
 
-        // Fog
+        this.foods = [
+            new Food(10, this.scene),
+            new Food(10, this.scene),
+            new Food(10, this.scene)
+        ]
         // scene.clearColor = Color3.Black().toColor4();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(
             environment,
@@ -78,9 +86,6 @@ export class World {
         this.glassMaterial.subSurface.isRefractionEnabled = true
 
         // создаём еду
-        this.foods = foodPosition.map((position, i) => {
-            return food
-        })
 
         const colony = new Colony(this, colonyPosition, antPopulation)
 
