@@ -36,7 +36,6 @@ export class Colony {
 
     constructor(world: World, position: Vector3, population: int) {
         this.world = world
-
         // создаём дом
         const home_mesh = MeshBuilder.CreateSphere(
             'home',
@@ -50,9 +49,8 @@ export class Colony {
         this.home.mesh.setBoundingInfo(
             new BoundingInfo(new Vector3(-h, -h, -h), new Vector3(h, h, h))
         )
+        // это чтобы контроллером дергать
         const sixDofDragBehavior = new SixDofDragBehavior()
-        // sixDofDragBehavior.dragDeltaRatio = 0.2;
-        // sixDofDragBehavior.zDragFactor = 0.2;
         this.home.mesh.addBehavior(sixDofDragBehavior)
         this.createSPS(population)
     }
@@ -64,35 +62,35 @@ export class Colony {
             boundingSphereOnly: true,
             bSphereRadiusFactor: 1.0 / Math.sqrt(3.0)
         })
-        // this.sps.billboard = true;
+        //Это обход баги когда все букахи в начале находили еду не прикоснувшесь ее
         this.sps.computeBoundingBox = true
-        // const poly = MeshBuilder.CreatePlane("p", {size: skudraSize }, scene);
+        //Создаем буках
         const poly = MeshBuilder.CreatePolyhedron(
             'p',
             { type: this.world.antPolyhedronType, size: this.world.antSize },
             this.world.scene
         )
-        // const poly = MeshBuilder.CreateBox("p", {size: skudraSize }, scene);
-        // const poly = MeshBuilder.CreateIcoSphere("p", {radius: skudraSize }, scene);
         this.sps.addShape(poly, quantity)
         poly.dispose()
         const mesh = this.sps.buildMesh()
         mesh.position = this.world.center
-
         // initiate particles function
         this.sps.initParticles = () => {
             for (let p = 0; p < this.sps.nbParticles; p++) {
                 const particle = this.sps.particles[p]
+                //раскрашиваем буках
                 particle.color = new Color4(
                     Math.random(),
                     Math.random(),
                     Math.random(),
                     Math.random()
                 )
+                //даем им скорости
                 const velocity = randomToCartesian(
                     this.world.speed,
                     this.world.speed
                 )
+                //поворачеваем и добовляем объект букахи в массив
                 this.ants[p] = new Ant(this, velocity)
                 particle.position = randomToCartesian(0, this.world.radius)
                 particle.rotation = new Vector3(
@@ -100,17 +98,12 @@ export class Colony {
                     Scalar.RandomRange(0, Scalar.TwoPi),
                     Scalar.RandomRange(0, Scalar.TwoPi)
                 )
-
-                // particle.rotationQuaternion =
-                //   new Quaternion(Math.random(), Math.random(), Math.random(), Math.random())
             }
         }
 
         this.sps.initParticles()
         this.sps.updateParticle = particle => this.update(particle)
-
         this.sps.afterUpdateParticles = () => (this.bboxesComputed = true)
-
         this.world.scene.onBeforeRenderObservable.add(() =>
             this.sps.setParticles()
         )
@@ -147,7 +140,6 @@ export class Colony {
         this.ants[particle.idx].update(particle)
         return particle
     }
-
     setQuantity(quantity: int) {
         this.sps.dispose()
         this.createSPS(quantity)

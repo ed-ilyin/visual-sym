@@ -51,12 +51,10 @@ export class World {
             new Food(10, this.scene),
             new Food(10, this.scene)
         ]
-        // scene.clearColor = Color3.Black().toColor4();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(
             environment,
             this.scene
         )
-        // const gl = new GlowLayer("glow", this.scene);
         this.scene.createDefaultSkybox(this.scene.environmentTexture)
         // создаём освещение
         new HemisphericLight(
@@ -65,7 +63,6 @@ export class World {
             this.scene
         )
         // создаём камеру
-
         this.acrCamera = new ArcRotateCamera(
             'arc',
             (Math.PI / 3) * 5,
@@ -84,7 +81,6 @@ export class World {
         this.glassMaterial.metallic = 0.0
         this.glassMaterial.roughness = 0
         this.glassMaterial.subSurface.isRefractionEnabled = true
-
         // создаём еду
 
         const colony = new Colony(this, colonyPosition, antPopulation)
@@ -100,8 +96,6 @@ export class World {
         await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         })
-
-        //const sessionManager = await xr.baseExperience.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
 
         create_menu(this.scene, colony)
 

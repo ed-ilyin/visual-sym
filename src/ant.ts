@@ -49,24 +49,21 @@ export class Ant {
             for (const food of this.colony.world.foods) {
                 if (particle.intersectsMesh(food.mesh)) {
                     this.lidzBaribai = 0
-
                     if (this.mekle == Vieta.Bariba && food.volume > 0) {
                         this.mekle = Vieta.Maja
-                        // particle.color = this.colony.colorFull
                         this.eats(food)
                         particle.scaling = scalingFull
                         this.velocity.scaleInPlace(-1) // разворот на 180 градусов
                     }
                 }
             }
-
+            //проверка пересечения с домом
             if (particle.intersectsMesh(this.colony.home.mesh)) {
                 this.lidzMajai = 0
 
                 if (this.mekle == Vieta.Maja) {
                     this.takenFoodAtHome()
                     this.mekle = Vieta.Bariba
-                    // particle.color = this.colony.colorEmpty
                     particle.scaling = scalingEmpty
                     this.velocity.scaleInPlace(-1) // разворот на 180 градусов
                 }
@@ -95,7 +92,6 @@ export class Ant {
                 break
             case Vieta.Bariba:
                 this.kliegs = Vieta.Maja
-
                 if (distance <= this.colony.loudness)
                     citaSkudra.dzird(
                         skudrasVieta,
@@ -105,14 +101,6 @@ export class Ant {
                     )
         }
     }
-
-    // line(from: Vector3, to: Vector3) {
-    // const line = MeshBuilder.CreateLines("lines", {
-    //   points: [from, to],
-    //   updatable: false
-    // });
-    // setTimeout(() => line.dispose(), 20)
-    // }
 
     dzird(
         kliedzosasSkudrasVieta: Vector3,
@@ -153,11 +141,7 @@ export class Ant {
     oneBiteSize = new Vector3(0.001, 0.001, 0.001)
 
     takenFoodAtHome() {
-        // this.colony.home.size += Ant.OneBiteSize * 10;
-        // const scale_home = this.colony.home.size / this.colony.home.original_size
-        // this.colony.home.mesh.scaling.x = scale_home
-        // this.colony.home.mesh.scaling.y = scale_home
-        // this.colony.home.mesh.scaling.z = scale_home
+        // Элегантно изменяем дом на размер укуса в большую сторону
         this.colony.home.mesh.scaling.addInPlace(this.oneBiteSize)
     }
 
@@ -165,7 +149,6 @@ export class Ant {
         food.volume -= Ant.OneBiteSize
         const scale = food.volume / food.original_volume
         food.mesh.scaling.scaleInPlace(scale)
-
         if (food.volume < 0) {
             food.mesh.position = new Vector3(
                 Math.random(),

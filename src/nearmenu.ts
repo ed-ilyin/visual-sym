@@ -15,7 +15,6 @@ export function create_menu(scene: Scene, colony: Colony) {
     // Manager
     const manager = new GUI3DManager(scene)
     manager.useRealisticScaling = true
-
     // Holographic Slate
     const slate = new HolographicSlate()
     manager.addControl(slate)
@@ -25,10 +24,7 @@ export function create_menu(scene: Scene, colony: Colony) {
     slate.position = new Vector3(-2, 7, 7)
     const scale = 10
     slate.scaling.scaleInPlace(scale)
-    // slate.position = new Vector3(-1.6, 7, -4);
-    // slate.scaling.scaleInPlace(2)
     slate._followButton.onToggleObservable.add(v => {
-        // console.log(v)
         if (v) {
             slate.scaling.scaleInPlace(1 / scale)
         } else {
@@ -41,9 +37,7 @@ export function create_menu(scene: Scene, colony: Colony) {
     const selector = new SelectionPanel('selector')
     selector.background = '#edce'
     slate.content = selector
-
     const transformGroup = new CheckboxGroup('Поотмечаем')
-
     transformGroup.addCheckbox(
         'Auto Rotation (wait)',
         v => (colony.world.acrCamera.useAutoRotationBehavior = v)
@@ -65,7 +59,6 @@ export function create_menu(scene: Scene, colony: Colony) {
     )
 
     const sliderGroup = new SliderGroup('Подвигаем')
-
     sliderGroup.addSlider(
         'Скорость',
         v => (colony.world.speed = v),
@@ -108,11 +101,7 @@ export function create_menu(scene: Scene, colony: Colony) {
     selector.addGroup(transformGroup)
     selector.addGroup(sliderGroup)
 
-    // Reset button
     const reset_apply = new TouchHolographicButton()
-    // menu.addButton(reset_apply);
-    // sphere.addControl(reset_apply);
-    // stack.addControl(reset_apply);
 
     reset_apply.onPointerClickObservable.add(() => {
         colony.setQuantity(colony.sps.nbParticles)
@@ -123,10 +112,7 @@ export function create_menu(scene: Scene, colony: Colony) {
     reset_apply.imageUrl =
         'https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconRefresh.png'
 
-    // Debug button
     const debug = new TouchHolographicButton()
-    // menu.addButton(debug);
-    // sphere.addControl(debug);
 
     debug.onPointerClickObservable.add(() => async () => {
         debug.dispose()
