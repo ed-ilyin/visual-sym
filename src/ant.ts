@@ -141,16 +141,15 @@ export class Ant {
     }
 
     oneBiteSize = new Vector3(0.001, 0.001, 0.001)
-
+    oneBiteSizeSphere = new Vector3(0.0001, 0.0001, 0.0001)
     takenFoodAtHome() {
         // Элегантно изменяем дом на размер укуса в большую сторону
-        this.colony.home.mesh.scaling.multiplyInPlace(this.oneBiteSize)
+        console.log(this.colony.home.mesh.scaling)
+        this.colony.home.mesh.scaling.addInPlace(this.oneBiteSizeSphere)
     }
 
     eats(food: Food) {
-        food.volume -= Ant.OneBiteSize
-        const scale = food.volume / food.original_volume
-        food.mesh.scaling.scaleInPlace(scale)
+        food.mesh.scaling.subtractInPlace(this.oneBiteSize)
         if (food.mesh.scaling._x < 0.1) {
             food.mesh.position = randomToCartesian(
                 World.worldRadius(),
