@@ -1,7 +1,7 @@
 'use strict'
 import { Ant } from './ant'
 import { BoundingInfo } from '@babylonjs/core/Culling/boundingInfo'
-import { Color3, Color4 } from '@babylonjs/core/Maths/math.color'
+import { Color4 } from '@babylonjs/core/Maths/math.color'
 import { float, int } from '@babylonjs/core/types'
 import { Mesh } from '@babylonjs/core/Meshes/mesh'
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder'
