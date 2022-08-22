@@ -144,14 +144,14 @@ export class Ant {
 
     takenFoodAtHome() {
         // Элегантно изменяем дом на размер укуса в большую сторону
-        this.colony.home.mesh.scaling.addInPlace(this.oneBiteSize)
+        this.colony.home.mesh.scaling.multiplyInPlace(this.oneBiteSize)
     }
 
     eats(food: Food) {
         food.volume -= Ant.OneBiteSize
         const scale = food.volume / food.original_volume
-        food.mesh.scaling.scaleInPlace(-scale)
-        if (food.mesh.scaling._x < 0) {
+        food.mesh.scaling.scaleInPlace(scale)
+        if (food.mesh.scaling._x < 0.1) {
             food.mesh.position = randomToCartesian(
                 World.worldRadius(),
                 World.worldRadius()
