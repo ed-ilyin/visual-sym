@@ -1,7 +1,7 @@
 'use strict'
 import { Ant } from './ant'
 import { BoundingInfo } from '@babylonjs/core/Culling/boundingInfo'
-import { Color4 } from '@babylonjs/core/Maths/math.color'
+import { Color3, Color4 } from '@babylonjs/core/Maths/math.color'
 import { float, int } from '@babylonjs/core/types'
 import { Mesh } from '@babylonjs/core/Meshes/mesh'
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder'
@@ -12,6 +12,7 @@ import { SolidParticle } from '@babylonjs/core/Particles/solidParticle'
 import { SolidParticleSystem } from '@babylonjs/core/Particles/solidParticleSystem'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { World } from './world'
+import { LinesMesh } from '@babylonjs/core/Meshes/linesMesh'
 
 class Home {
     mesh: Mesh
@@ -32,10 +33,13 @@ export class Colony {
     world: World
     colorFull = new Color4(1, 0, 0, 1)
     colorEmpty = new Color4(0, 0, 1, 1)
-    loudness: float = 0.6
+    loudness: float = 0.5
+    lines: [Vector3, Vector3][] = []
+    lineSystem: LinesMesh | undefined
 
     constructor(world: World, position: Vector3, population: int) {
         this.world = world
+
         // создаём дом
         const home_mesh = MeshBuilder.CreateSphere(
             'home',
@@ -102,15 +106,30 @@ export class Colony {
         }
 
         this.sps.initParticles()
+        this.sps.beforeUpdateParticles = () => (this.lines = []) //[[new Vector3(0, 0, 0), new Vector3(1, 1, 1)]]
+
         this.sps.updateParticle = particle => this.update(particle)
-        this.sps.afterUpdateParticles = () => (this.bboxesComputed = true)
-        this.world.scene.onBeforeRenderObservable.add(() =>
+        this.sps.afterUpdateParticles = () => {
+            this.bboxesComputed = true
+            this.lineSystem?.dispose()
+
+            if (this.lines.length > 0) {
+                this.lineSystem = MeshBuilder.CreateLineSystem(
+                    'lines',
+                    { lines: this.lines },
+                    this.world.scene
+                )
+                this.lineSystem.position = this.world.center
+            }
+        }
+        this.world.scene.onBeforeRenderObservable.add(() => {
             this.sps.setParticles()
-        )
+        })
     }
 
     update(particle: SolidParticle) {
         const ant = this.ants[particle.id]
+
         // букаха кричит одно из пройденных путей
         // Ищем кто услышал,
         // чтобы два раза не прогонять по массиву сразу меняемся данными в обе
@@ -140,6 +159,7 @@ export class Colony {
         this.ants[particle.idx].update(particle)
         return particle
     }
+
     setQuantity(quantity: int) {
         this.sps.dispose()
         this.createSPS(quantity)
