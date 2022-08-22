@@ -4,6 +4,8 @@ import { SolidParticle } from '@babylonjs/core/Particles/solidParticle'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { Vieta } from './vieta'
 import { Food } from './food'
+import { randomToCartesian } from './polar'
+import { World } from './world'
 
 const scalingEmpty = new Vector3(1, 1, 1)
 const scalingFull = new Vector3(2, 2, 2)
@@ -148,13 +150,12 @@ export class Ant {
     eats(food: Food) {
         food.volume -= Ant.OneBiteSize
         const scale = food.volume / food.original_volume
-        food.mesh.scaling.scaleInPlace(scale)
-        if (food.volume < 0) {
-            food.mesh.position = new Vector3(
-                Math.random(),
-                Math.random(),
-                Math.random()
-            )
+        food.mesh.scaling.scaleInPlace(-scale)
+        if (food.mesh.scaling._x < 0) {
+            food.mesh.position = randomToCartesian(
+                World.worldRadius(),
+                World.worldRadius()
+            ).addInPlace(World.worldCenter())
             food.mesh.scaling = new Vector3(1, 1, 1)
             food.volume = 100
         }
