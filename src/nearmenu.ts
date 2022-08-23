@@ -6,6 +6,7 @@ import { TouchHolographicButton } from '@babylonjs/gui/3D/controls/touchHolograp
 import { HolographicSlate } from '@babylonjs/gui/3D/controls/holographicSlate'
 import {
     CheckboxGroup,
+    RadioGroup,
     SelectionPanel,
     SliderGroup
 } from '@babylonjs/gui/2D/controls'
@@ -19,9 +20,9 @@ export function create_menu(scene: Scene, colony: Colony) {
     const slate = new HolographicSlate()
     manager.addControl(slate)
     slate.title = 'Swarm'
-    slate.minDimensions = new Vector2(2, 3)
-    slate.dimensions = new Vector2(9, 10)
-    slate.position = new Vector3(-2, 7, 7)
+    slate.minDimensions = new Vector2(2, 5)
+    slate.dimensions = new Vector2(9, 12)
+    slate.position = new Vector3(-2, 8, 7)
     const scale = 10
     slate.scaling.scaleInPlace(scale)
     slate._followButton.onToggleObservable.add(v => {
@@ -57,6 +58,11 @@ export function create_menu(scene: Scene, colony: Colony) {
             }
         })
     )
+    const radiogroup = new RadioGroup('aaa')
+    radiogroup.addRadio('level 1', greet)
+    radiogroup.addRadio('level 2', greet)
+    radiogroup.addRadio('level 3', greet)
+    radiogroup.addRadio('level 4', greet)
 
     const sliderGroup = new SliderGroup('Подвигаем')
     sliderGroup.addSlider(
@@ -100,6 +106,7 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     selector.addGroup(transformGroup)
     selector.addGroup(sliderGroup)
+    selector.addGroup(radiogroup)
 
     const reset_apply = new TouchHolographicButton()
 
@@ -124,5 +131,10 @@ export function create_menu(scene: Scene, colony: Colony) {
     })
 
     debug.text = 'Debug'
+
     return scene
+}
+
+function greet() {
+    alert('hey me')
 }
