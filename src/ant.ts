@@ -112,6 +112,11 @@ export class Ant {
     ) {
         const pivot = () => {
             if (sadzirdetaVieta == this.mekle) {
+                this.colony.lines.push([
+                    kliedzosasSkudrasVieta,
+                    skudrasKasDzirdVieta
+                ])
+
                 // меняем направление на кричащую букаху
                 // зная где кричащая букаха, нужно посчитать вектор в направлении кричащей букахи,
                 // но динной в скорость слышащей букахи
@@ -119,6 +124,7 @@ export class Ant {
                     skudrasKasDzirdVieta,
                     this.velocity
                 )
+
                 this.velocity.normalize().scaleInPlace(this.colony.world.speed)
             }
         }
@@ -144,7 +150,7 @@ export class Ant {
     oneBiteSizeSphere = new Vector3(0.0001, 0.0001, 0.0001)
     takenFoodAtHome() {
         // Элегантно изменяем дом на размер укуса в большую сторону
-        console.log(this.colony.home.mesh.scaling)
+        // console.log(this.colony.home.mesh.scaling)
         this.colony.home.mesh.scaling.addInPlace(this.oneBiteSizeSphere)
     }
 

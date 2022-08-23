@@ -19,7 +19,7 @@ const worldCenter = new Vector3(0, worldRadius, 0)
 const colonyPosition = randomToCartesian(worldRadius, worldRadius).addInPlace(
     worldCenter
 )
-const colonySpeed = 0.02
+const colonySpeed = 0.01
 const antPopulation = 500
 
 export class World {

@@ -46,17 +46,18 @@ export function create_menu(scene: Scene, colony: Colony) {
 
     transformGroup.addCheckbox(
         'Debug',
-        void (async (v: boolean) => {
-            if (v) {
-                await Promise.all([
-                    import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
-                    import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
-                ])
-                await scene.debugLayer.show()
-            } else {
-                scene.debugLayer.hide()
-            }
-        })
+        (v: boolean) =>
+            void (async () => {
+                if (v) {
+                    await Promise.all([
+                        import('@babylonjs/core/Debug/debugLayer'), // Augments the scene with the debug methods
+                        import('@babylonjs/inspector') // Injects a local ES6 version of the inspector to prevent automatically relying on the none compatible version
+                    ])
+                    await scene.debugLayer.show()
+                } else {
+                    scene.debugLayer.hide()
+                }
+            })()
     )
     const radiogroup = new RadioGroup('aaa')
     radiogroup.addRadio('level 1', greet)
