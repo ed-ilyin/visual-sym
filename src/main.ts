@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 import './style.css'
 // import { Engine } from "@babylonjs/core/Engines/engine";
 // import { World } from "./world";
@@ -10,21 +10,21 @@ import('@babylonjs/loaders/glTF')
 //  Build of NodeMaterial failed" error when loading controller model
 //  Uncaught (in promise) Build of NodeMaterial failed: input rgba from block
 //  FragmentOutput[FragmentOutputBlock] is not connected and is not optional.
-import('@babylonjs/core/Materials/Node/Blocks');
+import('@babylonjs/core/Materials/Node/Blocks')
 
 void (async () => {
-    const canvas = document.getElementById("app") as HTMLCanvasElement;
+    const canvas = document.getElementById('app') as HTMLCanvasElement
 
     // Load the 3D engine
     const engines = await import('@babylonjs/core/Engines/engine')
-    const engine = new engines.Engine(canvas, true);
+    const engine = new engines.Engine(canvas, true)
 
     //Create the scene
     const world = await import('./world')
-    const scene = await new world.World().createScene(engine, canvas)
+    const scene = await new world.World().createScene(engine, canvas, true)
     //DEBUG
     engine.runRenderLoop(() => scene.render())
 
     // Resize the engine to fit the scene
-    window.addEventListener("resize", () => engine.resize());
+    window.addEventListener('resize', () => engine.resize())
 })()

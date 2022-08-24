@@ -60,10 +60,7 @@ export function create_menu(scene: Scene, colony: Colony) {
             })()
     )
     const radiogroup = new RadioGroup('aaa')
-    radiogroup.addRadio('level 1', greet)
-    radiogroup.addRadio('level 2', greet)
-    radiogroup.addRadio('level 3', greet)
-    radiogroup.addRadio('level 4', greet)
+    radiogroup.addRadio('level 1', v => show_scene(1, colony))
 
     const sliderGroup = new SliderGroup('Подвигаем')
     sliderGroup.addSlider(
@@ -136,6 +133,9 @@ export function create_menu(scene: Scene, colony: Colony) {
     return scene
 }
 
-function greet() {
-    alert('hey me')
+function show_scene(id: number, colony: Colony) {
+    switch (id) {
+        case 1:
+            colony.dispose(true)
+    }
 }

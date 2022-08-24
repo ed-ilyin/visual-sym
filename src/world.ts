@@ -42,7 +42,11 @@ export class World {
         return worldCenter
     }
 
-    async createScene(engine: Engine, canvas: HTMLCanvasElement) {
+    async createScene(
+        engine: Engine,
+        canvas: HTMLCanvasElement,
+        create_ant: boolean
+    ) {
         // создаём сцену
         this.scene = new Scene(engine)
 
@@ -72,18 +76,21 @@ export class World {
             this.scene
         )
 
-        this.acrCamera.minZ = 0.01
-        this.acrCamera.wheelDeltaPercentage = 0.01
-        this.acrCamera.attachControl(canvas, true)
+        if (create_ant) {
+            this.acrCamera.minZ = 0.01
+            this.acrCamera.wheelDeltaPercentage = 0.01
+            this.acrCamera.attachControl(canvas, true)
 
-        // создаём текстуру для дома и еды
-        this.glassMaterial = new PBRMaterial('glass', this.scene)
-        this.glassMaterial.metallic = 0.0
-        this.glassMaterial.roughness = 0
-        this.glassMaterial.subSurface.isRefractionEnabled = true
-        // создаём еду
+            // создаём текстуру для дома и еды
+            this.glassMaterial = new PBRMaterial('glass', this.scene)
+            this.glassMaterial.metallic = 0.0
+            this.glassMaterial.roughness = 0
+            this.glassMaterial.subSurface.isRefractionEnabled = true
+            // создаём еду
 
-        const colony = new Colony(this, colonyPosition, antPopulation)
+            const colony = new Colony(this, colonyPosition, antPopulation)
+            create_menu(this.scene, colony)
+        }
 
         // here we add XR support
 
@@ -96,8 +103,6 @@ export class World {
         await this.scene.createDefaultXRExperienceAsync({
             floorMeshes: [ground]
         })
-
-        create_menu(this.scene, colony)
 
         return this.scene
     }

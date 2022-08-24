@@ -13,6 +13,7 @@ import { SolidParticleSystem } from '@babylonjs/core/Particles/solidParticleSyst
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { World } from './world'
 import { LinesMesh } from '@babylonjs/core/Meshes/linesMesh'
+import { Engine } from '@babylonjs/core/Engines'
 
 class Home {
     mesh: Mesh
@@ -125,6 +126,26 @@ export class Colony {
         this.world.scene.onBeforeRenderObservable.add(() => {
             this.sps.setParticles()
         })
+    }
+
+    dispose(allow: boolean) {
+        if (allow) {
+            this.sps.dispose()
+            const canvas = document.getElementById('app') as HTMLCanvasElement
+
+            // Load the 3D engine
+
+            const engine = new Engine(canvas, true)
+            const scene_Promise = this.world.createScene(engine, canvas, false)
+            scene_Promise
+                .then(value => {
+                    console.log(value) // 👉️ "Hello world"
+                    this.world.scene = value
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
     }
 
     update(particle: SolidParticle) {
