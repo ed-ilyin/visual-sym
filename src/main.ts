@@ -28,3 +28,4 @@ void (async () => {
     // Resize the engine to fit the scene
     window.addEventListener('resize', () => engine.resize())
 })()
+

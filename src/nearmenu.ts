@@ -136,6 +136,24 @@ export function create_menu(scene: Scene, colony: Colony) {
 function show_scene(id: number, colony: Colony) {
     switch (id) {
         case 1:
-            colony.dispose(true)
+            reset()
     }
 }
+async function reset() {
+  
+    const canvas = document.getElementById('app') as HTMLCanvasElement
+    canvas.width += 0
+    // Load the 3D engine
+    const engines = await import('@babylonjs/core/Engines/engine')
+    const engine = new engines.Engine(main, true)
+
+    //Create the scene
+    const world = await import('./world')
+    const scene = await new world.World().createScene(engine, main, true)
+    ////DEBUG
+    engine.runRenderLoop(() => scene.render())
+
+    // Resize the engine to fit the scene
+    window.addEventListener('resize', () => engine.resize())
+}
+
