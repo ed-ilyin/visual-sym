@@ -139,21 +139,25 @@ function show_scene(id: number, colony: Colony) {
             reset()
     }
 }
+
+interface HTMLElementTagNameMap {
+    a: HTMLAnchorElement
+    canvas: HTMLCanvasElement
+}
 async function reset() {
-  
     const canvas = document.getElementById('app') as HTMLCanvasElement
-    canvas.width += 0
+    const new_canvas = document.createElement('canvas')
+    canvas.replaceWith(new_canvas)
     // Load the 3D engine
     const engines = await import('@babylonjs/core/Engines/engine')
-    const engine = new engines.Engine(main, true)
+    const engine = new engines.Engine(canvas, true)
 
     //Create the scene
-    const world = await import('./world')
-    const scene = await new world.World().createScene(engine, main, true)
+    //const world = await import('./world')
+    //const scene = await new world.World().createScene(engine, canvas, true)
     ////DEBUG
-    engine.runRenderLoop(() => scene.render())
+    // engine.runRenderLoop(() => scene.render())
 
     // Resize the engine to fit the scene
-    window.addEventListener('resize', () => engine.resize())
+    //window.addEventListener('resize', () => engine.resize())
 }
-
